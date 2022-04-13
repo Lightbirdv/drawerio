@@ -8,6 +8,9 @@ Wir wollen eine Chrome extension schreiben die es ermöglicht gescrappte Daten a
 
 
 <h1>Teammitglieder:</h1>
-- Abdullah Zeineh 898056
-- Vico Drescher 846547
-- Timothy Jacob Sun Gee Ganskow
+<ul>
+  <li>Abdullah Zeineh 898056</li>
+  <li>Vico Drescher 846547</li>
+  <li>Timothy Jacob Sun Gee Ganskow 914020</li>
+</ul>
+
