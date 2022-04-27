@@ -1,23 +1,31 @@
-creating nodejs application: 
+# PostgreSQL
+
+## Installation
+Windows: https://www.postgresql.org/download/windows/
+Ubuntu: sudo apt-get -y install postgresql
+
+## DB
+psql -U postgres // postgres is default user
+\dt for relations
+\c for switching table
+\l for list
+
+# Express Backend
+
+## Create Nodejs Application: 
 npm init -y
-install yarn:
 npm install --global yarn
-initialize typescript:
+### initialize typescript:
 yarn add -D typescript
-create tsconfig file:
 npx tsc --init
-add build tsc to package json:
 "build": "tsc"
-build files: 
+### build files: 
 yarn build
-add ts-node for automatic build:
 yarn add -D ts-node
-point ts-node to index:
 "start": "ts-node src/index.ts",
-start script:
+### start script:
 yarn start
 ts-node-dev for server:
 yarn add -D ts-node-dev
-
 yarn add express
 yarn add -D @types/express
