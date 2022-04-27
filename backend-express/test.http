@@ -1,0 +1,7 @@
+POST http://127.0.0.1:3001/user/register
+content-type: application/json
+
+{
+    "email":"hallo@web.de",
+    "password":"test1"
+}
