@@ -7,14 +7,10 @@ interface User {
   password: string;
 }
 
-const getUsers = (request: express.Request, response: express.Response) => {
-    pool.query('SELECT * FROM users ORDER BY users_id ASC', (error: string, results: any) => {
-        if (error) {
-          throw error
-        }
-        console.log(results.rows)
-        return results.rows;
-    })
+const getUsers = (req:any, res:any) => {
+    const users = pool.query('SELECT * FROM users ORDER BY users_id ASC');
+    console.log(users)
+    return users
 }
 
 const registerUser = async(req: any, res: any) => {

@@ -11,14 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
 const bcrypt = require('bcrypt');
-const getUsers = (request, response) => {
-    pool.query('SELECT * FROM users ORDER BY users_id ASC', (error, results) => {
-        if (error) {
-            throw error;
-        }
-        console.log(results.rows);
-        return results.rows;
-    });
+const getUsers = (req, res) => {
+    const users = pool.query('SELECT * FROM users ORDER BY users_id ASC');
+    console.log(users);
+    return users;
 };
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var user = req.body;

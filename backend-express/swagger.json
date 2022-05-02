@@ -1,0 +1,66 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "3.0.0",
+      "title": "My User Project CRUD",
+      "description": "My User Project Application API",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:3001",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "API for users in the system"
+      }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+        "/user/all": {
+          "get": {
+            "tags": ["Users"],
+            "summary": "Get all users in system",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/Users"
+                }
+              }
+            }
+          }
+        }
+      },
+      "definitions": {
+        "User": {
+          "required": ["users_id", "email", "refreshtoken","forgottoken","forgotexpires"],
+          "properties": {
+            "_id": {
+                "type": "integer",
+                "uniqueItems": true
+            },
+            "email": {
+                "type": "string"
+            },
+            "refreshtoken": {
+                "type": "string"
+            },
+            "forgottoken": {
+                "type":"string"
+            },
+            "forgotexpires": {
+                "type":"string"
+            }
+          }
+        },
+        "Users": {
+          "type": "array",
+          "$ref": "#/definitions/User"
+        }
+      }
+  }

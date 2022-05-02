@@ -3,12 +3,12 @@ import express from 'express'
 const router = express.Router()
 const userFunctions = require('./userFunctions')
 
-router.get('/all', async (request: express.Request, response: express.Response) => {
+router.get('/all', async(req, res) => {
     try {
         const users = await userFunctions.getUsers()
-        response.json(users)
+        res.json(users.rows);
     } catch (err: any) {
-        response.status(500).json({ message: err.message })
+        res.status(500).json({ message: err.message })
     }
 })
 

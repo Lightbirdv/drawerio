@@ -15,13 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const userFunctions = require('./userFunctions');
-router.get('/all', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield userFunctions.getUsers();
-        response.json(users);
+        res.json(users.rows);
     }
     catch (err) {
-        response.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 }));
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
