@@ -1,11 +1,12 @@
+import {default as config} from "../.dbsecret.json"
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-    user: 'postgres',
-    password: 'password',
-    host: 'localhost',
-    database: 'drawerio',
-    port:5432
+    user: config.user,
+    password: config.password,
+    host: config.host,
+    database: config.database,
+    port: config.port
 });
 
 
