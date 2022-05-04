@@ -15,6 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const userFunctions = require('./userFunctions');
+/**
+ * @swagger
+ * /user/all:
+ *    get:
+ *      description: Returns all users
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned all user
+ *        '500':
+ *          description: Failed to query for users
+ */
 router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield userFunctions.getUsers();
@@ -24,6 +37,131 @@ router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ message: err.message });
     }
 }));
+/**
+ * @swagger
+ * /user/{id}:
+ *    get:
+ *      description: Returns specific user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned user
+ *        '500':
+ *          description: Failed to query for user
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            schema:
+ *              type: integer
+ *            description: id of the user
+ *            required: true
+ */
+router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield userFunctions.getUser(req);
+        res.json(user);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/{id}:
+ *    patch:
+ *      consumes:
+ *          - application/x-www-form-urlencoded
+ *      description: Updates specific user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully update user
+ *        '500':
+ *          description: Failed to query for user
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            schema:
+ *              type: integer
+ *            description: id of the user
+ *            required: true
+ *          - in: formData
+ *            name: email
+ *            type: string
+ *            description: email to be changed to
+ *            required: false
+ *          - in: formData
+ *            name: password
+ *            type: string
+ *            description: password to be changed to
+ *            required: false
+ */
+router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updateduser = yield userFunctions.updateUser(req);
+        res.json(updateduser);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/{id}:
+ *    delete:
+ *      description: Delete specific user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully deleted user
+ *        '500':
+ *          description: Failed to query for user
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            schema:
+ *              type: integer
+ *            description: id of the user
+ *            required: true
+ */
+router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const deleteduser = yield userFunctions.deleteUser(req);
+        res.json(deleteduser);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/register:
+ *    post:
+ *      consumes:
+ *          - application/x-www-form-urlencoded
+ *      description: Updates specific user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully update user
+ *        '500':
+ *          description: Failed to query for user
+ *      parameters:
+ *          - in: formData
+ *            name: email
+ *            type: string
+ *            description: email to be changed to
+ *            required: false
+ *          - in: formData
+ *            name: password
+ *            type: string
+ *            description: password to be changed to
+ *            required: false
+ */
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newUser = yield userFunctions.registerUser(req);

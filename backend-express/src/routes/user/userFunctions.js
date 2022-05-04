@@ -11,22 +11,55 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
 const bcrypt = require('bcrypt');
-const getUsers = (req, res) => {
-    const users = pool.query('SELECT * FROM users ORDER BY users_id ASC');
-    console.log(users);
-    return users;
-};
-const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var user = req.body;
-    user.password = yield hashPassword(user.password);
-    console.log(user.password);
-    const newUser = pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *', [user.email, user.password]);
-    return newUser;
-});
-const hashPassword = (password) => {
-    return bcrypt.hash(password, 10);
-};
+function getUsers(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const users = pool.query('SELECT * FROM users ORDER BY users_id ASC');
+        console.log(users);
+        return users;
+    });
+}
+function getUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = pool.query('SELECT * FROM users WHERE users_id=$1', [req.params.id]);
+        console.log(user);
+        return user;
+    });
+}
+function updateUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield getUser(req, res);
+        console.log(user.rows);
+        let oldUser = { email: user.rows[0].email, password: user.rows[0].password };
+        const newUser = pool.query('UPDATE users SET email=$1, password=$2 WHERE users_id=$3', [(req.body.email != null ? req.body.email : oldUser.email), (req.body.password != null ? yield hashPassword(req.body.password) : oldUser.password), req.params.id]);
+        console.log(newUser);
+        return newUser;
+    });
+}
+function deleteUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = pool.query('DELETE FROM users WHERE users_id=$1', [req.params.id]);
+        console.log(user);
+        return user;
+    });
+}
+function registerUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var user = req.body;
+        user.password = yield hashPassword(user.password);
+        console.log(user.password);
+        const newUser = pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *', [user.email, user.password]);
+        return newUser;
+    });
+}
+function hashPassword(password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return bcrypt.hash(password, 10);
+    });
+}
 module.exports = {
     getUsers,
+    getUser,
+    updateUser,
+    deleteUser,
     registerUser,
 };

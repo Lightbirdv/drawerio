@@ -2,9 +2,11 @@
   "name": "backend-express",
   "version": "1.0.0",
   "description": "creating nodejs application: \r npm init -y\r install Typescript and tslint:\r npm install typescript tslint --save-dev",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "ts-node-dev --respawn src/app.ts",
+    "start:build": "tsc -w",
+    "start:run": "nodemon build/app.js",
+    "start": "concurrently npm:start:*",
     "build": "tsc"
   },
   "keywords": [],
@@ -23,6 +25,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "pg": "^8.7.3",
+    "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.3.0"
   }
 }
