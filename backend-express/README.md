@@ -29,3 +29,7 @@ ts-node-dev for server:
 yarn add -D ts-node-dev
 yarn add express
 yarn add -D @types/express
+
+generate secret for env:
+node
+require('crypto').randomBytes(64).toString('hex')

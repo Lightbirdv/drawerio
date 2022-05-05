@@ -21,6 +21,13 @@ async function getUser(req:any, res:any) {
   return user
 }
 
+async function getUserByEmail(email:string, res:any) {
+  const user = await pool.query('SELECT * FROM users WHERE email=$1',
+    [email]
+  );
+  return user.rows[0]
+}
+
 async function updateUser(req:any, res:any) {
   const user = await getUser(req, res)
   console.log(user.rows)
@@ -57,6 +64,7 @@ async function hashPassword(password: string) {
 module.exports = {
   getUsers,
   getUser,
+  getUserByEmail,
   updateUser,
   deleteUser,
   registerUser,

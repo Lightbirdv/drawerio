@@ -1,12 +1,11 @@
-import {default as config} from "../.dbsecret.json"
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-    user: config.user,
-    password: config.password,
-    host: config.host,
-    database: config.database,
-    port: config.port
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    host: process.env.HOST,
+    database: process.env.DB,
+    port: process.env.PORT
 });
 
 

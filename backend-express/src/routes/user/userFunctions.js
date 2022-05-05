@@ -25,6 +25,12 @@ function getUser(req, res) {
         return user;
     });
 }
+function getUserByEmail(email, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield pool.query('SELECT * FROM users WHERE email=$1', [email]);
+        return user.rows[0];
+    });
+}
 function updateUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield getUser(req, res);
@@ -59,6 +65,7 @@ function hashPassword(password) {
 module.exports = {
     getUsers,
     getUser,
+    getUserByEmail,
     updateUser,
     deleteUser,
     registerUser,
