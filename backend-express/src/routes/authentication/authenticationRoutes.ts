@@ -6,7 +6,7 @@ const authenticationFunctions = require('./authenticationFunctions')
 /**
  * @swagger
  * /auth/login:
- *    get:
+ *    post:
  *      description: Returns specific user
  *      tags:
  *          - authentication endpoints
@@ -15,20 +15,21 @@ const authenticationFunctions = require('./authenticationFunctions')
  *          description: Successfully logged in user
  *        '500':
  *          description: Failed to login user
- *      parameters:
- *          - in: formData
- *            name: email
- *            type: string
- *            description: email to be changed to
- *            required: true
- *          - in: formData
- *            name: password
- *            type: string
- *            description: password to be changed to
- *            required: true
+ *      requestBody:
+ *          content:
+ *            application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ *                     password:
+ *                        type: string
+ *                   
  */
- router.get('/login', async(req, res) => {
+ router.post('/login', async(req, res) => {
     try {
+        console.log(req.body)
         const loginToken = await authenticationFunctions.login(req, res)
         res.status(200).json(loginToken);
     } catch (err: any) {

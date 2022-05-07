@@ -17,6 +17,23 @@ const router = express_1.default.Router();
 const userFunctions = require('./userFunctions');
 /**
  * @swagger
+ * components:
+ *  schemas:
+ *      Login:
+ *          type: object
+ *          required:
+ *              - email
+ *              - password
+ *          properties:
+ *              email:
+ *                  type: string
+ *                  description: email of the user
+ *              password:
+ *                  type: string
+ *                  description: password of the user
+*/
+/**
+ * @swagger
  * /user/all:
  *    get:
  *      description: Returns all users
@@ -87,16 +104,18 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *              type: integer
  *            description: id of the user
  *            required: true
- *          - in: formData
- *            name: email
- *            type: string
- *            description: email to be changed to
- *            required: false
- *          - in: formData
- *            name: password
- *            type: string
- *            description: password to be changed to
- *            required: false
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ *                        required: false
+ *                     password:
+ *                        type: string
+ *                        required: false
  */
 router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -150,17 +169,16 @@ router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
  *          description: Successfully update user
  *        '500':
  *          description: Failed to query for user
- *      parameters:
- *          - in: formData
- *            name: email
- *            type: string
- *            description: email to be changed to
- *            required: false
- *          - in: formData
- *            name: password
- *            type: string
- *            description: password to be changed to
- *            required: false
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ *                     password:
+ *                        type: string
  */
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

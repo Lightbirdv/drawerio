@@ -36,7 +36,11 @@ function updateUser(req, res) {
         const user = yield getUser(req, res);
         console.log(user.rows);
         let oldUser = { email: user.rows[0].email, password: user.rows[0].password };
-        const newUser = pool.query('UPDATE users SET email=$1, password=$2 WHERE users_id=$3', [(req.body.email != null ? req.body.email : oldUser.email), (req.body.password != null ? yield hashPassword(req.body.password) : oldUser.password), req.params.id]);
+        const newUser = pool.query('UPDATE users SET email=$1, password=$2 WHERE users_id=$3', [
+            (req.body.email != null && req.body.email.length ? req.body.email : oldUser.email),
+            (req.body.password != null && req.body.password.length ? yield hashPassword(req.body.password) : oldUser.password),
+            req.params.id
+        ]);
         console.log(newUser);
         return newUser;
     });

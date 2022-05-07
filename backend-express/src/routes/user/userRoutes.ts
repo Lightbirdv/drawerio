@@ -4,6 +4,24 @@ const router = express.Router()
 const userFunctions = require('./userFunctions')
 
 /**
+ * @swagger 
+ * components:
+ *  schemas:
+ *      Login:
+ *          type: object
+ *          required:
+ *              - email
+ *              - password
+ *          properties:
+ *              email:
+ *                  type: string
+ *                  description: email of the user
+ *              password:
+ *                  type: string
+ *                  description: password of the user
+*/
+
+/**
  * @swagger
  * /user/all:
  *    get:
@@ -75,16 +93,18 @@ router.get('/:id', async(req, res) => {
  *              type: integer
  *            description: id of the user
  *            required: true
- *          - in: formData
- *            name: email
- *            type: string
- *            description: email to be changed to
- *            required: false
- *          - in: formData
- *            name: password
- *            type: string
- *            description: password to be changed to
- *            required: false
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ *                        required: false
+ *                     password:
+ *                        type: string
+ *                        required: false
  */
 router.patch('/:id', async (req, res) => {
     try {
@@ -138,17 +158,16 @@ router.delete('/:id', async (req, res) => {
  *          description: Successfully update user
  *        '500':
  *          description: Failed to query for user
- *      parameters:
- *          - in: formData
- *            name: email
- *            type: string
- *            description: email to be changed to
- *            required: false
- *          - in: formData
- *            name: password
- *            type: string
- *            description: password to be changed to
- *            required: false
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ *                     password:
+ *                        type: string
  */
 router.post('/register', async(req, res) => {
     try {
