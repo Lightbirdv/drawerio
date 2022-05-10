@@ -1,0 +1,118 @@
+.userpage-textarea {
+  display: flex;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: -3%;
+  margin-bottom: 6%;
+}
+
+.userpage-textarea__design {
+  border: none;
+  resize: none;
+  outline: none;
+  background-color: lightgrey;
+  border-radius: 10px;
+}
+
+.down-site {
+  position: fixed;
+  bottom: 0;
+  background-color: lightgrey;
+  border: 2px solid black;
+  width: 400px;
+  height: 50px;
+}
+
+.userpage-bottom--button {
+  margin-top: 3%;
+}
+
+.userpage-bottom--button-select__design {
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-left: 10%;
+  transition-duration: 0.4s;
+  background-color: rgb(199, 199, 199);
+}
+
+.userpage-bottom--button-select__design:hover {
+  transform: scale(1.02);
+}
+
+.userpage-bottom--button-save__design {
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-left: 30%;
+  width: 70px;
+  transition-duration: 0.4s;
+  background-color: rgb(199, 199, 199);
+}
+
+.userpage-bottom--button-save__design:hover {
+  transform: scale(1.02);
+}
+
+.userpage-middle {
+  width: 200px;
+  height: 200px;
+  float: left;
+  border-top: 2px solid black;
+  border-left: 1px solid black;
+  overflow: hidden;
+}
+
+.userpage-middle--images__design {
+  max-width: max-content;
+  border: 1px solid black;
+  overflow: hidden;
+}
+
+.userpage-middle--images__design:hover {
+  transform: scale(1.05);
+}
+
+.comment-text__design {
+  margin-top: 15%;
+  margin-left: 10%;
+  font-size: 1.1rem;
+}
+
+.userpage-text--url__design {
+  margin-top: 13%;
+  margin-left: 5%;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.userpage-text--button-grab__design {
+  border: none;
+  width: 30%;
+  border-radius: 10px;
+  transition-duration: 0.4s;
+  background-color: rgb(199, 199, 199);
+  margin-left: 35%;
+  margin-top: 5%;
+}
+
+.userpage-text--button-grab__design:hover {
+  background-color: lightgreen;
+  transform: scale(1.05);
+}
+
+.userpage-text--button-signout__design {
+  border: none;
+  width: 30%;
+  border-radius: 10px;
+  transition-duration: 0.4s;
+  background-color: rgb(199, 199, 199);
+  margin-left: 5%;
+  margin-top: 20%;
+}
+
+.userpage-text--button-signout__design:hover {
+  background-color: rgb(228, 124, 124);
+  transform: scale(1.05);
+}

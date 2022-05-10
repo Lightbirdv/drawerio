@@ -1,0 +1,94 @@
+.register-form__design {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+  width: 250px;
+}
+
+.register-form--username {
+  margin-left: 10%;
+}
+
+.register-form--password {
+  margin-top: 30px;
+  margin-left: 10%;
+}
+
+.register-form--email {
+  margin-top: 30px;
+  margin-left: 10%;
+}
+
+.register-form--username__design {
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.register-form--password__design {
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.register-form--email__design {
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.register-form--button-back__design {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  transition-duration: 0.4s;
+  background-color: rgb(199, 199, 199);
+}
+
+.register-form--button-back {
+  margin-left: 50%;
+  margin-top: 5%;
+}
+
+.register-form--button-back__design:hover {
+  background-color: lightgreen;
+  transform: scale(1.05);
+}
+
+.register-form--button-create {
+  margin-left: 50%;
+  margin-top: 28%;
+}
+
+.register-form--button-create__design {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  transition-duration: 0.4s;
+  background-color: rgb(199, 199, 199);
+}
+
+.register-form--button-create__design:hover {
+  background-color: lightgreen;
+  transform: scale(1.05);
+}
+
+::placeholder {
+  opacity: 0.4;
+}
+
+.register-form--text {
+  font-size: 1.1rem;
+  margin-top: 20%;
+  margin-left: 6%;
+}
+
+.error-message {
+  color: red;
+}
