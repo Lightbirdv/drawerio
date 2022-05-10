@@ -78,7 +78,7 @@
 }
 
 .userpage-text--url__design {
-  margin-top: 25%;
+  margin-top: 13%;
   margin-left: 5%;
   border-left: none;
   border-right: none;
@@ -99,5 +99,20 @@
 
 .userpage-text--button-grab__design:hover {
   background-color: lightgreen;
+  transform: scale(1.05);
+}
+
+.userpage-text--button-signout__design {
+  border: none;
+  width: 30%;
+  border-radius: 10px;
+  transition-duration: 0.4s;
+  background-color: rgb(199, 199, 199);
+  margin-left: 5%;
+  margin-top: 20%;
+}
+
+.userpage-text--button-signout__design:hover {
+  background-color: rgb(228, 124, 124);
   transform: scale(1.05);
 }

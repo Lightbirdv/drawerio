@@ -2,14 +2,25 @@ import React, { useState } from "react";
 import "./UserPage.css";
 import cheerio from "cheerio";
 import axios from "axios";
+import LoginForm from "./LoginForm";
 
 const UserPage = function () {
   const [allImages, setAllImages] = useState([]);
   const [grabUrl, setGrabUrl] = useState("");
+  const [deleted, setDeleted] = useState(false);
 
   const textareaHandler = function (event) {
     setGrabUrl(event.target.value);
   };
+
+  const logOut = () => {
+    localStorage.clear();
+    setDeleted(true);
+  };
+
+  if (deleted) {
+    return <LoginForm />;
+  }
 
   const grabHandler = function () {
     axios.get(grabUrl).then((res) => {
@@ -24,6 +35,12 @@ const UserPage = function () {
   console.log(allImages);
   return (
     <div>
+      <button
+        onClick={logOut}
+        className="userpage-text--button-signout__design"
+      >
+        Sign out!
+      </button>
       <input
         name="http"
         type="url"

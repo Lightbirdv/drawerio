@@ -1,15 +1,28 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import axios from "axios";
 import "./LoginForm.css";
+import UserPage from "./UserPage";
+import RegisterForm from "./RegisterForm";
 
 const LoginForm = function (props) {
-  const [loadPage, setLoadPage] = useState(false);
+  const [goUserPage, setGoUserPage] = useState(false);
+  const [goRegPage, setGoRegPage] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  if (goRegPage) {
+    return <RegisterForm />;
+  }
+
+  if (goUserPage) {
+    return <UserPage />;
+  }
 
   return (
     <div>
@@ -19,7 +32,21 @@ const LoginForm = function (props) {
       <form
         className="login-form__design"
         onSubmit={handleSubmit((data) => {
-          setLoadPage(true);
+          console.log(data);
+          axios
+            .post("http://localhost:5000/auth/login", {
+              email: data.email,
+              password: data.password,
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.data !== null) {
+                localStorage.setItem("token", response.data);
+              }
+              if (localStorage.getItem("token")) {
+                setGoUserPage(true);
+              }
+            });
         })}
       >
         <div className="login-form--email">
@@ -62,18 +89,16 @@ const LoginForm = function (props) {
           </a>
         </div>
         <div className="login-form--button-login">
-          <button
-            type="submit"
-            onClick={loadPage && props.onUserPage}
-            className="login-form--button-login__design"
-          >
+          <button type="submit" className="login-form--button-login__design">
             Log In
           </button>
         </div>
         <div className="login-form--button-register">
           <button
-            type="submit"
-            onClick={props.onChangeSite}
+            onClick={(e) => {
+              e.preventDefault();
+              setGoRegPage(true);
+            }}
             className="login-form--button-register__design"
           >
             Register

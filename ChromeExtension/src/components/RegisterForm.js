@@ -1,16 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./RegisterForm.css";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
+import LoginForm from "./LoginForm";
 
 const RegisterForm = function (props) {
-  const [loadPage, setLoadPage] = useState(false);
+  const [goLoginPage, setGoLoginPage] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  if (goLoginPage) {
+    return <LoginForm />;
+  }
 
   return (
     <div>
@@ -20,7 +25,16 @@ const RegisterForm = function (props) {
       <form
         className="register-form__design"
         onSubmit={handleSubmit((data) => {
-          setLoadPage(true);
+          console.log(data);
+          axios
+            .post("http://localhost:5000/user/register", {
+              email: data.email,
+              password: data.password,
+            })
+            .then((response) => {
+              console.log(response);
+              setGoLoginPage(true);
+            });
         })}
       >
         <div className="register-form--email">
@@ -60,7 +74,6 @@ const RegisterForm = function (props) {
         <div className="register-form--button-create">
           <button
             type="submit"
-            onClick={loadPage && props.onBackSite}
             className="register-form--button-create__design"
           >
             Create Account
@@ -69,7 +82,7 @@ const RegisterForm = function (props) {
         <div className="register-form--button-back">
           <button
             type="submit"
-            onClick={props.onBackSite}
+            onClick={() => setGoLoginPage(true)}
             className="register-form--button-back__design"
           >
             Go Back

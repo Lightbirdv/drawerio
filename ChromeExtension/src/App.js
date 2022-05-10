@@ -1,4 +1,4 @@
-import React from "React";
+import React from "react";
 import DisplayForm from "./components/DisplayForm";
 import TopSite from "./UI/TopSite";
 
