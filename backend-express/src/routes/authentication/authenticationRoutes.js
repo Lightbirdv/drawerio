@@ -41,9 +41,13 @@ const authenticationFunctions = require('./authenticationFunctions');
  */
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const loginToken = yield authenticationFunctions.login(req, res);
-        res.status(200).json(loginToken);
+        if (!loginToken) {
+            res.status(500).json({ message: "login not successful!" });
+        }
+        else {
+            res.status(200).json(loginToken);
+        }
     }
     catch (err) {
         res.status(500).json({ message: err.message });

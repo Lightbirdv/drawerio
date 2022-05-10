@@ -13,14 +13,12 @@ const pool = require('../../queries').pool;
 function getDrawers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const drawers = pool.query('SELECT * FROM drawer ORDER BY drawer_id ASC');
-        console.log(drawers);
         return drawers;
     });
 }
 function getDrawer(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const drawer = pool.query('SELECT * FROM drawer WHERE drawer_id=$1', [req.params.id]);
-        console.log(drawer);
         return drawer;
     });
 }
@@ -40,14 +38,12 @@ function updateDrawer(req, res) {
             (req.body.users_id != null && req.body.users_id.length ? req.body.users_id : oldDrawer.users_id),
             req.params.id
         ]);
-        console.log(newUser);
         return newUser;
     });
 }
 function deleteDrawer(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = pool.query('DELETE FROM drawer WHERE drawer_id=$1', [req.params.id]);
-        console.log(user);
         return user;
     });
 }

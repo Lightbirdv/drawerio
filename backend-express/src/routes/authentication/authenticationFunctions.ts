@@ -17,12 +17,13 @@ interface UncodedToken {
 async function login(req: any, res: any) {
     if(!req.body) {
         console.log("Error not json body found")
-        res("JSON-Body missing", null, null);
+        res("JSON-Body missing", null, null)
         return
     }
     let user = await userFunctions.getUserByEmail(req.body.email, res)
-    console.log(user)
-    console.log(req.body)
+    if(!user) {
+        return null
+    }
     if(await bcrypt.compare(req.body.password, user.password)) {
         const issuedAt = new Date().getTime()
         const expirationTime: number = +process.env.TIMEOUT!
