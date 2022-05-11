@@ -9,7 +9,6 @@ interface User {
 
 async function getUsers(req:any, res:any) {
     const users = pool.query('SELECT * FROM users ORDER BY users_id ASC');
-    console.log(users)
     return users
 }
 
@@ -17,7 +16,6 @@ async function getUser(req:any, res:any) {
   const user = pool.query('SELECT * FROM users WHERE users_id=$1',
     [req.params.id]
   );
-  console.log(user)
   return user
 }
 
@@ -30,7 +28,6 @@ async function getUserByEmail(email:string, res:any) {
 
 async function updateUser(req:any, res:any) {
   const user = await getUser(req, res)
-  console.log(user.rows)
   let oldUser = { email: user.rows[0].email, password: user.rows[0].password}
   const newUser = pool.query('UPDATE users SET email=$1, password=$2 WHERE users_id=$3',
     [
@@ -39,7 +36,6 @@ async function updateUser(req:any, res:any) {
       req.params.id
     ]
   );
-  console.log(newUser)
   return newUser
 }
 
@@ -47,14 +43,12 @@ async function deleteUser(req:any, res:any) {
   const user = pool.query('DELETE FROM users WHERE users_id=$1',
     [req.params.id]
   );
-  console.log(user)
   return user
 }
 
 async function registerUser(req: any, res: any) {
   var user: User = req.body;
   user.password = await hashPassword(user.password);
-  console.log(user.password)
   const newUser = pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *',
     [user.email,user.password]
   );

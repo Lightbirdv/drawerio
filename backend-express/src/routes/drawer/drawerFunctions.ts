@@ -10,7 +10,6 @@ interface Drawer {
 
 async function getDrawers(req:any, res:any) {
     const drawers = pool.query('SELECT * FROM drawer ORDER BY drawer_id ASC');
-    console.log(drawers)
     return drawers
 }
 
@@ -18,7 +17,6 @@ async function getDrawer(req:any, res:any) {
   const drawer = pool.query('SELECT * FROM drawer WHERE drawer_id=$1',
     [req.params.id]
   );
-  console.log(drawer)
   return drawer
 }
 
@@ -39,7 +37,6 @@ async function updateDrawer(req:any, res:any) {
         req.params.id
     ]
   );
-  console.log(newUser)
   return newUser
 }
 
@@ -47,7 +44,6 @@ async function deleteDrawer(req:any, res:any) {
   const user = pool.query('DELETE FROM drawer WHERE drawer_id=$1',
     [req.params.id]
   );
-  console.log(user)
   return user
 }
 

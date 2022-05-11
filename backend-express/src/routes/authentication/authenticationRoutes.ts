@@ -29,9 +29,12 @@ const authenticationFunctions = require('./authenticationFunctions')
  */
  router.post('/login', async(req, res) => {
     try {
-        console.log(req.body)
         const loginToken = await authenticationFunctions.login(req, res)
-        res.status(200).json(loginToken);
+        if(!loginToken) {
+            res.status(500).json({ message: "login not successful!" })
+        } else {
+            res.status(200).json(loginToken);
+        }
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }

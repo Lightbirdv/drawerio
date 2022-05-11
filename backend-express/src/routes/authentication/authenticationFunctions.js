@@ -21,8 +21,9 @@ function login(req, res) {
             return;
         }
         let user = yield userFunctions.getUserByEmail(req.body.email, res);
-        console.log(user);
-        console.log(req.body);
+        if (!user) {
+            return null;
+        }
         if (yield bcrypt.compare(req.body.password, user.password)) {
             const issuedAt = new Date().getTime();
             const expirationTime = +process.env.TIMEOUT;

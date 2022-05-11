@@ -158,7 +158,6 @@ router.delete('/:id', async (req, res) => {
  */
 router.post('/add', authFunctions.authenticateToken, async(req, res) => {
     try {
-        console.log(req.body)
         var newDrawer = await drawerFunctions.addDrawer(req)
         res.status(201).json(newDrawer)
     } catch (err: any) {

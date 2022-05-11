@@ -169,7 +169,6 @@ router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
  */
 router.post('/add', authFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         var newDrawer = yield drawerFunctions.addDrawer(req);
         res.status(201).json(newDrawer);
     }
