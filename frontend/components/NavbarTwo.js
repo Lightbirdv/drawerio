@@ -1,7 +1,16 @@
 import { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
 
+function clearx(){
+    console.log(localStorage.getItem('token'));
+    localStorage.clear();
+    console.log(localStorage.getItem('token'));
+}
+
 function NavLink({to, children}) {
+
+   
+
     return <a href={to} className={`mx-4`}>
         {children}
     </a>
@@ -58,7 +67,7 @@ export default function Navbar() {
                         Contact
                     </NavLink> */}
                     <NavLink to="/">
-                    <button className="x">Logout</button>
+                    <button onClick={clearx} className="x">Logout</button>
                     </NavLink>
                 </div>
             </div>
