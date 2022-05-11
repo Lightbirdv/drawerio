@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body {
@@ -19,7 +22,8 @@ a {
 
 /* TopComponent Background pexels-Johanes */
 .background {
-  background-image: url("../public/assets/bg.jpg");
+  /* background-image: url("../public/assets/bg_spotlight.jpg"); */
+  background-color:rgb(172, 222, 206);
   height: 100vh;
   width: 100vw;
   position: fixed;
@@ -27,12 +31,12 @@ a {
   top: 0px;
 }
 
-.texture {
-  background-image: url("../public/assets/bg.jpg");
-  background-attachment: fixed;
-  height: 100vh;
-  background-repeat: no-repeat;
+/* Navbar */
+.img-logo {
+  width: 40px;
+  height: 40px;
 }
+
 
 /* !important? */
 .container-top {
@@ -41,6 +45,7 @@ a {
   margin-left: 30px !important;
   margin-right: 10px !important;
 }
+
 
 
 /* Top Section  */
@@ -52,9 +57,9 @@ a {
   align-items: center;
 }
 .section-top-right {
-  background-color: rgba(255, 255, 255, 0.315);
+  background-color: rgba(241, 241, 234, 0.815);
   backdrop-filter: blur(10px);
-  padding: 50px;
+  padding: 20px;
   border-radius: 10px;
 }
 .section-top-right h2 {
@@ -70,19 +75,46 @@ a {
   color: brown;
   letter-spacing: 10px;
 }
-.btn-custom {
-  background-color: tomato;
-  color: white;
+
+.x {
+  background-color:darkmagenta;
+  color: rgb(255, 255, 255);
+  border-radius: 15px;
+  margin-left: 5px;
+  /* margin-top:-4px;  */
+  font-size: 16px;
+  padding: 5px;
+  width: 100px;
 }
-.btn-custom:hover {
-  color: white;
+
+.y {
+  background-color: rgb(184, 176, 176);
+  color: rgb(6, 6, 6);
+  border-radius: 15px;
+  margin-left: 5px;
+  /* margin-top:-4px;  */
+  font-size: 16px;
+  padding: 5px;
+  width: 100px;
 }
+
+.z {
+  background-color:darkmagenta;
+  color: rgb(255, 255, 255);
+  border-radius: 15px;
+  margin-left: 5px;
+  /* margin-top:-4px;  */
+  font-size: 16px;
+  padding: 5px;
+  width: 200px;
+}
+
 
 .plate-img-container {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: -80px;
+  margin-top: -120px;
   margin-bottom: 30px;
 }
 .plate-img {
@@ -94,15 +126,19 @@ a {
   min-height: 50vh;
 }
 .service-img {
-  width: 200px;
+  width: 40%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .service-container-bg {
-  background-color: white;
+  background-color: rgb(110, 173, 153);
   padding-top: 100px;
 }
 /* About Component  */
 .about-container-bg {
-  background-color: white;
+  background-color: rgb(172, 222, 206);
 }
 .about-details {
   display: flex;
@@ -113,7 +149,7 @@ a {
 
 /* Download Component  */
 .download-container-bg {
-  background-color: white;
+  background-color: rgb(110, 173, 153);
 }
 .download-component {
   min-height: 40vh;
@@ -121,15 +157,17 @@ a {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  
 }
-.img-download {
+.img-contact {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 50%;
+  height: 40%;
+  margin: 40px;
 }
-.img-download img {
-  width: 150px;
-}
+
 
 /* Contact Component  */
 .contact-component {
@@ -141,7 +179,7 @@ a {
   align-items: center;
 }
 .contact-container-bg {
-  background-color: rgb(255, 214, 175);
+  background-color: rgb(172, 222, 206);
 }
 .fa {
   margin-left: 5px;
@@ -149,10 +187,73 @@ a {
 }
 /* Footer  */
 .footer {
-  background-color: rgb(43, 31, 20);
-  color: white;
+  background-color: darkmagenta;
+  color: rgb(243, 243, 244);
   min-height: 5vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
+
+.fakeimg {
+  height: 600px;
+}
+
+#xxx {
+  height: 600px;
+}
+.center {
+  margin: auto;
+  width: 70%;
+  padding: 70px 0;
+}
+
+.textpic{
+  margin: auto;
+  width: 40%;
+  padding: 30px 0;
+}
+
+
+/* Login */
+.divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: rgb(118, 113, 113);
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+.h-custom {
+height: 100%;
+}
+}
+
+#table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#table td, #table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#table tr:nth-child(even){background-color: #f2f2f2;}
+
+#table tr:hover {background-color: #ddd;}
+
+#table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #4CAF50;
+  color: white;
+}
+
+

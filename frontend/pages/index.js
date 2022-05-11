@@ -7,13 +7,15 @@ import AboutComponent from "../components/AboutComponent";
 import ContactComponent from "../components/ContactComponent";
 import DownloadComponent from "../components/DownloadComponent";
 import ServiceComponent from "../components/ServiceComponent";
+import Navbar from '../components/Navbar';
 
 export default function Home() {
   return (
     <div >
       <Head>
-        <title>Drawer.io - Landign Page</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Drawer.io</title>
+        <link rel="icon" href="/assets/logo.jpg" />
+        
         <link
           rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -36,11 +38,13 @@ export default function Home() {
         </Container>*/}
 
         {/* Sehr wichtig, Componenten hier einfügen */}
+        <Navbar />
         <TopComponent />
         <ServiceComponent />
         <AboutComponent />
         <DownloadComponent />
         <ContactComponent />
+        {/* <LoginComponent/> */}
 
       </main>
       <footer className="footer">

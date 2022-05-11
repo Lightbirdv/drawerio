@@ -7,10 +7,11 @@ function ContactComponent() {
       <Container className="contact-component">
         <Row>
           <Col xs={12} md={6}>
-            <h1>Drawer</h1>
+            <b>Rate us in the Google Webstore!</b>
+            <br />
+            <br />
             <p>
-              Lorem ipsum, or lipsum as it is sometimes known.Lorem ipsum, or
-              lipsum as it is sometimes known.
+            Your feedback can help us a lot. Gladly via the Google Webstore or gladly directly by email or by phone.
             </p>
             <div>
               <span className="fa fa-facebook-square"></span>

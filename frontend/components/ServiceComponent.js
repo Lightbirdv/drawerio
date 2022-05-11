@@ -7,34 +7,28 @@ function ServiceComponent() {
       <Container className="service-container">
         <Row>
           <Col xs={12} md={4}>
-            <img src="assets/tacho.png" className="img-fluid service-img" />
-            <h2>Fast</h2>
-            <p>
-              Lorem ipsum, or lipsum as it is sometimes known, is dummy text
-              used.
+            <img src="assets/fast-time.png" className="img-fluid service-img" />
+            <p className="textpic">
+            There is no faster way to access your data.
             </p>
           </Col>
           <Col xs={12} md={4}>
-            <img src="assets/easy.jpg" className="img-fluid service-img" />
-            <h2>Easy</h2>
-            <p>
-              Lorem ipsum, or lipsum as it is sometimes known, is dummy text
-              used.
+            <img src="assets/click.png" className="img-fluid service-img" />
+            <p className="textpic">
+            Drawer.io is easy to understand for everyone and extremely easy to use.
             </p>
           </Col>
           <Col xs={12} md={4}>
             <img
-              src="assets/arbeit.jpg"
+              src="assets/house.png"
               className="img-fluid service-img"
             />
-            <h2>CLean</h2>
-            <p>
-              Lorem ipsum, or lipsum as it is sometimes known, is dummy text
-              used.
+            <p className="textpic">
+            Forget your information chaos and look forward to orderly data
             </p>
           </Col>
         </Row>
-        <hr />
+        
       </Container>
     </div>
   );

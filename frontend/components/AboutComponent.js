@@ -7,22 +7,21 @@ function AboutComponent() {
       <Container>
         <Row>
           <Col xs={12} md={6}>
-            <img src="assets/chrome.jpg" className="img-fluid" />
+            <img src="assets/chrome3.png" className="img-fluid" />
           </Col>
           <Col xs={12} md={6} className="about-details">
             <div>
               <h2>Google Chrome Extension</h2>
-              <b>Lorem ipsum, or lipsum as it is sometimes known,</b>
+              <b>Why Google Chrome? Because it is the most popular browser</b>
               <br />
               <br />
               <p>
-                Lorem ipsum, or lipsum as it is sometimes known, is dummy text
-                used in laying out print, graphic or web designs. The passage is
-                attributed to an unknown typesetter in the 15th century who is
-                thought to have scrambled parts of Cicero's De Finibus Bonorum
-                et Malorum for use in a type specimen book.
+                Go to the Chrome Web Store.
+                Search for drawer.io and select it.
+                Click Add to Chrome.
+                Our logo will appear in the top right corner of the browser. Click on it and a login window will open.
+                Sign up and get started!
               </p>
-              <button className="btn btn-custom">Explore More</button>
             </div>
           </Col>
         </Row>
