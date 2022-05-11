@@ -7,7 +7,7 @@ function AboutComponent() {
       <Container>
         <Row>
           <Col xs={12} md={6}>
-            <img src="assets/chrome.jpg" className="img-fluid" />
+            <img src="assets/chrome3.png" className="img-fluid" />
           </Col>
           <Col xs={12} md={6} className="about-details">
             <div>

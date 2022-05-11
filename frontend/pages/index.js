@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div >
       <Head>
-        <title>Drawer.io - Landign Page</title>
+        <title>Drawer.io</title>
         <link rel="icon" href="/assets/logo.jpg" />
         
         <link

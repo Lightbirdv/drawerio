@@ -7,7 +7,9 @@ function ContactComponent() {
       <Container className="contact-component">
         <Row>
           <Col xs={12} md={6}>
-            <h1>Rate us in the Google Webstore!</h1>
+            <b>Rate us in the Google Webstore!</b>
+            <br />
+            <br />
             <p>
             Your feedback can help us a lot. Gladly via the Google Webstore or gladly directly by email or by phone.
             </p>
