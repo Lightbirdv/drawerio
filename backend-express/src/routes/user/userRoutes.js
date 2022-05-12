@@ -183,6 +183,9 @@ router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newUser = yield userFunctions.registerUser(req);
+        if (!newUser) {
+            res.status(500).json({ message: "register not successful" });
+        }
         res.status(201).json(newUser);
     }
     catch (err) {

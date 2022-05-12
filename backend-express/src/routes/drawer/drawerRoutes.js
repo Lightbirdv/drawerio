@@ -40,6 +40,33 @@ router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 /**
  * @swagger
+ * /drawer/all/user:
+ *    get:
+ *      description: Returns all drawer for specific user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawer endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned drawers
+ *        '500':
+ *          description: Failed to query for drawers
+ */
+router.get('/all/user', authFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const drawer = yield drawerFunctions.getDrawersByUser(req);
+        if (!drawer) {
+            res.status(500).json({ message: "retrieval of drawers failed" });
+        }
+        res.status(201).json(drawer);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
  * /drawer/{id}:
  *    get:
  *      description: Returns specific drawer
@@ -60,7 +87,7 @@ router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  */
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const drawer = yield drawerFunctions.getDrawer(req);
+        const drawer = yield drawerFunctions.getSingleDrawer(req);
         res.json(drawer);
     }
     catch (err) {

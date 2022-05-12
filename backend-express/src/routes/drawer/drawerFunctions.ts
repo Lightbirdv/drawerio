@@ -13,7 +13,14 @@ async function getDrawers(req:any, res:any) {
     return drawers
 }
 
-async function getDrawer(req:any, res:any) {
+async function getDrawersByUser(req:any, res:any) {
+  const drawers = pool.query('SELECT * FROM drawer where users_id=$1 ORDER BY drawer_id ASC',
+    [req.user.users_id]
+  );
+  return drawers
+}
+
+async function getSingleDrawer(req:any, res:any) {
   const drawer = pool.query('SELECT * FROM drawer WHERE drawer_id=$1',
     [req.params.id]
   );
@@ -21,7 +28,7 @@ async function getDrawer(req:any, res:any) {
 }
 
 async function updateDrawer(req:any, res:any) {
-  const drawer = await getDrawer(req, res)
+  const drawer = await getSingleDrawer(req, res)
   let oldDrawer = { 
       drawer_id: drawer.rows[0].drawer_id, 
       drawerTitle: drawer.rows[0].drawerTitle, 
@@ -57,10 +64,19 @@ async function addDrawer(req: any, res: any) {
   return newDrawer
 }
 
+async function addDefaultDrawer(users_id: number) {
+  const newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *',
+    ["My first Drawer!", new Date(), users_id]
+  );
+  return newDrawer
+}
+
 module.exports = {
     getDrawers,
-    getDrawer,
+    getDrawersByUser,
+    getSingleDrawer,
     updateDrawer,
     deleteDrawer,
     addDrawer,
+    addDefaultDrawer,
 };

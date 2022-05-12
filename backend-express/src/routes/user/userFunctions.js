@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
+const drawerFunctions = require('../drawer/drawerFunctions');
 const bcrypt = require('bcrypt');
 function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -51,7 +52,15 @@ function registerUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         var user = req.body;
         user.password = yield hashPassword(user.password);
-        const newUser = pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *', [user.email, user.password]);
+        var newUser = yield pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *', [user.email, user.password]);
+        if (!newUser) {
+            return null;
+        }
+        newUser = newUser.rows[0];
+        const defaultDrawer = yield drawerFunctions.addDefaultDrawer(newUser.users_id);
+        if (!defaultDrawer) {
+            return null;
+        }
         return newUser;
     });
 }

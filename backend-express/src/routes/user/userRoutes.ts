@@ -172,6 +172,9 @@ router.delete('/:id', async (req, res) => {
 router.post('/register', async(req, res) => {
     try {
         var newUser = await userFunctions.registerUser(req)
+        if(!newUser) {
+            res.status(500).json({ message: "register not successful" })
+        }
         res.status(201).json(newUser)
     } catch (err: any) {
         res.status(400).json({ message: err.message })

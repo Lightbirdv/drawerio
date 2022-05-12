@@ -28,8 +28,7 @@ async function login(req: any, res: any) {
         const issuedAt = new Date().getTime()
         const expirationTime: number = +process.env.TIMEOUT!
         const expiresAt = issuedAt + (expirationTime * 1000)
-        let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, {algorithm: 'HS256'})
-        // let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256'})
+        let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256'})
         // let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET)
         return accessToken
     } else {
@@ -42,6 +41,7 @@ async function authenticateToken(req: any, res: any, next: any) {
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any, uncodedToken: UncodedToken) => {
         if (err) return res.sendStatus(403)
+        console.log(uncodedToken)
         let user = await userFunctions.getUserByEmail(uncodedToken.user, res)
         req.user = user
         next()

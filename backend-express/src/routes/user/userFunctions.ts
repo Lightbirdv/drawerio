@@ -1,5 +1,6 @@
 import express from 'express'
 const pool = require('../../queries').pool;
+const drawerFunctions = require('../drawer/drawerFunctions')
 const bcrypt = require('bcrypt');
 
 interface User {
@@ -49,9 +50,17 @@ async function deleteUser(req:any, res:any) {
 async function registerUser(req: any, res: any) {
   var user: User = req.body;
   user.password = await hashPassword(user.password);
-  const newUser = pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *',
+  var newUser = await pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *',
     [user.email,user.password]
   );
+  if(!newUser) {
+    return null
+  }
+  newUser = newUser.rows[0]
+  const defaultDrawer = await drawerFunctions.addDefaultDrawer(newUser.users_id)
+  if(!defaultDrawer) {
+    return null
+  }
   return newUser
 }
 

@@ -28,8 +28,7 @@ function login(req, res) {
             const issuedAt = new Date().getTime();
             const expirationTime = +process.env.TIMEOUT;
             const expiresAt = issuedAt + (expirationTime * 1000);
-            let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { algorithm: 'HS256' });
-            // let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256'})
+            let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256' });
             // let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET)
             return accessToken;
         }
@@ -45,6 +44,7 @@ function authenticateToken(req, res, next) {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.sendStatus(403);
+            console.log(uncodedToken);
             let user = yield userFunctions.getUserByEmail(uncodedToken.user, res);
             req.user = user;
             next();
