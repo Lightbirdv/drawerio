@@ -30,7 +30,7 @@ CREATE TABLE drawerentries(
     drawerentry_id SERIAL PRIMARY KEY,
     creationDate TIMESTAMP NOT NULL,
     comment VARCHAR(255),
-    imageURL VARCHAR[],
+    imageURL TEXT[],
     drawer_id INTEGER,
     CONSTRAINT fk_drawer
         FOREIGN KEY(drawer_id) 

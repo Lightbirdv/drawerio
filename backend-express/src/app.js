@@ -9,6 +9,7 @@ require('dotenv').config();
 const authRouter = require('./routes/authentication/authenticationRoutes');
 const userRouter = require('./routes/user/userRoutes');
 const drawerRouter = require('./routes/drawer/drawerRoutes');
+const drawerentryRouter = require('./routes/drawerentries/drawerentryRoutes');
 var bodyParser = require('body-parser');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -52,6 +53,7 @@ app.get('/', (req, res) => {
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/drawer', drawerRouter);
+app.use('/drawerentry', drawerentryRouter);
 app.listen(port, () => {
     console.log("started");
 });
