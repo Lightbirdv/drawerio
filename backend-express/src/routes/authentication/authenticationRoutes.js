@@ -53,4 +53,26 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: err.message });
     }
 }));
+/**
+ * @swagger
+ * /auth/token:
+ *    post:
+ *      description: Returns specific user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully refreshed token
+ *        '500':
+ *          description: Failed to refresh token of user
+ */
+router.post('/token', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let newAccessToken = yield authenticationFunctions.refreshTheToken(req, res);
+    if (newAccessToken == null) {
+        return res.sendStatus(401);
+    }
+    res.json('refreshedToken: Bearer ' + newAccessToken);
+}));
 module.exports = router;

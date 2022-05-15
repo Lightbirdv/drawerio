@@ -40,4 +40,27 @@ const authenticationFunctions = require('./authenticationFunctions')
     }
 })
 
+/**
+ * @swagger
+ * /auth/token:
+ *    post:
+ *      description: Returns specific user
+ *      security:
+ *          - bearerAuth: [] 
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully refreshed token
+ *        '500':
+ *          description: Failed to refresh token of user
+ */
+router.post('/token', authenticationFunctions.authenticateToken, async (req, res) =>{
+    let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
+    if(newAccessToken == null){
+        return res.sendStatus(401)
+    }
+    res.json('refreshedToken: Bearer ' + newAccessToken)
+})
+
 module.exports = router

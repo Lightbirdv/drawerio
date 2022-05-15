@@ -2,7 +2,7 @@ import express from 'express'
 
 const router = express.Router()
 const drawerentryFunctions = require('./drawerentryFunctions')
-const authFunctions = require('../authentication/authenticationFunctions')
+const authenticationFunctions = require('../authentication/authenticationFunctions')
 
 /**
  * @swagger
@@ -17,7 +17,7 @@ const authFunctions = require('../authentication/authenticationFunctions')
  *        '500':
  *          description: Failed to query for drawerentries
  */
- router.get('/all', async(req, res) => {
+ router.get('/all', authenticationFunctions.isAdmin, async(req, res) => {
     try {
         const drawerentries = await drawerentryFunctions.getEntries()
         res.json(drawerentries.rows);
@@ -121,7 +121,7 @@ router.get('/:id', async(req, res) => {
  *                        type: string[]
  *                        required: false
  */
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', authenticationFunctions.isAdmin, async (req, res) => {
     try {
         const updatedEntry = await drawerentryFunctions.updateEntry(req)
         res.json(updatedEntry);
@@ -150,7 +150,7 @@ router.patch('/:id', async (req, res) => {
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticationFunctions.isAdmin, async (req, res) => {
     try {
         const deletedEntry = await drawerentryFunctions.deleteEntry(req)
         res.json(deletedEntry);

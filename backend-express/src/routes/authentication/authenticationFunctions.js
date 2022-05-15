@@ -29,7 +29,11 @@ function login(req, res) {
             const expirationTime = +process.env.TIMEOUT;
             const expiresAt = issuedAt + (expirationTime * 1000);
             let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256' });
-            // let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET)
+            let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET);
+            let updatedUser = yield userFunctions.insertRefreshToken(user, refreshToken);
+            if (!updatedUser) {
+                return null;
+            }
             return accessToken;
         }
         else {
@@ -51,7 +55,58 @@ function authenticateToken(req, res, next) {
         }));
     });
 }
+function refreshTheToken(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let user = req.user;
+        let accessToken = jwt.verify(user.refreshtoken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if (err)
+                return null;
+            const issuedAt = new Date().getTime();
+            const expirationTime = +process.env.TIMEOUT;
+            const expiresAt = issuedAt + (expirationTime * 1000);
+            const accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256' });
+            return accessToken;
+        });
+        return accessToken;
+    });
+}
+function deleteRefreshToken(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => __awaiter(this, void 0, void 0, function* () {
+            if (err)
+                return res.sendStatus(403);
+            let updatedUser = yield userFunctions.insertRefreshToken(user, '');
+            if (!updatedUser) {
+                return null;
+            }
+        }));
+        return true;
+    });
+}
+function isAdmin(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, tokenuser) => __awaiter(this, void 0, void 0, function* () {
+            if (err)
+                return res.sendStatus(403);
+            let user = yield userFunctions.getUserByEmail(tokenuser.user, res);
+            if (user.isadmin == true) {
+                req.user = user;
+                next();
+            }
+            else {
+                return res.status(500).send({ message: 'This function is only available for admins' });
+            }
+        }));
+    });
+}
 module.exports = {
     login,
     authenticateToken,
+    refreshTheToken,
+    deleteRefreshToken,
+    isAdmin
 };

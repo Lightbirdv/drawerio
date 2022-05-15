@@ -6,8 +6,9 @@ CREATE TABLE users(
     users_id SERIAL PRIMARY KEY,
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    refreshToken VARCHAR(50),
-    forgotToken VARCHAR(50),
+    isAdmin BOOLEAN DEFAULT false,
+    refreshToken VARCHAR(255),
+    forgotToken VARCHAR(255),
     forgotExpires TIMESTAMP
 );
 

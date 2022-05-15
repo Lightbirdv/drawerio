@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const userFunctions = require('./userFunctions');
+const authenticationFunctions = require('../authentication/authenticationFunctions');
 /**
  * @swagger
  * components:
@@ -45,7 +46,7 @@ const userFunctions = require('./userFunctions');
  *        '500':
  *          description: Failed to query for users
  */
-router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield userFunctions.getUsers();
         res.json(users.rows);
@@ -117,7 +118,7 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *                        type: string
  *                        required: false
  */
-router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updateduser = yield userFunctions.updateUser(req);
         res.json(updateduser);
@@ -146,7 +147,7 @@ router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* (
  *            description: id of the user
  *            required: true
  */
-router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deleteduser = yield userFunctions.deleteUser(req);
         res.json(deleteduser);
@@ -187,6 +188,43 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
             res.status(500).json({ message: "register not successful" });
         }
         res.status(201).json(newUser);
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/promotetoadmin:
+ *    post:
+ *      consumes:
+ *          - application/x-www-form-urlencoded
+ *      description: Updates specific user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully update user
+ *        '500':
+ *          description: Failed to query for user
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ */
+router.post('/promotetoadmin', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        var updatedUser = yield userFunctions.promoteToAdmin(req);
+        if (!updatedUser) {
+            res.status(500).json({ message: "promotion not successful" });
+        }
+        res.status(201).json(updatedUser);
     }
     catch (err) {
         res.status(400).json({ message: err.message });

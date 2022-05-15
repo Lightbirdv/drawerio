@@ -42,6 +42,12 @@ function updateUser(req, res) {
         return newUser;
     });
 }
+function insertRefreshToken(user, refreshToken) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const updatedUser = pool.query('UPDATE users SET refreshToken=$1 WHERE users_id=$2', [refreshToken, user.users_id]);
+        return updatedUser;
+    });
+}
 function deleteUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = pool.query('DELETE FROM users WHERE users_id=$1', [req.params.id]);
@@ -64,6 +70,17 @@ function registerUser(req, res) {
         return newUser;
     });
 }
+function registerAdmin() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield pool.query('INSERT INTO users (email,password,isAdmin) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING', ["admin", yield hashPassword("admin"), "true"]);
+    });
+}
+function promoteToAdmin(req) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let updatedUser = pool.query('UPDATE users SET isAdmin=$1 WHERE email=$2', [true, req.body.email]);
+        return updatedUser;
+    });
+}
 function hashPassword(password) {
     return __awaiter(this, void 0, void 0, function* () {
         return bcrypt.hash(password, 10);
@@ -74,6 +91,9 @@ module.exports = {
     getUser,
     getUserByEmail,
     updateUser,
+    insertRefreshToken,
     deleteUser,
     registerUser,
+    registerAdmin,
+    promoteToAdmin
 };

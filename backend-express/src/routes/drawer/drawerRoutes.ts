@@ -2,7 +2,7 @@ import express from 'express'
 
 const router = express.Router()
 const drawerFunctions = require('./drawerFunctions')
-const authFunctions = require('../authentication/authenticationFunctions')
+const authenticationFunctions = require('../authentication/authenticationFunctions')
 
 /**
  * @swagger
@@ -17,7 +17,7 @@ const authFunctions = require('../authentication/authenticationFunctions')
  *        '500':
  *          description: Failed to query for drawers
  */
- router.get('/all', async(req, res) => {
+ router.get('/all', authenticationFunctions.isAdmin, async(req, res) => {
     try {
         const drawers = await drawerFunctions.getDrawers()
         res.json(drawers.rows);
@@ -41,7 +41,7 @@ const authFunctions = require('../authentication/authenticationFunctions')
  *        '500':
  *          description: Failed to query for drawers
  */
- router.get('/all/user', authFunctions.authenticateToken, async(req, res) => {
+ router.get('/all/user', authenticationFunctions.authenticateToken, async(req, res) => {
     try {
         const drawer = await drawerFunctions.getDrawersByUser(req)
         if(!drawer) {
@@ -119,7 +119,7 @@ router.get('/:id', async(req, res) => {
  *                        type: number
  *                        required: false
  */
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', authenticationFunctions.isAdmin, async (req, res) => {
     try {
         const updatedDrawer = await drawerFunctions.updateDrawer(req)
         res.json(updatedDrawer);
@@ -148,7 +148,7 @@ router.patch('/:id', async (req, res) => {
  *            description: id of the drawer
  *            required: true
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticationFunctions.isAdmin, async (req, res) => {
     try {
         const deletedDrawer = await drawerFunctions.deleteDrawer(req)
         res.json(deletedDrawer);
@@ -183,7 +183,7 @@ router.delete('/:id', async (req, res) => {
  *                     drawerTitle:
  *                        type: string
  */
-router.post('/add', authFunctions.authenticateToken, async(req, res) => {
+router.post('/add', authenticationFunctions.authenticateToken, async(req, res) => {
     try {
         var newDrawer = await drawerFunctions.addDrawer(req)
         res.status(201).json(newDrawer)

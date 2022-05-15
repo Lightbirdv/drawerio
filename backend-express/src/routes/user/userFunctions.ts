@@ -4,6 +4,7 @@ const drawerFunctions = require('../drawer/drawerFunctions')
 const bcrypt = require('bcrypt');
 
 interface User {
+  users_id: number;
   email: string;
   password: string;
 }
@@ -40,6 +41,13 @@ async function updateUser(req:any, res:any) {
   return newUser
 }
 
+async function insertRefreshToken(user: User, refreshToken:string) {
+  const updatedUser = pool.query('UPDATE users SET refreshToken=$1 WHERE users_id=$2',
+    [refreshToken, user.users_id]
+  );
+  return updatedUser
+}
+
 async function deleteUser(req:any, res:any) {
   const user = pool.query('DELETE FROM users WHERE users_id=$1',
     [req.params.id]
@@ -64,6 +72,19 @@ async function registerUser(req: any, res: any) {
   return newUser
 }
 
+async function registerAdmin() {
+  await pool.query('INSERT INTO users (email,password,isAdmin) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING',
+    ["admin", await hashPassword("admin"), "true"]
+  );
+}
+
+async function promoteToAdmin(req: any) {
+  let updatedUser = pool.query('UPDATE users SET isAdmin=$1 WHERE email=$2',
+    [true, req.body.email]
+  );
+  return updatedUser
+}
+
 async function hashPassword(password: string) {
   return bcrypt.hash(password,10)
 }
@@ -73,6 +94,9 @@ module.exports = {
   getUser,
   getUserByEmail,
   updateUser,
+  insertRefreshToken,
   deleteUser,
   registerUser,
+  registerAdmin,
+  promoteToAdmin
 };

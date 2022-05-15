@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const drawerentryFunctions = require('./drawerentryFunctions');
-const authFunctions = require('../authentication/authenticationFunctions');
+const authenticationFunctions = require('../authentication/authenticationFunctions');
 /**
  * @swagger
  * /drawerentry/all:
@@ -29,7 +29,7 @@ const authFunctions = require('../authentication/authenticationFunctions');
  *        '500':
  *          description: Failed to query for drawerentries
  */
-router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawerentries = yield drawerentryFunctions.getEntries();
         res.json(drawerentries.rows);
@@ -133,7 +133,7 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *                        type: string[]
  *                        required: false
  */
-router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedEntry = yield drawerentryFunctions.updateEntry(req);
         res.json(updatedEntry);
@@ -162,7 +162,7 @@ router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* (
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedEntry = yield drawerentryFunctions.deleteEntry(req);
         res.json(deletedEntry);

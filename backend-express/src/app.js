@@ -8,6 +8,7 @@ const app = (0, express_1.default)();
 require('dotenv').config();
 const authRouter = require('./routes/authentication/authenticationRoutes');
 const userRouter = require('./routes/user/userRoutes');
+const userFunctions = require('./routes/user/userFunctions');
 const drawerRouter = require('./routes/drawer/drawerRoutes');
 const drawerentryRouter = require('./routes/drawerentries/drawerentryRoutes');
 var bodyParser = require('body-parser');
@@ -39,7 +40,6 @@ const swaggerOptions = {
     },
     apis: ['src/app.ts', 'src/routes/*/*.ts'],
 };
-console.log(process.cwd());
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(cors());
@@ -47,6 +47,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+userFunctions.registerAdmin();
 app.get('/', (req, res) => {
     return res.send("Hello World");
 });
