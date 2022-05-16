@@ -1,26 +1,88 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./UserPage.css";
 import cheerio from "cheerio";
 import axios from "axios";
 import LoginForm from "./LoginForm";
+import jwtDecode from "jwt-decode";
 
 const UserPage = function () {
   const [allImages, setAllImages] = useState([]);
   const [grabUrl, setGrabUrl] = useState("");
   const [deleted, setDeleted] = useState(false);
+  const [drawer, setDrawer] = useState([]);
+  const [textfieldInput, setTextfieldInput] = useState("");
+  const [optionValue, setOptionValue] = useState({ id: "Select Drawer..." });
+  var imgArr = [];
+  var date = new Date();
 
   const textareaHandler = function (event) {
     setGrabUrl(event.target.value);
   };
 
   const logOut = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
     setDeleted(true);
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/drawer/all/user", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => setDrawer(response.data.rows));
+  }, []);
+
+  const handleClick = function (event) {
+    event.preventDefault();
+    for (let i = 0; i < allImages.length; i++) {
+      imgArr[i] = allImages[i].IMAGESRC;
+    }
+    if (optionValue.id !== "Select Drawer..." && allImages.length !== 0) {
+      axios
+        .post("http://localhost:5000/drawerentry/add", {
+          comment: textfieldInput,
+          imageURL: imgArr,
+          drawer_id: optionValue.id,
+        })
+        .then((response) => console.log(response));
+    }
+  };
+
+  const handleChange = function (event) {
+    setOptionValue({ id: event.target.value });
   };
 
   if (deleted) {
     return <LoginForm />;
   }
+
+  if (localStorage.getItem("token") !== null) {
+    let token = localStorage.getItem("token");
+    let decodedToken = jwtDecode(token);
+
+    if (
+      decodedToken.exp * 1000 < date.getTime() &&
+      localStorage.getItem("token") !== null
+    ) {
+      axios
+        .post(
+          "http://localhost:5000/auth/token",
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((response) => localStorage.setItem("token", response.data));
+    }
+  }
+
+  const handleTextinput = function (event) {
+    setTextfieldInput(event.target.value);
+  };
 
   const grabHandler = function () {
     axios.get(grabUrl).then((res) => {
@@ -32,7 +94,6 @@ const UserPage = function () {
     });
   };
 
-  console.log(allImages);
   return (
     <div>
       <button
@@ -41,6 +102,18 @@ const UserPage = function () {
       >
         Sign out!
       </button>
+      <select className="userpage-top--list__design" onChange={handleChange}>
+        <option>Select Drawer...</option>
+        {drawer.map((alldrawer) => (
+          <option
+            key={alldrawer.drawer_id}
+            onSelect={handleChange}
+            value={alldrawer.drawer_id}
+          >
+            {alldrawer.drawertitle}
+          </option>
+        ))}
+      </select>
       <input
         name="http"
         type="url"
@@ -60,6 +133,7 @@ const UserPage = function () {
         <textarea
           className="userpage-textarea__design"
           placeholder="Your text..."
+          onChange={handleTextinput}
           rows={7}
           cols={50}
         ></textarea>
@@ -72,13 +146,14 @@ const UserPage = function () {
           ></img>
         </div>
       ))}
-
       <div className="down-site">
         <div className="userpage-bottom--button">
-          <button className="userpage-bottom--button-select__design">
-            Choose Drawer &#709;
+          <button
+            className="userpage-bottom--button-save__design"
+            onClick={handleClick}
+          >
+            Save
           </button>
-          <button className="userpage-bottom--button-save__design">Save</button>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@
   outline: none;
   background-color: lightgrey;
   border-radius: 10px;
+  margin-bottom: 30%;
 }
 
 .down-site {
@@ -27,22 +28,10 @@
   margin-top: 3%;
 }
 
-.userpage-bottom--button-select__design {
-  border: 1px solid black;
-  border-radius: 10px;
-  margin-left: 10%;
-  transition-duration: 0.4s;
-  background-color: rgb(199, 199, 199);
-}
-
-.userpage-bottom--button-select__design:hover {
-  transform: scale(1.02);
-}
-
 .userpage-bottom--button-save__design {
   border: 1px solid black;
   border-radius: 10px;
-  margin-left: 30%;
+  margin-left: 40%;
   width: 70px;
   transition-duration: 0.4s;
   background-color: rgb(199, 199, 199);
@@ -115,4 +104,11 @@
 .userpage-text--button-signout__design:hover {
   background-color: rgb(228, 124, 124);
   transform: scale(1.05);
+}
+
+.userpage-top--list__design {
+  margin-top: 20%;
+  margin-left: 25%;
+  outline: none;
+  border-radius: 10px;
 }

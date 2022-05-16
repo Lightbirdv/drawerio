@@ -83,11 +83,7 @@ const LoginForm = function (props) {
             <b>{errors.password?.message}</b>
           </p>
         </div>
-        <div className="login-form--password-forgot">
-          <a href="" className="login-form--password-forgot__design">
-            Forgot password?
-          </a>
-        </div>
+
         <div className="login-form--button-login">
           <button type="submit" className="login-form--button-login__design">
             Log In
