@@ -17,8 +17,7 @@ function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!req.body) {
             console.log("Error not json body found");
-            res("JSON-Body missing", null, null);
-            return;
+            return null;
         }
         let user = yield userFunctions.getUserByEmail(req.body.email, res);
         if (!user) {
@@ -31,7 +30,7 @@ function login(req, res) {
             if (!updatedUser) {
                 return null;
             }
-            return accessToken;
+            return { accessToken, refreshToken };
         }
         else {
             return null;
@@ -43,6 +42,20 @@ function authenticateToken(req, res, next) {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
+            if (err)
+                return res.sendStatus(403);
+            console.log(uncodedToken);
+            let user = yield userFunctions.getUserByEmail(uncodedToken.user, res);
+            req.user = user;
+            next();
+        }));
+    });
+}
+function authenticateRefreshToken(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.sendStatus(403);
             console.log(uncodedToken);
@@ -100,6 +113,7 @@ function isAdmin(req, res, next) {
 module.exports = {
     login,
     authenticateToken,
+    authenticateRefreshToken,
     refreshTheToken,
     deleteRefreshToken,
     isAdmin

@@ -58,7 +58,7 @@ function addDrawer(req, res) {
         var drawer = req.body;
         drawer.users_id = req.user.users_id;
         drawer.creationDate = new Date();
-        const newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *', [drawer.drawerTitle, drawer.creationDate, drawer.users_id]);
+        let newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3)   RETURNING *', [drawer.drawerTitle, drawer.creationDate, drawer.users_id]);
         return newDrawer;
     });
 }

@@ -28,11 +28,11 @@ const authenticationFunctions = require('./authenticationFunctions')
  */
  router.post('/login', async(req: express.Request, res: express.Response) => {
     try {
-        const loginToken = await authenticationFunctions.login(req, res)
-        if(!loginToken) {
+        const {accessToken, refreshToken} = await authenticationFunctions.login(req, res)
+        if(!accessToken) {
             res.status(500).json({ message: "login not successful!" })
         } else {
-            res.status(200).json(loginToken);
+            res.status(200).json({accessToken, refreshToken});
         }
     } catch (err: any) {
         res.status(500).json({ message: err.message })
@@ -54,7 +54,7 @@ const authenticationFunctions = require('./authenticationFunctions')
  *        '500':
  *          description: Failed to refresh token of user
  */
-router.post('/token', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) =>{
+router.post('/token', authenticationFunctions.authenticateRefreshToken, async (req: express.Request, res: express.Response) =>{
     let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
     if(newAccessToken == null){
         return res.sendStatus(401)

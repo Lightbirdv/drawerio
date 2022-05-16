@@ -9,26 +9,26 @@ interface User {
   password: string;
 }
 
-async function getUsers(req:any, res:any) {
+async function getUsers(req: express.Request, res: express.Response) {
     const users = pool.query('SELECT * FROM users ORDER BY users_id ASC');
     return users
 }
 
-async function getUser(req:any, res:any) {
+async function getUser(req: express.Request, res: express.Response) {
   const user = pool.query('SELECT * FROM users WHERE users_id=$1',
     [req.params.id]
   );
   return user
 }
 
-async function getUserByEmail(email:string, res:any) {
+async function getUserByEmail(email:string, res:express.Response) {
   const user = await pool.query('SELECT * FROM users WHERE email=$1',
     [email]
   );
   return user.rows[0]
 }
 
-async function updateUser(req:any, res:any) {
+async function updateUser(req: express.Request, res: express.Response) {
   const user = await getUser(req, res)
   let oldUser = { email: user.rows[0].email, password: user.rows[0].password}
   const newUser = pool.query('UPDATE users SET email=$1, password=$2 WHERE users_id=$3',
@@ -48,14 +48,14 @@ async function insertRefreshToken(user: User, refreshToken:string) {
   return updatedUser
 }
 
-async function deleteUser(req:any, res:any) {
+async function deleteUser(req: express.Request, res: express.Response) {
   const user = pool.query('DELETE FROM users WHERE users_id=$1',
     [req.params.id]
   );
   return user
 }
 
-async function registerUser(req: any, res: any) {
+async function registerUser(req: express.Request, res: express.Response) {
   var user: User = req.body;
   user.password = await hashPassword(user.password);
   var newUser = await pool.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *',
@@ -78,7 +78,7 @@ async function registerAdmin() {
   );
 }
 
-async function promoteToAdmin(req: any) {
+async function promoteToAdmin(req: express.Request) {
   let updatedUser = pool.query('UPDATE users SET isAdmin=$1 WHERE email=$2',
     [true, req.body.email]
   );

@@ -14,6 +14,7 @@ const drawerentryRouter = require('./routes/drawerentries/drawerentryRoutes');
 var bodyParser = require('body-parser');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const fileupload = require("express-fileupload");
 var cors = require('cors');
 const port = process.env.APIPORT || 5000;
 const swaggerOptions = {
@@ -43,6 +44,7 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(cors());
+app.use(fileupload());
 app.use(bodyParser.urlencoded({
     extended: true
 }));

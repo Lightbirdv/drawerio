@@ -8,26 +8,26 @@ interface Drawerentry {
     creationDate: Date
 }
 
-async function getEntries(req:any, res:any) {
+async function getEntries(req: express.Request, res: express.Response) {
     const entries = pool.query('SELECT * FROM drawerentries ORDER BY drawerentry_id ASC');
     return entries
 }
 
-async function getEntriesByDrawer(req:any, res:any) {
+async function getEntriesByDrawer(req: express.Request, res: express.Response) {
   const entries = pool.query('SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC',
     [req.params.drawerid]
   );
   return entries
 }
 
-async function getSingleEntry(req:any, res:any) {
+async function getSingleEntry(req: express.Request, res: express.Response) {
   const entry = pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1',
     [req.params.id]
   );
   return entry
 }
 
-async function updateEntry(req:any, res:any) {
+async function updateEntry(req: express.Request, res: express.Response) {
   const entry = await getSingleEntry(req, res)
   let oldEntry = { 
       comment: entry.rows[0].comment, 
@@ -47,14 +47,14 @@ async function updateEntry(req:any, res:any) {
   return newEntry
 }
 
-async function deleteEntry(req:any, res:any) {
+async function deleteEntry(req: express.Request, res: express.Response) {
   const entry = pool.query('DELETE FROM drawerentries WHERE drawerentry_id=$1',
     [req.params.id]
   );
   return entry
 }
 
-async function addEntry(req: any, res: any) {
+async function addEntry(req: express.Request, res: express.Response) {
   var entry: Drawerentry = req.body;
   console.log(entry)
   entry.creationDate = new Date();
