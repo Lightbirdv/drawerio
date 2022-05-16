@@ -46,7 +46,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(500).json({ message: "login not successful!" });
         }
         else {
-            res.status(200).json({ accessToken, refreshToken });
+            res.status(200).json(accessToken);
         }
     }
     catch (err) {

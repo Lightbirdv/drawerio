@@ -32,7 +32,7 @@ const authenticationFunctions = require('./authenticationFunctions')
         if(!accessToken) {
             res.status(500).json({ message: "login not successful!" })
         } else {
-            res.status(200).json({accessToken, refreshToken});
+            res.status(200).json(accessToken);
         }
     } catch (err: any) {
         res.status(500).json({ message: err.message })
