@@ -9,6 +9,8 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  * /drawerentry/all:
  *    get:
  *      description: Returns all drawerentries
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -94,6 +96,8 @@ router.get('/:id', async(req, res) => {
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      description: Updates specific entry
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -135,6 +139,8 @@ router.patch('/:id', authenticationFunctions.isAdmin, async (req, res) => {
  * /drawerentry/{id}:
  *    delete:
  *      description: Delete specific entry
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -165,6 +171,8 @@ router.delete('/:id', authenticationFunctions.isAdmin, async (req, res) => {
  * /drawerentry/add:
  *    post:
  *      description: Returns specific entry
+ *      security:
+ *          - bearerAuth: [] 
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      tags:

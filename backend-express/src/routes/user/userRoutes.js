@@ -38,6 +38,8 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  * /user/all:
  *    get:
  *      description: Returns all users
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - user endpoints
  *      responses:
@@ -91,6 +93,8 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      description: Updates specific user
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - user endpoints
  *      responses:
@@ -132,6 +136,8 @@ router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(vo
  * /user/{id}:
  *    delete:
  *      description: Delete specific user
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - user endpoints
  *      responses:
