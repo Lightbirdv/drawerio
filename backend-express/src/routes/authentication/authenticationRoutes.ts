@@ -1,5 +1,4 @@
-import express from 'express'
-
+import express from 'express';
 const router = express.Router()
 const authenticationFunctions = require('./authenticationFunctions')
 
@@ -27,7 +26,7 @@ const authenticationFunctions = require('./authenticationFunctions')
  *                        type: string
  *                   
  */
- router.post('/login', async(req, res) => {
+ router.post('/login', async(req: express.Request, res: express.Response) => {
     try {
         const loginToken = await authenticationFunctions.login(req, res)
         if(!loginToken) {
@@ -55,12 +54,12 @@ const authenticationFunctions = require('./authenticationFunctions')
  *        '500':
  *          description: Failed to refresh token of user
  */
-router.post('/token', authenticationFunctions.authenticateToken, async (req, res) =>{
+router.post('/token', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) =>{
     let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
     if(newAccessToken == null){
         return res.sendStatus(401)
     }
-    res.json('refreshedToken: Bearer ' + newAccessToken)
+    res.json(newAccessToken)
 })
 
 module.exports = router

@@ -15,6 +15,7 @@ interface User {
 interface UncodedToken {
     user: string;
     iat: number;
+    exp: number;
 }
 
 async function login(req: any, res: any) {
@@ -28,10 +29,7 @@ async function login(req: any, res: any) {
         return null
     }
     if(await bcrypt.compare(req.body.password, user.password)) {
-        const issuedAt = new Date().getTime()
-        const expirationTime: number = +process.env.TIMEOUT!
-        const expiresAt = issuedAt + (expirationTime * 1000)
-        let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256'})
+        let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h', algorithm: 'HS256'})
         let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET)
         let updatedUser = await userFunctions.insertRefreshToken(user, refreshToken)
         if(!updatedUser) {
@@ -57,12 +55,9 @@ async function authenticateToken(req: any, res: any, next: any) {
 
 async function refreshTheToken(req:any, res:any) {
     let user = req.user
-    let accessToken = jwt.verify(user.refreshtoken, process.env.REFRESH_TOKEN_SECRET, (err: any, user: User) => {
+    let accessToken = jwt.verify(user.refreshtoken, process.env.REFRESH_TOKEN_SECRET, (err: any, uncodedToken: UncodedToken) => {
         if (err) return null
-        const issuedAt = new Date().getTime()
-        const expirationTime: number = +process.env.TIMEOUT!
-        const expiresAt = issuedAt + (expirationTime * 1000)
-        const accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256'})
+        const accessToken = jwt.sign({ 'user': uncodedToken.user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h', algorithm: 'HS256'})
         return accessToken
     })
     

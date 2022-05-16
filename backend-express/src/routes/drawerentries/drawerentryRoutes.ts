@@ -19,7 +19,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for drawerentries
  */
- router.get('/all', authenticationFunctions.isAdmin, async(req, res) => {
+ router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
         const drawerentries = await drawerentryFunctions.getEntries()
         res.json(drawerentries.rows);
@@ -48,7 +48,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the drawer
  *            required: true
  */
- router.get('/all/:drawerid', async(req, res) => {
+ router.get('/all/:drawerid', async(req: express.Request, res: express.Response) => {
     try {
         const drawerentries = await drawerentryFunctions.getEntriesByDrawer(req)
         if(!drawerentries) {
@@ -80,7 +80,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the entry
  *            required: true
  */
-router.get('/:id', async(req, res) => {
+router.get('/:id', async(req: express.Request, res: express.Response) => {
     try {
         const entry = await drawerentryFunctions.getSingleEntry(req)
         res.json(entry);
@@ -125,7 +125,7 @@ router.get('/:id', async(req, res) => {
  *                        type: string[]
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, async (req, res) => {
+router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const updatedEntry = await drawerentryFunctions.updateEntry(req)
         res.json(updatedEntry);
@@ -156,7 +156,7 @@ router.patch('/:id', authenticationFunctions.isAdmin, async (req, res) => {
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, async (req, res) => {
+router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deletedEntry = await drawerentryFunctions.deleteEntry(req)
         res.json(deletedEntry);
@@ -197,7 +197,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, async (req, res) => {
  *                     drawer_id:
  *                        type: number
  */
-router.post('/add', async(req, res) => {
+router.post('/add', async(req: express.Request, res: express.Response) => {
     try {
         var newEntry = await drawerentryFunctions.addEntry(req)
         res.status(201).json(newEntry)

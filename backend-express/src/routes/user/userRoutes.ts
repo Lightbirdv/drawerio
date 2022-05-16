@@ -37,7 +37,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for users
  */
-router.get('/all', authenticationFunctions.isAdmin, async(req, res) => {
+router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
         const users = await userFunctions.getUsers()
         res.json(users.rows);
@@ -66,7 +66,7 @@ router.get('/all', authenticationFunctions.isAdmin, async(req, res) => {
  *            description: id of the user
  *            required: true
  */
-router.get('/:id', async(req, res) => {
+router.get('/:id', async(req: express.Request, res: express.Response) => {
     try {
         const user = await userFunctions.getUser(req)
         res.json(user);
@@ -111,7 +111,7 @@ router.get('/:id', async(req, res) => {
  *                        type: string
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, async (req, res) => {
+router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const updateduser = await userFunctions.updateUser(req)
         res.json(updateduser);
@@ -142,7 +142,7 @@ router.patch('/:id', authenticationFunctions.isAdmin, async (req, res) => {
  *            description: id of the user
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, async (req, res) => {
+router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deleteduser = await userFunctions.deleteUser(req)
         res.json(deleteduser);
@@ -176,7 +176,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, async (req, res) => {
  *                     password:
  *                        type: string
  */
-router.post('/register', async(req, res) => {
+router.post('/register', async(req: express.Request, res: express.Response) => {
     try {
         var newUser = await userFunctions.registerUser(req)
         if(!newUser) {
@@ -213,7 +213,7 @@ router.post('/register', async(req, res) => {
  *                     email:
  *                        type: string
  */
- router.post('/promotetoadmin', authenticationFunctions.isAdmin, async(req, res) => {
+ router.post('/promotetoadmin', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
         var updatedUser = await userFunctions.promoteToAdmin(req)
         if(!updatedUser) {

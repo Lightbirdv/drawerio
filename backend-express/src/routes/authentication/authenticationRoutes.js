@@ -73,6 +73,6 @@ router.post('/token', authenticationFunctions.authenticateToken, (req, res) => _
     if (newAccessToken == null) {
         return res.sendStatus(401);
     }
-    res.json('refreshedToken: Bearer ' + newAccessToken);
+    res.json(newAccessToken);
 }));
 module.exports = router;

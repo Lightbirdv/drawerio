@@ -25,10 +25,7 @@ function login(req, res) {
             return null;
         }
         if (yield bcrypt.compare(req.body.password, user.password)) {
-            const issuedAt = new Date().getTime();
-            const expirationTime = +process.env.TIMEOUT;
-            const expiresAt = issuedAt + (expirationTime * 1000);
-            let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256' });
+            let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h', algorithm: 'HS256' });
             let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET);
             let updatedUser = yield userFunctions.insertRefreshToken(user, refreshToken);
             if (!updatedUser) {
@@ -58,13 +55,10 @@ function authenticateToken(req, res, next) {
 function refreshTheToken(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let user = req.user;
-        let accessToken = jwt.verify(user.refreshtoken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        let accessToken = jwt.verify(user.refreshtoken, process.env.REFRESH_TOKEN_SECRET, (err, uncodedToken) => {
             if (err)
                 return null;
-            const issuedAt = new Date().getTime();
-            const expirationTime = +process.env.TIMEOUT;
-            const expiresAt = issuedAt + (expirationTime * 1000);
-            const accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: expiresAt, algorithm: 'HS256' });
+            const accessToken = jwt.sign({ 'user': uncodedToken.user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h', algorithm: 'HS256' });
             return accessToken;
         });
         return accessToken;
