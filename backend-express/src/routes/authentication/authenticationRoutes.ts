@@ -43,7 +43,7 @@ const authenticationFunctions = require('./authenticationFunctions')
  * @swagger
  * /auth/token:
  *    post:
- *      description: Returns specific user
+ *      description: Returns refreshed token
  *      security:
  *          - bearerAuth: [] 
  *      tags:
@@ -54,7 +54,30 @@ const authenticationFunctions = require('./authenticationFunctions')
  *        '500':
  *          description: Failed to refresh token of user
  */
-router.post('/token', authenticationFunctions.authenticateRefreshToken, async (req: express.Request, res: express.Response) =>{
+ router.post('/token', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) =>{
+    let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
+    if(newAccessToken == null){
+        return res.sendStatus(401)
+    }
+    res.json(newAccessToken)
+})
+
+/**
+ * @swagger
+ * /auth/tokenRefresh:
+ *    post:
+ *      description: Returns refreshed token
+ *      security:
+ *          - bearerAuth: [] 
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully refreshed token
+ *        '500':
+ *          description: Failed to refresh token of user
+ */
+router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, async (req: express.Request, res: express.Response) =>{
     let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
     if(newAccessToken == null){
         return res.sendStatus(401)
