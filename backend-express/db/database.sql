@@ -6,8 +6,9 @@ CREATE TABLE users(
     users_id SERIAL PRIMARY KEY,
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    refreshToken VARCHAR(50),
-    forgotToken VARCHAR(50),
+    isAdmin BOOLEAN DEFAULT false,
+    refreshToken VARCHAR(255),
+    forgotToken VARCHAR(255),
     forgotExpires TIMESTAMP
 );
 
@@ -30,7 +31,7 @@ CREATE TABLE drawerentries(
     drawerentry_id SERIAL PRIMARY KEY,
     creationDate TIMESTAMP NOT NULL,
     comment VARCHAR(255),
-    imageURL VARCHAR(50),
+    imageURL TEXT[],
     drawer_id INTEGER,
     CONSTRAINT fk_drawer
         FOREIGN KEY(drawer_id) 

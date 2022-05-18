@@ -15,12 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const drawerFunctions = require('./drawerFunctions');
-const authFunctions = require('../authentication/authenticationFunctions');
+const authenticationFunctions = require('../authentication/authenticationFunctions');
 /**
  * @swagger
  * /drawer/all:
  *    get:
  *      description: Returns all drawer
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -29,10 +31,37 @@ const authFunctions = require('../authentication/authenticationFunctions');
  *        '500':
  *          description: Failed to query for drawers
  */
-router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawers = yield drawerFunctions.getDrawers();
         res.json(drawers.rows);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /drawer/all/user:
+ *    get:
+ *      description: Returns all drawer for specific user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawer endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned drawers
+ *        '500':
+ *          description: Failed to query for drawers
+ */
+router.get('/all/user', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const drawer = yield drawerFunctions.getDrawersByUser(req);
+        if (!drawer) {
+            res.status(500).json({ message: "retrieval of drawers failed" });
+        }
+        res.status(201).json(drawer);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -60,7 +89,7 @@ router.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  */
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const drawer = yield drawerFunctions.getDrawer(req);
+        const drawer = yield drawerFunctions.getSingleDrawer(req);
         res.json(drawer);
     }
     catch (err) {
@@ -74,6 +103,8 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      description: Updates specific drawer
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -104,7 +135,7 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *                        type: number
  *                        required: false
  */
-router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedDrawer = yield drawerFunctions.updateDrawer(req);
         res.json(updatedDrawer);
@@ -118,6 +149,8 @@ router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* (
  * /drawer/{id}:
  *    delete:
  *      description: Delete specific drawer
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -133,7 +166,7 @@ router.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* (
  *            description: id of the drawer
  *            required: true
  */
-router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedDrawer = yield drawerFunctions.deleteDrawer(req);
         res.json(deletedDrawer);
@@ -167,7 +200,7 @@ router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
  *                     drawerTitle:
  *                        type: string
  */
-router.post('/add', authFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/add', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newDrawer = yield drawerFunctions.addDrawer(req);
         res.status(201).json(newDrawer);

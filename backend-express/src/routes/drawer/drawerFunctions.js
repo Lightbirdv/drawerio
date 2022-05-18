@@ -16,7 +16,13 @@ function getDrawers(req, res) {
         return drawers;
     });
 }
-function getDrawer(req, res) {
+function getDrawersByUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const drawers = pool.query('SELECT * FROM drawer where users_id=$1 ORDER BY drawer_id ASC', [req.user.users_id]);
+        return drawers;
+    });
+}
+function getSingleDrawer(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const drawer = pool.query('SELECT * FROM drawer WHERE drawer_id=$1', [req.params.id]);
         return drawer;
@@ -24,7 +30,7 @@ function getDrawer(req, res) {
 }
 function updateDrawer(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const drawer = yield getDrawer(req, res);
+        const drawer = yield getSingleDrawer(req, res);
         let oldDrawer = {
             drawer_id: drawer.rows[0].drawer_id,
             drawerTitle: drawer.rows[0].drawerTitle,
@@ -52,14 +58,22 @@ function addDrawer(req, res) {
         var drawer = req.body;
         drawer.users_id = req.user.users_id;
         drawer.creationDate = new Date();
-        const newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *', [drawer.drawerTitle, drawer.creationDate, drawer.users_id]);
+        let newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3)   RETURNING *', [drawer.drawerTitle, drawer.creationDate, drawer.users_id]);
+        return newDrawer;
+    });
+}
+function addDefaultDrawer(users_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *', ["My first Drawer!", new Date(), users_id]);
         return newDrawer;
     });
 }
 module.exports = {
     getDrawers,
-    getDrawer,
+    getDrawersByUser,
+    getSingleDrawer,
     updateDrawer,
     deleteDrawer,
     addDrawer,
+    addDefaultDrawer,
 };

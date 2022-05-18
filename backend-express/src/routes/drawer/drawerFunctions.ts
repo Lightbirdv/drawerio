@@ -8,20 +8,27 @@ interface Drawer {
     users_id: number,
 }
 
-async function getDrawers(req:any, res:any) {
+async function getDrawers(req: express.Request, res: express.Response) {
     const drawers = pool.query('SELECT * FROM drawer ORDER BY drawer_id ASC');
     return drawers
 }
 
-async function getDrawer(req:any, res:any) {
+async function getDrawersByUser(req: any, res: express.Response) {
+  const drawers = pool.query('SELECT * FROM drawer where users_id=$1 ORDER BY drawer_id ASC',
+    [req.user.users_id]
+  );
+  return drawers
+}
+
+async function getSingleDrawer(req: express.Request, res: express.Response) {
   const drawer = pool.query('SELECT * FROM drawer WHERE drawer_id=$1',
     [req.params.id]
   );
   return drawer
 }
 
-async function updateDrawer(req:any, res:any) {
-  const drawer = await getDrawer(req, res)
+async function updateDrawer(req: express.Request, res: express.Response) {
+  const drawer = await getSingleDrawer(req, res)
   let oldDrawer = { 
       drawer_id: drawer.rows[0].drawer_id, 
       drawerTitle: drawer.rows[0].drawerTitle, 
@@ -40,27 +47,36 @@ async function updateDrawer(req:any, res:any) {
   return newUser
 }
 
-async function deleteDrawer(req:any, res:any) {
+async function deleteDrawer(req: express.Request, res: express.Response) {
   const user = pool.query('DELETE FROM drawer WHERE drawer_id=$1',
     [req.params.id]
   );
   return user
 }
 
-async function addDrawer(req: any, res: any) {
+async function addDrawer(req: any, res: express.Response) {
   var drawer: Drawer = req.body;
   drawer.users_id = req.user.users_id
   drawer.creationDate = new Date();
-  const newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *',
+  let newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3)   RETURNING *',
     [drawer.drawerTitle,drawer.creationDate, drawer.users_id]
+  );
+  return newDrawer
+}
+
+async function addDefaultDrawer(users_id: number) {
+  const newDrawer = pool.query('INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *',
+    ["My first Drawer!", new Date(), users_id]
   );
   return newDrawer
 }
 
 module.exports = {
     getDrawers,
-    getDrawer,
+    getDrawersByUser,
+    getSingleDrawer,
     updateDrawer,
     deleteDrawer,
     addDrawer,
+    addDefaultDrawer,
 };

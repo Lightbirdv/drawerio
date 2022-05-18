@@ -1,28 +1,28 @@
 import express from 'express'
 
 const router = express.Router()
-const drawerFunctions = require('./drawerFunctions')
+const drawerentryFunctions = require('./drawerentryFunctions')
 const authenticationFunctions = require('../authentication/authenticationFunctions')
 
 /**
  * @swagger
- * /drawer/all:
+ * /drawerentry/all:
  *    get:
- *      description: Returns all drawer
+ *      description: Returns all drawerentries
  *      security:
  *          - bearerAuth: [] 
  *      tags:
- *          - drawer endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully returned all drawer
+ *          description: Successfully returned all drawerentries
  *        '500':
- *          description: Failed to query for drawers
+ *          description: Failed to query for drawerentries
  */
  router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
-        const drawers = await drawerFunctions.getDrawers()
-        res.json(drawers.rows);
+        const drawerentries = await drawerentryFunctions.getEntries()
+        res.json(drawerentries.rows);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -30,26 +30,31 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
 
 /**
  * @swagger
- * /drawer/all/user:
+ * /drawerentry/all/{drawerid}:
  *    get:
- *      description: Returns all drawer for specific user
- *      security:
- *          - bearerAuth: [] 
+ *      description: Returns all entries for specific drawer
  *      tags:
- *          - drawer endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully returned drawers
+ *          description: Successfully returned entries
  *        '500':
- *          description: Failed to query for drawers
+ *          description: Failed to query for entries
+ *      parameters:
+ *          - in: path
+ *            name: drawerid
+ *            schema:
+ *              type: integer
+ *            description: id of the drawer
+ *            required: true
  */
- router.get('/all/user', authenticationFunctions.authenticateToken, async(req: express.Request, res: express.Response) => {
+ router.get('/all/:drawerid', async(req: express.Request, res: express.Response) => {
     try {
-        const drawer = await drawerFunctions.getDrawersByUser(req)
-        if(!drawer) {
-            res.status(500).json({ message: "retrieval of drawers failed" })
+        const drawerentries = await drawerentryFunctions.getEntriesByDrawer(req)
+        if(!drawerentries) {
+            res.status(500).json({ message: "retrieval of drawerentries failed" })
         }
-        res.status(201).json(drawer);
+        res.status(201).json(drawerentries);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -57,28 +62,28 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
 
 /**
  * @swagger
- * /drawer/{id}:
+ * /drawerentry/{id}:
  *    get:
- *      description: Returns specific drawer
+ *      description: Returns specific entry
  *      tags:
- *          - drawer endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully returned drawer
+ *          description: Successfully returned entry
  *        '500':
- *          description: Failed to query for drawer
+ *          description: Failed to query for entry
  *      parameters:
  *          - in: path
  *            name: id
  *            schema:
  *              type: integer
- *            description: id of the drawer
+ *            description: id of the entry
  *            required: true
  */
 router.get('/:id', async(req: express.Request, res: express.Response) => {
     try {
-        const drawer = await drawerFunctions.getSingleDrawer(req)
-        res.json(drawer);
+        const entry = await drawerentryFunctions.getSingleEntry(req)
+        res.json(entry);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -86,26 +91,26 @@ router.get('/:id', async(req: express.Request, res: express.Response) => {
 
 /**
  * @swagger
- * /drawer/{id}:
+ * /drawerentry/{id}:
  *    patch:
  *      consumes:
  *          - application/x-www-form-urlencoded
- *      description: Updates specific drawer
+ *      description: Updates specific entry
  *      security:
  *          - bearerAuth: [] 
  *      tags:
- *          - drawer endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully update drawer
+ *          description: Successfully update entry
  *        '500':
- *          description: Failed to query for drawer
+ *          description: Failed to query for entry
  *      parameters:
  *          - in: path
  *            name: id
  *            schema:
  *              type: integer
- *            description: id of the drawer
+ *            description: id of the entry
  *            required: true
  *      requestBody:
  *          content:
@@ -113,20 +118,17 @@ router.get('/:id', async(req: express.Request, res: express.Response) => {
  *               schema:
  *                  type: object
  *                  properties:
- *                     drawerTitle:
+ *                     comment:
  *                        type: string
  *                        required: false
- *                     creationDate:
- *                        type: string
- *                        required: false
- *                     users_id:
- *                        type: number
+ *                     imageURL:
+ *                        type: string[]
  *                        required: false
  */
 router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
-        const updatedDrawer = await drawerFunctions.updateDrawer(req)
-        res.json(updatedDrawer);
+        const updatedEntry = await drawerentryFunctions.updateEntry(req)
+        res.json(updatedEntry);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -134,30 +136,30 @@ router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Reques
 
 /**
  * @swagger
- * /drawer/{id}:
+ * /drawerentry/{id}:
  *    delete:
- *      description: Delete specific drawer
+ *      description: Delete specific entry
  *      security:
  *          - bearerAuth: [] 
  *      tags:
- *          - drawer endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully deleted drawer
+ *          description: Successfully deleted entry
  *        '500':
- *          description: Failed to query for drawer
+ *          description: Failed to query for entry
  *      parameters:
  *          - in: path
  *            name: id
  *            schema:
  *              type: integer
- *            description: id of the drawer
+ *            description: id of the entry
  *            required: true
  */
 router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
-        const deletedDrawer = await drawerFunctions.deleteDrawer(req)
-        res.json(deletedDrawer);
+        const deletedEntry = await drawerentryFunctions.deleteEntry(req)
+        res.json(deletedEntry);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -166,33 +168,39 @@ router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Reque
 
 /**
  * @swagger
- * /drawer/add:
+ * /drawerentry/add:
  *    post:
- *      description: Returns specific user
+ *      description: Returns specific entry
  *      security:
  *          - bearerAuth: [] 
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      tags:
- *          - drawer endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully created drawer
+ *          description: Successfully created entry
  *        '500':
- *          description: Failed to create drawer
+ *          description: Failed to create entry
  *      requestBody:
  *          content:
  *             application/x-www-form-urlencoded:
  *               schema:
  *                  type: object
  *                  properties:
- *                     drawerTitle:
+ *                     comment:
  *                        type: string
+ *                     imageURL:
+ *                        type: array
+ *                        items:
+ *                           type: string
+ *                     drawer_id:
+ *                        type: number
  */
-router.post('/add', authenticationFunctions.authenticateToken, async(req: express.Request, res: express.Response) => {
+router.post('/add', async(req: express.Request, res: express.Response) => {
     try {
-        var newDrawer = await drawerFunctions.addDrawer(req)
-        res.status(201).json(newDrawer)
+        var newEntry = await drawerentryFunctions.addEntry(req)
+        res.status(201).json(newEntry)
     } catch (err: any) {
         res.status(400).json({ message: err.message })
     }

@@ -1,5 +1,4 @@
-import express from 'express'
-
+import express from 'express';
 const router = express.Router()
 const authenticationFunctions = require('./authenticationFunctions')
 
@@ -27,17 +26,63 @@ const authenticationFunctions = require('./authenticationFunctions')
  *                        type: string
  *                   
  */
- router.post('/login', async(req, res) => {
+ router.post('/login', async(req: express.Request, res: express.Response) => {
     try {
-        const loginToken = await authenticationFunctions.login(req, res)
-        if(!loginToken) {
+        const {accessToken, refreshToken} = await authenticationFunctions.login(req, res)
+        if(!accessToken) {
             res.status(500).json({ message: "login not successful!" })
         } else {
-            res.status(200).json(loginToken);
+            res.status(200).json(accessToken);
         }
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
+})
+
+/**
+ * @swagger
+ * /auth/token:
+ *    post:
+ *      description: Returns refreshed token
+ *      security:
+ *          - bearerAuth: [] 
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully refreshed token
+ *        '500':
+ *          description: Failed to refresh token of user
+ */
+ router.post('/token', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) =>{
+    let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
+    if(newAccessToken == null){
+        return res.sendStatus(401)
+    }
+    res.json(newAccessToken)
+})
+
+/**
+ * @swagger
+ * /auth/tokenRefresh:
+ *    post:
+ *      description: Returns refreshed token
+ *      security:
+ *          - bearerAuth: [] 
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully refreshed token
+ *        '500':
+ *          description: Failed to refresh token of user
+ */
+router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, async (req: express.Request, res: express.Response) =>{
+    let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
+    if(newAccessToken == null){
+        return res.sendStatus(401)
+    }
+    res.json(newAccessToken)
 })
 
 module.exports = router

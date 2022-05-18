@@ -14,44 +14,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const userFunctions = require('./userFunctions');
+const drawerentryFunctions = require('./drawerentryFunctions');
 const authenticationFunctions = require('../authentication/authenticationFunctions');
 /**
  * @swagger
- * components:
- *  schemas:
- *      Login:
- *          type: object
- *          required:
- *              - email
- *              - password
- *          properties:
- *              email:
- *                  type: string
- *                  description: email of the user
- *              password:
- *                  type: string
- *                  description: password of the user
-*/
-/**
- * @swagger
- * /user/all:
+ * /drawerentry/all:
  *    get:
- *      description: Returns all users
+ *      description: Returns all drawerentries
  *      security:
  *          - bearerAuth: []
  *      tags:
- *          - user endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully returned all user
+ *          description: Successfully returned all drawerentries
  *        '500':
- *          description: Failed to query for users
+ *          description: Failed to query for drawerentries
  */
 router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield userFunctions.getUsers();
-        res.json(users.rows);
+        const drawerentries = yield drawerentryFunctions.getEntries();
+        res.json(drawerentries.rows);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -59,28 +42,60 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
 }));
 /**
  * @swagger
- * /user/{id}:
+ * /drawerentry/all/{drawerid}:
  *    get:
- *      description: Returns specific user
+ *      description: Returns all entries for specific drawer
  *      tags:
- *          - user endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully returned user
+ *          description: Successfully returned entries
  *        '500':
- *          description: Failed to query for user
+ *          description: Failed to query for entries
+ *      parameters:
+ *          - in: path
+ *            name: drawerid
+ *            schema:
+ *              type: integer
+ *            description: id of the drawer
+ *            required: true
+ */
+router.get('/all/:drawerid', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const drawerentries = yield drawerentryFunctions.getEntriesByDrawer(req);
+        if (!drawerentries) {
+            res.status(500).json({ message: "retrieval of drawerentries failed" });
+        }
+        res.status(201).json(drawerentries);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /drawerentry/{id}:
+ *    get:
+ *      description: Returns specific entry
+ *      tags:
+ *          - drawerentry endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned entry
+ *        '500':
+ *          description: Failed to query for entry
  *      parameters:
  *          - in: path
  *            name: id
  *            schema:
  *              type: integer
- *            description: id of the user
+ *            description: id of the entry
  *            required: true
  */
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield userFunctions.getUser(req);
-        res.json(user);
+        const entry = yield drawerentryFunctions.getSingleEntry(req);
+        res.json(entry);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -88,26 +103,26 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 /**
  * @swagger
- * /user/{id}:
+ * /drawerentry/{id}:
  *    patch:
  *      consumes:
  *          - application/x-www-form-urlencoded
- *      description: Updates specific user
+ *      description: Updates specific entry
  *      security:
  *          - bearerAuth: []
  *      tags:
- *          - user endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully update user
+ *          description: Successfully update entry
  *        '500':
- *          description: Failed to query for user
+ *          description: Failed to query for entry
  *      parameters:
  *          - in: path
  *            name: id
  *            schema:
  *              type: integer
- *            description: id of the user
+ *            description: id of the entry
  *            required: true
  *      requestBody:
  *          content:
@@ -115,17 +130,17 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *               schema:
  *                  type: object
  *                  properties:
- *                     email:
+ *                     comment:
  *                        type: string
  *                        required: false
- *                     password:
- *                        type: string
+ *                     imageURL:
+ *                        type: string[]
  *                        required: false
  */
 router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updateduser = yield userFunctions.updateUser(req);
-        res.json(updateduser);
+        const updatedEntry = yield drawerentryFunctions.updateEntry(req);
+        res.json(updatedEntry);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -133,30 +148,30 @@ router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(vo
 }));
 /**
  * @swagger
- * /user/{id}:
+ * /drawerentry/{id}:
  *    delete:
- *      description: Delete specific user
+ *      description: Delete specific entry
  *      security:
  *          - bearerAuth: []
  *      tags:
- *          - user endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully deleted user
+ *          description: Successfully deleted entry
  *        '500':
- *          description: Failed to query for user
+ *          description: Failed to query for entry
  *      parameters:
  *          - in: path
  *            name: id
  *            schema:
  *              type: integer
- *            description: id of the user
+ *            description: id of the entry
  *            required: true
  */
 router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deleteduser = yield userFunctions.deleteUser(req);
-        res.json(deleteduser);
+        const deletedEntry = yield drawerentryFunctions.deleteEntry(req);
+        res.json(deletedEntry);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -164,73 +179,39 @@ router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(v
 }));
 /**
  * @swagger
- * /user/register:
+ * /drawerentry/add:
  *    post:
- *      consumes:
- *          - application/x-www-form-urlencoded
- *      description: Updates specific user
- *      tags:
- *          - user endpoints
- *      responses:
- *        '200':
- *          description: Successfully update user
- *        '500':
- *          description: Failed to query for user
- *      requestBody:
- *          content:
- *             application/x-www-form-urlencoded:
- *               schema:
- *                  type: object
- *                  properties:
- *                     email:
- *                        type: string
- *                     password:
- *                        type: string
- */
-router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        var newUser = yield userFunctions.registerUser(req);
-        if (!newUser) {
-            res.status(500).json({ message: "register not successful" });
-        }
-        res.status(201).json(newUser);
-    }
-    catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-}));
-/**
- * @swagger
- * /user/promotetoadmin:
- *    post:
- *      consumes:
- *          - application/x-www-form-urlencoded
- *      description: Updates specific user
+ *      description: Returns specific entry
  *      security:
  *          - bearerAuth: []
+ *      consumes:
+ *          - application/x-www-form-urlencoded
  *      tags:
- *          - user endpoints
+ *          - drawerentry endpoints
  *      responses:
  *        '200':
- *          description: Successfully update user
+ *          description: Successfully created entry
  *        '500':
- *          description: Failed to query for user
+ *          description: Failed to create entry
  *      requestBody:
  *          content:
  *             application/x-www-form-urlencoded:
  *               schema:
  *                  type: object
  *                  properties:
- *                     email:
+ *                     comment:
  *                        type: string
+ *                     imageURL:
+ *                        type: array
+ *                        items:
+ *                           type: string
+ *                     drawer_id:
+ *                        type: number
  */
-router.post('/promotetoadmin', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/add', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        var updatedUser = yield userFunctions.promoteToAdmin(req);
-        if (!updatedUser) {
-            res.status(500).json({ message: "promotion not successful" });
-        }
-        res.status(201).json(updatedUser);
+        var newEntry = yield drawerentryFunctions.addEntry(req);
+        res.status(201).json(newEntry);
     }
     catch (err) {
         res.status(400).json({ message: err.message });

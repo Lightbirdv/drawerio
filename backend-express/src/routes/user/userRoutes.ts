@@ -2,6 +2,7 @@ import express from 'express'
 
 const router = express.Router()
 const userFunctions = require('./userFunctions')
+const authenticationFunctions = require('../authentication/authenticationFunctions')
 
 /**
  * @swagger 
@@ -26,6 +27,8 @@ const userFunctions = require('./userFunctions')
  * /user/all:
  *    get:
  *      description: Returns all users
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - user endpoints
  *      responses:
@@ -34,7 +37,7 @@ const userFunctions = require('./userFunctions')
  *        '500':
  *          description: Failed to query for users
  */
-router.get('/all', async(req, res) => {
+router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
         const users = await userFunctions.getUsers()
         res.json(users.rows);
@@ -63,7 +66,7 @@ router.get('/all', async(req, res) => {
  *            description: id of the user
  *            required: true
  */
-router.get('/:id', async(req, res) => {
+router.get('/:id', async(req: express.Request, res: express.Response) => {
     try {
         const user = await userFunctions.getUser(req)
         res.json(user);
@@ -79,6 +82,8 @@ router.get('/:id', async(req, res) => {
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      description: Updates specific user
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - user endpoints
  *      responses:
@@ -106,7 +111,7 @@ router.get('/:id', async(req, res) => {
  *                        type: string
  *                        required: false
  */
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const updateduser = await userFunctions.updateUser(req)
         res.json(updateduser);
@@ -120,6 +125,8 @@ router.patch('/:id', async (req, res) => {
  * /user/{id}:
  *    delete:
  *      description: Delete specific user
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - user endpoints
  *      responses:
@@ -135,7 +142,7 @@ router.patch('/:id', async (req, res) => {
  *            description: id of the user
  *            required: true
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deleteduser = await userFunctions.deleteUser(req)
         res.json(deleteduser);
@@ -169,10 +176,50 @@ router.delete('/:id', async (req, res) => {
  *                     password:
  *                        type: string
  */
-router.post('/register', async(req, res) => {
+router.post('/register', async(req: express.Request, res: express.Response) => {
     try {
         var newUser = await userFunctions.registerUser(req)
+        if(!newUser) {
+            res.status(500).json({ message: "register not successful" })
+        }
         res.status(201).json(newUser)
+    } catch (err: any) {
+        res.status(400).json({ message: err.message })
+    }
+})
+
+/**
+ * @swagger
+ * /user/promotetoadmin:
+ *    post:
+ *      consumes:
+ *          - application/x-www-form-urlencoded
+ *      description: Updates specific user
+ *      security:
+ *          - bearerAuth: [] 
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully update user
+ *        '500':
+ *          description: Failed to query for user
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ */
+ router.post('/promotetoadmin', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
+    try {
+        var updatedUser = await userFunctions.promoteToAdmin(req)
+        if(!updatedUser) {
+            res.status(500).json({ message: "promotion not successful" })
+        }
+        res.status(201).json(updatedUser)
     } catch (err: any) {
         res.status(400).json({ message: err.message })
     }
