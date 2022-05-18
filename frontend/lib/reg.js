@@ -5,8 +5,9 @@ export const regUser = (email,password) => {
 const {data} = axios.post('http://localhost:5000/user/register', {email: email, password: password}).then((response) => {
         console.log(response.status);
         if (response !== null && email !== "" && password !== "") {
-          const token = localStorage.setItem("token", response.data);
-          Router.push("/privatepage")
+         /*  const token = localStorage.setItem("token", response.data);
+          const user = localStorage.setItem("user", email); */
+          Router.push("/")
         } else{
             alert("Unfortunately the creation of the user failed")
         }

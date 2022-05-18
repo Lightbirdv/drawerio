@@ -1,47 +1,49 @@
 import { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
+import { useRouter } from 'next/router';
 
-function clearx(){
-    console.log(localStorage.getItem('token'));
+
+
+function clearx() {
     localStorage.clear();
-    console.log(localStorage.getItem('token'));
 }
 
-function NavLink({to, children}) {
+function NavLink({ to, children }) {
 
-   
+
 
     return <a href={to} className={`mx-4`}>
         {children}
     </a>
 }
 
-function MobileNav({open, setOpen}) {
+function MobileNav({ open, setOpen }) {
     return (
         <div className={`absolute top-0 left-0 h-screen w-screen bg-white transform ${open ? "-translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md `}>
             <div className="flex items-center justify-center filter drop-shadow-md bg-white h-20"> {/*logo container*/}
                 <a className="text-xl font-semibold" href="/">LOGO</a>
             </div>
             <div className="flex flex-col ml-4">
-                <a className="text-xl font-medium my-4" href="/about" onClick={() => setTimeout(() => {setOpen(!open)}, 100)}>
-                
+                <a className="text-xl font-medium my-4" href="/about" onClick={() => setTimeout(() => { setOpen(!open) }, 100)}>
+
                 </a>
-                <a className="text-xl font-normal my-4" href="/contact" onClick={() => setTimeout(() => {setOpen(!open)}, 100)}>
+                <a className="text-xl font-normal my-4" href="/contact" onClick={() => setTimeout(() => { setOpen(!open) }, 100)}>
                     Contact
                 </a>
-            </div>  
+            </div>
         </div>
     )
 }
 
 export default function Navbar() {
+    const router = useRouter();
 
     const [open, setOpen] = useState(false)
     return (
         <nav className="flex filter drop-shadow-md bg-white px-4 py-4 h-20 items-center">
-            <MobileNav open={open} setOpen={setOpen}/>
+            <MobileNav open={open} setOpen={setOpen} />
             <div className="w-3/12 flex items-center">
-                <a className="text-2xl font-semibold" href="/"><img src="assets/logo.jpg" className="img-logo" style={{marginRight: "15px", maxHeight: "130px"}}/></a>
+                <a className="text-2xl font-semibold" href="/"><img src="assets/logo.jpg" className="img-logo" style={{ marginRight: "15px", maxHeight: "130px" }} /></a>
                 <a className="text-2xl font-semibold" href="/">Drawer.io</a>
             </div>
 
@@ -57,7 +59,7 @@ export default function Navbar() {
                 </div>
 
                 <div className="hidden md:flex">
-                   {/*  <NavLink to="/">
+                    {/*  <NavLink to="/">
                         Home
                     </NavLink>
                     <NavLink to="/about">
@@ -66,8 +68,12 @@ export default function Navbar() {
                     <NavLink to="/Contact">
                         Contact
                     </NavLink> */}
+
+                    <NavLink>
+                        <button onClick={router.back} className="x">back</button>
+                    </NavLink>
                     <NavLink to="/">
-                    <button onClick={clearx} className="x">Logout</button>
+                        <button onClick={clearx} className="x">Logout</button>
                     </NavLink>
                 </div>
             </div>
