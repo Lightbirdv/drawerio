@@ -36,7 +36,7 @@ class LoginComponent extends React.Component {
               <form onSubmit={this.handleSubmit}>
                 {/* Email input */}
                 <div className="form-outline mb-4">
-                  <input type="email" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
+                  <input type="test" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
                   <label className="form-label" htmlFor="form3Example3">Email address</label>
                    
                 </div>

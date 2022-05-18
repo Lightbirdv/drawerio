@@ -6,24 +6,20 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Router from 'next/router';
-import { useRouter } from 'next/router';
 import { addDrawer } from '../lib/newDrawer';
 import { updateDrawer } from "../lib/updateDrawer";
 import { deleteD } from "../lib/deleteD";
 
 
 
-const AxiosPost = () => {
-
-  const router = useRouter();
-  const forceReload = () => {
-    router.reload();
-  }
-
-  const [state, setState] = useState({ drawerName: '' })
-  const [newDrawName, setName] = useState('');
-  const [newDime, setDime] = useState('');
-  const [newUid, setUid] = useState('');
+const ThirdPage = () => {
+  const [state, setState] = useState({
+    drawerName: '',
+    newName: '',
+    dime: '',
+    userID: ''
+  })
+  
 
 
   const [show, setShow] = useState(false);
@@ -38,72 +34,74 @@ const AxiosPost = () => {
     setState({ [event.target.name]: event.target.value });
     console.log(event.target.name)
   }
-  const handleName = event => {
-    setName({ newName: event.target.value });
-    console.log(event.target.name)
-  }
-  const handledime = event => {
-    setDime({ dime: event.target.value });
-    console.log(event.target.name)
-  }
-  const handleUid = event => {
-    setUid({ userID: event.target.value });
-    console.log(event.target.name)
-  }
-
 
   const handleSubmit = event => {
     const { drawerName } = state;
     console.log(drawerName)
     addDrawer(localStorage.getItem('token'), drawerName)
-    forceReload();
   }
 
   const handleUpdate = (e, _id) => {
-    const { newName } = newDrawName;
-    const { dime } = newDime;
-    const { userID } = newUid;
+    
+    const { newName, dime, userID } = state;
     e.preventDefault();
     console.log(newName, dime, userID, _id)
     updateDrawer(newName, dime, userID, _id)
-    forceReload();
   }
 
   const deleteDrawer = (e, _id) => {
     e.preventDefault();
     deleteD(_id)
-    forceReload();
   }
 
-  const goNext = (e, _id) => {
+  const goNext = (e) => {
     e.preventDefault();
-    localStorage.setItem("drawer_id", _id);
-    localStorage.getItem("drawer_id")
     Router.push("/thirdpage")
   }
 
-  const goToUserManagement = (e) => {
+  const goToUserManagement  = (e) => {
     e.preventDefault();
-    Router.push("/userpage")
+    Router.push("/thirdpage")
   }
 
 
-  const [get, setPosts] = useState({ blogs: [] });
+  const [posts, setPosts] = useState({ blogs: [] });
 
   useEffect(() => {
-    const fetchPostList = async () => {
-      const { data } = await axios.get(
-        "http://localhost:5000/drawer/all/user", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' +localStorage.getItem('token')
+    }
+   /*  const fetchPostList = async () => { */
+      /* const { data } = await axios(
+        "http://localhost:5000/drawerentry/all",{
+          headers: headers
+        }
+      ); */
 
-      });
-      setPosts({ blogs: data.rows });
-      console.log(data.rows);
+     /*  const {data} = axios("http://localhost:5000/drawerentry/all",{
+        headers: headers
+      }
+       ).then((response) => {
+          console.log(response.data[0].imageurl);
+        })
+      setPosts({ blogs: data });
+      console.log(data);
     };
     fetchPostList();
-  }, [setPosts]);
+  }, [setPosts]); */
+
+  const fetchPostList = async () => {
+    const { data } = await axios(
+      "http://localhost:5000/drawerentry/all/"+localStorage.getItem("drawer_id") ,{  
+        headers: headers
+      }
+    );
+    setPosts({ blogs: data.rows });
+    console.log(data.rows);
+  };
+  fetchPostList();
+}, [setPosts]);
 
   return (
     <div style={{ marginTop: "50px" }}>
@@ -111,10 +109,9 @@ const AxiosPost = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Title</th>
+            <th>comment</th>
             <th>Date</th>
-            <th><button type="button" class="btn btn-secondary" onClick={handleShow}>New Drawer</button>
-              <button type="button" className="btn btn-secondary" onClick={goToUserManagement}>UserManagement</button>
+            <th>URL</th>
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>Modal heading</Modal.Title>
@@ -136,17 +133,18 @@ const AxiosPost = () => {
                     Save Changes
                   </Button>
                 </Modal.Footer>
-              </Modal></th>
+              </Modal>
           </tr>
         </thead>
         <tbody>
-          {get.blogs &&
-            get.blogs.map((item) => (
+          {posts.blogs &&
+            posts.blogs.map((item) => (
               <tr key={item.id}>
-                <td>{item.drawer_id}</td>
-                <td>{item.drawertitle}</td>
+                <td>{item.drawerentry_id}</td>
+                <td>{item.comment}</td>
                 <td>{item.creationdate}</td>
-                <td><button type="button" class="btn btn-success" style={{ marginRight: "10px" }} onClick={(e) => { { goNext(e, item.drawer_id) } }}>Open</button>
+                <td>{item.imageurl}</td>
+                <td><button type="button" class="btn btn-success" style={{ marginRight: "10px" }} onClick={goNext}>Open</button>
                   <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={handleShowUpd}>Edit</button>
                   <Modal show={showUpd} onHide={handleCloseUpd}>
                     <Modal.Header closeButton>
@@ -156,15 +154,15 @@ const AxiosPost = () => {
                       <Form>
                         <Form.Group className="mb-3" id="updateName">
                           <Form.Label>New Name</Form.Label>
-                          <Form.Control id="drawerNew" type="text" placeholder="Name" name="newName" onChange={handleName} />
+                          <Form.Control id="drawerNew" type="text" placeholder="Name" name="newName" onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" id="updateDate">
                           <Form.Label>New Date</Form.Label>
-                          <Form.Control id="drawerNew" type="text" placeholder="Date" name="dime" onChange={handledime} />
+                          <Form.Control id="drawerNew" type="text" placeholder="Date" name="dime" onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" id="updateUser">
                           <Form.Label>New User</Form.Label>
-                          <Form.Control id="drawerNew" type="text" placeholder="User" name="userID" onChange={handleUid} />
+                          <Form.Control id="drawerNew" type="text" placeholder="User" name="userID" onChange={handleChange} />
                         </Form.Group>
                       </Form>
                     </Modal.Body>
@@ -187,4 +185,4 @@ const AxiosPost = () => {
   );
 };
 
-export default AxiosPost;
+export default ThirdPage;
