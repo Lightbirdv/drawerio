@@ -16,7 +16,6 @@ const jwt = require('jsonwebtoken');
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!req.body) {
-            console.log("Error not json body found");
             return null;
         }
         let user = yield userFunctions.getUserByEmail(req.body.email, res);
@@ -44,7 +43,6 @@ function authenticateToken(req, res, next) {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.sendStatus(403);
-            console.log(uncodedToken);
             let user = yield userFunctions.getUserByEmail(uncodedToken.user, res);
             req.user = user;
             next();
@@ -58,7 +56,6 @@ function authenticateRefreshToken(req, res, next) {
         jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.sendStatus(403);
-            console.log(uncodedToken);
             let user = yield userFunctions.getUserByEmail(uncodedToken.user, res);
             req.user = user;
             next();
@@ -105,7 +102,7 @@ function isAdmin(req, res, next) {
                 next();
             }
             else {
-                return res.status(500).send({ message: 'This function is only available for admins' });
+                return res.status(403).send({ message: 'This function is only available for admins' });
             }
         }));
     });

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const userFunctions = require('../user/userFunctions')
 const jwt = require('jsonwebtoken')
 
-interface User {
+export interface User {
   users_id: number;
   email: string;
   password: string;
@@ -20,7 +20,6 @@ interface UncodedToken {
 
 async function login(req: express.Request, res: express.Response) {
     if(!req.body) {
-        console.log("Error not json body found")
         return null
     }
     let user = await userFunctions.getUserByEmail(req.body.email, res)
@@ -45,7 +44,7 @@ async function authenticateToken(req: express.Request, res: express.Response, ne
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any, uncodedToken: UncodedToken) => {
         if (err) return res.sendStatus(403)
-        console.log(uncodedToken)
+        
         let user = await userFunctions.getUserByEmail(uncodedToken.user, res)
         req.user = user
         next()
@@ -57,7 +56,6 @@ async function authenticateRefreshToken(req: express.Request, res: express.Respo
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err: any, uncodedToken: UncodedToken) => {
         if (err) return res.sendStatus(403)
-        console.log(uncodedToken)
         let user = await userFunctions.getUserByEmail(uncodedToken.user, res)
         req.user = user
         next()
@@ -98,7 +96,7 @@ async function isAdmin(req: any, res: express.Response, next:express.NextFunctio
             req.user = user
             next()
         } else {
-            return res.status(500).send ({ message : 'This function is only available for admins' })
+            return res.status(403).send ({ message : 'This function is only available for admins' })
         }
     })
 }

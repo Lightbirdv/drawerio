@@ -51,6 +51,8 @@ router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, 
  * /user/{id}:
  *    get:
  *      description: Returns specific user
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - user endpoints
  *      responses:
@@ -66,7 +68,7 @@ router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, 
  *            description: id of the user
  *            required: true
  */
-router.get('/:id', async(req: express.Request, res: express.Response) => {
+router.get('/:id', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
         const user = await userFunctions.getUser(req)
         res.json(user);

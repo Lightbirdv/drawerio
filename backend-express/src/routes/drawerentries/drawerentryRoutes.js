@@ -34,7 +34,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
 router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawerentries = yield drawerentryFunctions.getEntries();
-        res.json(drawerentries.rows);
+        res.json(drawerentries);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -45,6 +45,8 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  * /drawerentry/all/{drawerid}:
  *    get:
  *      description: Returns all entries for specific drawer
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -60,7 +62,7 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  *            description: id of the drawer
  *            required: true
  */
-router.get('/all/:drawerid', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/all/:drawerid', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawerentries = yield drawerentryFunctions.getEntriesByDrawer(req);
         if (!drawerentries) {
@@ -77,6 +79,8 @@ router.get('/all/:drawerid', (req, res) => __awaiter(void 0, void 0, void 0, fun
  * /drawerentry/{id}:
  *    get:
  *      description: Returns specific entry
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -92,10 +96,16 @@ router.get('/all/:drawerid', (req, res) => __awaiter(void 0, void 0, void 0, fun
  *            description: id of the entry
  *            required: true
  */
-router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const entry = yield drawerentryFunctions.getSingleEntry(req);
-        res.json(entry);
+        if (req.entry) {
+            const entry = req.entry;
+            res.json(entry);
+        }
+        else {
+            const entry = yield drawerentryFunctions.getSingleEntry(req);
+            res.json(entry);
+        }
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -137,7 +147,7 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *                        type: string[]
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedEntry = yield drawerentryFunctions.updateEntry(req);
         res.json(updatedEntry);
@@ -168,7 +178,7 @@ router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(vo
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedEntry = yield drawerentryFunctions.deleteEntry(req);
         res.json(deletedEntry);
@@ -208,7 +218,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(v
  *                     drawer_id:
  *                        type: number
  */
-router.post('/add', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newEntry = yield drawerentryFunctions.addEntry(req);
         res.status(201).json(newEntry);
