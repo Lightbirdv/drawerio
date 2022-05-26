@@ -77,10 +77,16 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the drawer
  *            required: true
  */
-router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
+router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async(req: any, res: express.Response, next:express.NextFunction) => {
     try {
-        const drawer = await drawerFunctions.getSingleDrawer(req)
-        res.json(drawer);
+        if(req.drawer) {
+            const drawer = req.drawer
+            res.json(drawer);
+        } else {
+            const drawer = await drawerFunctions.getSingleDrawer(req, res ,next);
+            res.json(drawer);
+        }
+        
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -122,7 +128,7 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.is
 router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const updatedDrawer = await drawerFunctions.updateDrawer(req)
-        res.json(updatedDrawer);
+        res.status(201).json("successfully changed a drawer")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -153,7 +159,7 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.
 router.delete('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deletedDrawer = await drawerFunctions.deleteDrawer(req)
-        res.json(deletedDrawer);
+        res.status(201).json("successfully deleted a drawer")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }

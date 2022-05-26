@@ -150,7 +150,7 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctio
 router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedEntry = yield drawerentryFunctions.updateEntry(req);
-        res.json(updatedEntry);
+        res.status(201).json("successfully changed a drawer entry");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -181,7 +181,7 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunct
 router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedEntry = yield drawerentryFunctions.deleteEntry(req);
-        res.json(deletedEntry);
+        res.status(201).json("successfully deleted a drawer entry");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -221,7 +221,7 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
 router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newEntry = yield drawerentryFunctions.addEntry(req);
-        res.status(201).json(newEntry);
+        res.status(201).json("successfully created a drawer entry");
     }
     catch (err) {
         res.status(400).json({ message: err.message });

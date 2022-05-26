@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
 const drawerFunctions = require('../drawer/drawerFunctions');
+const HttpException_1 = __importDefault(require("../../exceptions/HttpException"));
 function getEntries(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const entries = yield pool.query('SELECT * FROM drawerentries ORDER BY drawerentry_id ASC');
@@ -23,10 +27,12 @@ function getEntriesByDrawer(req, res) {
         return entries.rows;
     });
 }
-function getSingleEntry(req, res) {
+function getSingleEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("getsingleentry");
         const result = yield pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1', [req.params.id]);
+        if (result.rowCount == 0) {
+            return next(new HttpException_1.default(404, 'Drawerentry not found'));
+        }
         let entry = {
             comment: result.rows[0].comment,
             imageURL: result.rows[0].imageurl,
@@ -36,9 +42,12 @@ function getSingleEntry(req, res) {
         return entry;
     });
 }
-function updateEntry(req, res) {
+function updateEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const entry = yield getSingleEntry(req, res);
+        const entry = yield getSingleEntry(req, res, next);
+        if (!entry) {
+            return next();
+        }
         const newEntry = pool.query('UPDATE drawerentries SET drawer_id=$1, comment=$2, imageURL=$3, creationDate=$4  WHERE drawerentry_id=$5', [
             (req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment),
             (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : entry.imageURL),
@@ -72,14 +81,16 @@ function isAuthorOrAdmin(req, res, next) {
             req.params.id = req.body.drawer_id;
         }
         else {
-            let entry = yield getSingleEntry(req, res);
-            console.log(entry);
+            let entry = yield getSingleEntry(req, res, next);
+            if (!entry) {
+                return next();
+            }
             req.entry = entry;
             req.params.id = entry.drawer_id;
         }
-        let drawer = yield drawerFunctions.getSingleDrawer(req, res);
+        let drawer = yield drawerFunctions.getSingleDrawer(req, res, next);
         if (!drawer || !req.user)
-            return res.sendStatus(401);
+            return next();
         if (req.user.isadmin == true) {
             next();
         }

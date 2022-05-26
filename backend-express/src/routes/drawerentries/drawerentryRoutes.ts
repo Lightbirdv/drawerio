@@ -138,7 +138,7 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctio
 router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const updatedEntry = await drawerentryFunctions.updateEntry(req)
-        res.json(updatedEntry);
+        res.status(201).json("successfully changed a drawer entry")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -169,7 +169,7 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunct
 router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deletedEntry = await drawerentryFunctions.deleteEntry(req)
-        res.json(deletedEntry);
+        res.status(201).json("successfully deleted a drawer entry")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -210,7 +210,7 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
 router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
     try {
         var newEntry = await drawerentryFunctions.addEntry(req)
-        res.status(201).json(newEntry)
+        res.status(201).json("successfully created a drawer entry")
     } catch (err: any) {
         res.status(400).json({ message: err.message })
     }

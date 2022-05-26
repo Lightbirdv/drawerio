@@ -1,4 +1,5 @@
 import express from 'express'
+import HttpException from '../../exceptions/HttpException'
 const pool = require('../../queries').pool;
 const bcrypt = require('bcrypt');
 const userFunctions = require('../user/userFunctions')
@@ -96,7 +97,7 @@ async function isAdmin(req: any, res: express.Response, next:express.NextFunctio
             req.user = user
             next()
         } else {
-            return res.status(403).send ({ message : 'This function is only available for admins' })
+            next(new HttpException(403, 'This function is only available for admins'));
         }
     })
 }

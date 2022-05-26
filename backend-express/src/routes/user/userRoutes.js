@@ -79,9 +79,9 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  *            description: id of the user
  *            required: true
  */
-router.get('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', authenticationFunctions.isAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield userFunctions.getUser(req);
+        const user = yield userFunctions.getUser(req, res, next);
         res.json(user);
     }
     catch (err) {
@@ -124,10 +124,10 @@ router.get('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  *                        type: string
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch('/:id', authenticationFunctions.isAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updateduser = yield userFunctions.updateUser(req);
-        res.json(updateduser);
+        const updateduser = yield userFunctions.updateUser(req, res, next);
+        res.status(201).json("successfully changed a user");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -158,7 +158,7 @@ router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(vo
 router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deleteduser = yield userFunctions.deleteUser(req);
-        res.json(deleteduser);
+        res.status(201).json("successfully deleted a user");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -195,7 +195,7 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
         if (!newUser) {
             res.status(500).json({ message: "register not successful" });
         }
-        res.status(201).json(newUser);
+        res.status(201).json("successfully registered a new user");
     }
     catch (err) {
         res.status(400).json({ message: err.message });

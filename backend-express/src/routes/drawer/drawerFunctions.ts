@@ -1,6 +1,7 @@
 import express from 'express'
 const pool = require('../../queries').pool;
 const jwt = require('jsonwebtoken')
+import HttpException from '../../exceptions/HttpException'
 
 export interface Drawer {
     drawer_id: number;
@@ -22,10 +23,13 @@ async function getDrawersByUser(req: any, res: express.Response) {
   return drawers.rows
 }
 
-async function getSingleDrawer(req: express.Request, res: express.Response) {
+async function getSingleDrawer(req: express.Request, res: express.Response, next:express.NextFunction) {
   const result = await pool.query('SELECT * FROM drawer WHERE drawer_id=$1',
     [req.params.id]
   );
+  if(result.rowCount == 0) {
+    return next(new HttpException(404, 'Drawer not found'));
+  } 
   let drawer: Drawer = {
     drawer_id: result.rows[0].drawer_id,
     drawerTitle: result.rows[0].drawertitle,
@@ -36,8 +40,11 @@ async function getSingleDrawer(req: express.Request, res: express.Response) {
   return drawer
 }
 
-async function updateDrawer(req: express.Request, res: express.Response) {
-  const drawer = await getSingleDrawer(req, res)
+async function updateDrawer(req: express.Request, res: express.Response, next:express.NextFunction) {
+  const drawer : Drawer | void = await getSingleDrawer(req, res, next)
+  if (!drawer) {
+    return next()
+  }
   const newUser = pool.query('UPDATE drawer SET drawer_id=$1, drawerTitle=$2, creationDate=$3, users_id=$4  WHERE drawer_id=$5',
     [
         (req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : drawer.drawer_id),
@@ -75,11 +82,15 @@ async function addDefaultDrawer(users_id: number) {
 }
 
 async function isAuthorOrAdmin(req: any, res: express.Response, next:express.NextFunction) {
-  let drawer: Drawer = await getSingleDrawer(req, res)
-  if(!drawer || !req.user) return res.sendStatus(401)
-  if(req.user.isadmin == true){
-    next()
-  } else if( drawer.users_id == req.user.users_id) { 
+  let drawer: Drawer | void = await getSingleDrawer(req, res, next)
+  if (!drawer) {
+    return next()
+  }
+  if(!req.user) {
+     return next(new HttpException(404, 'No request user'));
+  } 
+  req.drawer = drawer;
+  if(req.user.isadmin == true || drawer.users_id == req.user.users_id){
     next()
   } else {
     return res.status(500).send ({ message : 'This function is only available for admins or the user of the drawer' })

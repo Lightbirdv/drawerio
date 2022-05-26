@@ -2,6 +2,7 @@ import express from 'express'
 const pool = require('../../queries').pool;
 import { Drawer } from '../drawer/drawerFunctions';
 const drawerFunctions = require('../drawer/drawerFunctions');
+import HttpException from '../../exceptions/HttpException';
 
 export interface Drawerentry {
     comment: string;
@@ -22,11 +23,13 @@ async function getEntriesByDrawer(req: express.Request, res: express.Response) {
   return entries.rows
 }
 
-async function getSingleEntry(req: express.Request, res: express.Response) {
-  console.log("getsingleentry")
+async function getSingleEntry(req: express.Request, res: express.Response, next: express.NextFunction) {
   const result = await pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1',
     [req.params.id]
   );
+  if(result.rowCount == 0) {
+    return next(new HttpException(404, 'Drawerentry not found'));
+  } 
   let entry: Drawerentry = {
     comment: result.rows[0].comment,
     imageURL: result.rows[0].imageurl,
@@ -36,8 +39,11 @@ async function getSingleEntry(req: express.Request, res: express.Response) {
   return entry
 }
 
-async function updateEntry(req: express.Request, res: express.Response) {
-  const entry = await getSingleEntry(req, res)
+async function updateEntry(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const entry : Drawerentry | void = await getSingleEntry(req, res, next)
+  if(!entry) {
+    return next()
+  }
   const newEntry = pool.query('UPDATE drawerentries SET drawer_id=$1, comment=$2, imageURL=$3, creationDate=$4  WHERE drawerentry_id=$5',
     [
         (req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment),
@@ -73,14 +79,16 @@ async function isAuthorOrAdmin(req: any, res: express.Response, next:express.Nex
     req.params.id = req.body.drawer_id;
   }
   else {
-    let entry: Drawerentry = await getSingleEntry(req, res);
-    console.log(entry)
+    let entry: Drawerentry | void = await getSingleEntry(req, res, next);
+    if(!entry) {
+      return next()
+    }
     req.entry = entry
     req.params.id = entry.drawer_id;
   }
   
-  let drawer: Drawer = await drawerFunctions.getSingleDrawer(req, res)
-  if(!drawer || !req.user) return res.sendStatus(401)
+  let drawer: Drawer | void = await drawerFunctions.getSingleDrawer(req, res, next)
+  if(!drawer || !req.user) return next()
   if(req.user.isadmin == true){
     next()
   } else if( drawer.users_id == req.user.users_id) { 

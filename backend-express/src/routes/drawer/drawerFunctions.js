@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
 const jwt = require('jsonwebtoken');
+const HttpException_1 = __importDefault(require("../../exceptions/HttpException"));
 function getDrawers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const drawers = yield pool.query('SELECT * FROM drawer ORDER BY drawer_id ASC');
@@ -23,9 +27,12 @@ function getDrawersByUser(req, res) {
         return drawers.rows;
     });
 }
-function getSingleDrawer(req, res) {
+function getSingleDrawer(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield pool.query('SELECT * FROM drawer WHERE drawer_id=$1', [req.params.id]);
+        if (result.rowCount == 0) {
+            return next(new HttpException_1.default(404, 'Drawer not found'));
+        }
         let drawer = {
             drawer_id: result.rows[0].drawer_id,
             drawerTitle: result.rows[0].drawertitle,
@@ -36,9 +43,12 @@ function getSingleDrawer(req, res) {
         return drawer;
     });
 }
-function updateDrawer(req, res) {
+function updateDrawer(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const drawer = yield getSingleDrawer(req, res);
+        const drawer = yield getSingleDrawer(req, res, next);
+        if (!drawer) {
+            return next();
+        }
         const newUser = pool.query('UPDATE drawer SET drawer_id=$1, drawerTitle=$2, creationDate=$3, users_id=$4  WHERE drawer_id=$5', [
             (req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : drawer.drawer_id),
             (req.body.drawerTitle != null && req.body.drawerTitle.length ? req.body.drawerTitle : drawer.drawerTitle),
@@ -72,13 +82,15 @@ function addDefaultDrawer(users_id) {
 }
 function isAuthorOrAdmin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        let drawer = yield getSingleDrawer(req, res);
-        if (!drawer || !req.user)
-            return res.sendStatus(401);
-        if (req.user.isadmin == true) {
-            next();
+        let drawer = yield getSingleDrawer(req, res, next);
+        if (!drawer) {
+            return next();
         }
-        else if (drawer.users_id == req.user.users_id) {
+        if (!req.user) {
+            return next(new HttpException_1.default(404, 'No request user'));
+        }
+        req.drawer = drawer;
+        if (req.user.isadmin == true || drawer.users_id == req.user.users_id) {
             next();
         }
         else {

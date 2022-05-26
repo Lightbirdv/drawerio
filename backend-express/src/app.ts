@@ -1,4 +1,5 @@
 import express from 'express'
+
 const app = express()
 
 require('dotenv').config();
@@ -12,7 +13,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const fileupload = require("express-fileupload");
 var cors = require('cors')
-
+import errorMiddleware from './middleware/error.middleware';
 const port = process.env.APIPORT || 5000;
 
 const swaggerOptions = {
@@ -41,19 +42,14 @@ const swaggerOptions = {
 };
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
-
 app.use(cors())
-
 app.use(fileupload());
-
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
 app.use(bodyParser.json());
 
 userFunctions.registerAdmin();
-
 app.get('/', (req, res) => {
     return res.send("Hello World");
 })
@@ -62,6 +58,9 @@ app.use('/user', userRouter);
 app.use('/drawer', drawerRouter);
 app.use('/drawerentry', drawerentryRouter);
 
+
+
 app.listen(port, () => {
     console.log("started");
 })
+app.use(errorMiddleware);

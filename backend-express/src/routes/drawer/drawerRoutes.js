@@ -89,10 +89,16 @@ router.get('/all/user', authenticationFunctions.authenticateToken, (req, res) =>
  *            description: id of the drawer
  *            required: true
  */
-router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const drawer = yield drawerFunctions.getSingleDrawer(req);
-        res.json(drawer);
+        if (req.drawer) {
+            const drawer = req.drawer;
+            res.json(drawer);
+        }
+        else {
+            const drawer = yield drawerFunctions.getSingleDrawer(req, res, next);
+            res.json(drawer);
+        }
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -134,7 +140,7 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.is
 router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedDrawer = yield drawerFunctions.updateDrawer(req);
-        res.json(updatedDrawer);
+        res.status(201).json("successfully changed a drawer");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -165,7 +171,7 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.
 router.delete('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedDrawer = yield drawerFunctions.deleteDrawer(req);
-        res.json(deletedDrawer);
+        res.status(201).json("successfully deleted a drawer");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
