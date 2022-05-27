@@ -39,9 +39,9 @@ const authenticationFunctions = require('./authenticationFunctions');
  *                        type: string
  *
  */
-router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { accessToken, refreshToken } = yield authenticationFunctions.login(req, res);
+        const { accessToken, refreshToken } = yield authenticationFunctions.login(req, res, next);
         if (!accessToken) {
             res.status(500).json({ message: "login not successful!" });
         }

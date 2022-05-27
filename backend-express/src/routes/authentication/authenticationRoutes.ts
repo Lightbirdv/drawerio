@@ -27,9 +27,9 @@ import { User } from './authenticationFunctions'
  *                        type: string
  *                   
  */
- router.post('/login', async(req: express.Request, res: express.Response) => {
+ router.post('/login', async(req: express.Request, res: express.Response, next:express.NextFunction) => {
     try {
-        const {accessToken, refreshToken} = await authenticationFunctions.login(req, res)
+        const {accessToken, refreshToken} = await authenticationFunctions.login(req, res, next)
         if(!accessToken) {
             res.status(500).json({ message: "login not successful!" })
         } else {
