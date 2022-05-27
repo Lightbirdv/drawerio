@@ -34,10 +34,13 @@ async function getUser(req: express.Request, res: express.Response, next: expres
   return user
 }
 
-async function getUserByEmail(email:string, res:express.Response) {
+async function getUserByEmail(email:string, res:express.Response, next:express.NextFunction) {
   const user = await pool.query('SELECT * FROM users WHERE email=$1',
     [email]
   );
+  if(user.rowCount == 0) {
+    return next(new HttpException(404, 'User not found'));
+  } 
   return user.rows[0]
 }
 

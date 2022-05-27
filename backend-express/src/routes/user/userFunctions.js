@@ -38,9 +38,12 @@ function getUser(req, res, next) {
         return user;
     });
 }
-function getUserByEmail(email, res) {
+function getUserByEmail(email, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield pool.query('SELECT * FROM users WHERE email=$1', [email]);
+        if (user.rowCount == 0) {
+            return next(new HttpException_1.default(404, 'User not found'));
+        }
         return user.rows[0];
     });
 }

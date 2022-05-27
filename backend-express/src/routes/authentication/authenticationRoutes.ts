@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router()
 const authenticationFunctions = require('./authenticationFunctions')
+import { User } from './authenticationFunctions'
 
 /**
  * @swagger
@@ -83,6 +84,29 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, a
         return res.sendStatus(401)
     }
     res.json(newAccessToken)
+})
+
+/**
+ * @swagger
+ * /auth/isAdmin:
+ *    get:
+ *      description: Returns bool if user is admin
+ *      security:
+ *          - bearerAuth: [] 
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully checked user
+ *        '500':
+ *          description: Failed to check for user
+ */
+ router.get('/isAdmin', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) =>{
+    if(!req.user) {
+        return res.status(500).json("Something went wrong!")
+    }
+    let json: JSON= <JSON><unknown>{"isadmin": req.user.isadmin}
+    return res.status(200).json(json);
 })
 
 module.exports = router
