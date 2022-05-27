@@ -217,6 +217,8 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
  *                           type: string
  *                     drawer_id:
  *                        type: number
+ *                     originURL:
+ *                        type: string
  */
 router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

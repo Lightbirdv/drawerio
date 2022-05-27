@@ -8,7 +8,8 @@ export interface Drawerentry {
     comment: string;
     imageURL: string[],
     drawer_id: number,
-    creationDate: Date
+    creationDate: Date,
+    originURL: string,
 }
 
 async function getEntries(req: express.Request, res: express.Response) {
@@ -34,7 +35,8 @@ async function getSingleEntry(req: express.Request, res: express.Response, next:
     comment: result.rows[0].comment,
     imageURL: result.rows[0].imageurl,
     drawer_id: result.rows[0].drawer_id,
-    creationDate: result.rows[0].creationdate
+    creationDate: result.rows[0].creationdate,
+    originURL: result.rows[0].originURL
   }
   return entry
 }
@@ -66,8 +68,8 @@ async function deleteEntry(req: express.Request, res: express.Response) {
 async function addEntry(req: express.Request, res: express.Response) {
   var entry: Drawerentry = req.body;
   entry.creationDate = new Date();
-  const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id) VALUES ($1,$2,$3,$4) RETURNING *',
-    [entry.comment,entry.creationDate, entry.imageURL, entry.drawer_id]
+  const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+    [entry.comment,entry.creationDate, entry.imageURL, entry.drawer_id, entry.originURL]
   );
   return newEntry
 }

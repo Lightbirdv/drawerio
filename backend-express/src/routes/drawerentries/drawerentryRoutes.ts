@@ -206,6 +206,8 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
  *                           type: string
  *                     drawer_id:
  *                        type: number
+ *                     originURL:
+ *                        type: string
  */
 router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
     try {

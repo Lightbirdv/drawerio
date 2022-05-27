@@ -37,7 +37,8 @@ function getSingleEntry(req, res, next) {
             comment: result.rows[0].comment,
             imageURL: result.rows[0].imageurl,
             drawer_id: result.rows[0].drawer_id,
-            creationDate: result.rows[0].creationdate
+            creationDate: result.rows[0].creationdate,
+            originURL: result.rows[0].originURL
         };
         return entry;
     });
@@ -68,7 +69,7 @@ function addEntry(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         var entry = req.body;
         entry.creationDate = new Date();
-        const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id) VALUES ($1,$2,$3,$4) RETURNING *', [entry.comment, entry.creationDate, entry.imageURL, entry.drawer_id]);
+        const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL) VALUES ($1,$2,$3,$4,$5) RETURNING *', [entry.comment, entry.creationDate, entry.imageURL, entry.drawer_id, entry.originURL]);
         return newEntry;
     });
 }

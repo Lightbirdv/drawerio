@@ -30,6 +30,7 @@ CREATE TABLE drawer(
 CREATE TABLE drawerentries(
     drawerentry_id SERIAL PRIMARY KEY,
     creationDate TIMESTAMP NOT NULL,
+    originURL VARCHAR(255),
     comment VARCHAR(255),
     imageURL TEXT[],
     drawer_id INTEGER,
