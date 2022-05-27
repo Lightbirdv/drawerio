@@ -31,7 +31,8 @@ CREATE TABLE drawerentries(
     drawerentry_id SERIAL PRIMARY KEY,
     creationDate TIMESTAMP NOT NULL,
     originURL VARCHAR(255),
-    comment VARCHAR(255),
+    comment VARCHAR,
+    selText VARCHAR,
     imageURL TEXT[],
     drawer_id INTEGER,
     CONSTRAINT fk_drawer

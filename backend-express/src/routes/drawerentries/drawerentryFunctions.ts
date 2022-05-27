@@ -3,13 +3,16 @@ const pool = require('../../queries').pool;
 import { Drawer } from '../drawer/drawerFunctions';
 const drawerFunctions = require('../drawer/drawerFunctions');
 import HttpException from '../../exceptions/HttpException';
+import { debug } from 'console';
 
 export interface Drawerentry {
+   drawerentry_id: number,
     comment: string;
     imageURL: string[],
     drawer_id: number,
     creationDate: Date,
     originURL: string,
+    selText: string,
 }
 
 async function getEntries(req: express.Request, res: express.Response) {
@@ -32,27 +35,34 @@ async function getSingleEntry(req: express.Request, res: express.Response, next:
     return next(new HttpException(404, 'Drawerentry not found'));
   } 
   let entry: Drawerentry = {
+    drawerentry_id: result.rows[0].drawerentry_id,
     comment: result.rows[0].comment,
     imageURL: result.rows[0].imageurl,
     drawer_id: result.rows[0].drawer_id,
     creationDate: result.rows[0].creationdate,
-    originURL: result.rows[0].originURL
+    originURL: result.rows[0].originurl,
+    selText: result.rows[0].seltext
   }
   return entry
 }
 
-async function updateEntry(req: express.Request, res: express.Response, next: express.NextFunction) {
-  const entry : Drawerentry | void = await getSingleEntry(req, res, next)
+async function updateEntry(req: any, res: express.Response, next: express.NextFunction) {
+  let entry: Drawerentry | void;
+  if(req.entry) {
+    entry = req.entry
+    req.params.id = req.entry.drawerentry_id
+  } else {
+    entry = await getSingleEntry(req, res, next)
+  }
   if(!entry) {
     return next()
   }
-  const newEntry = pool.query('UPDATE drawerentries SET drawer_id=$1, comment=$2, imageURL=$3, creationDate=$4  WHERE drawerentry_id=$5',
+  const newEntry = await pool.query('UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3 WHERE drawerentry_id=$4',
     [
-        (req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment),
-        (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : entry.imageURL),  
-        (req.body.creationDate != null && req.body.creationDate.length ? req.body.creationDate : entry.creationDate), 
-        (req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : entry.drawer_id), 
-        req.params.id
+      (req.body.selText != null && req.body.selText.length ? req.body.selText : entry.selText),
+      (req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment),
+      (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : entry.imageURL),  
+      req.params.id
     ]
   );
   return newEntry
@@ -68,8 +78,8 @@ async function deleteEntry(req: express.Request, res: express.Response) {
 async function addEntry(req: express.Request, res: express.Response) {
   var entry: Drawerentry = req.body;
   entry.creationDate = new Date();
-  const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL) VALUES ($1,$2,$3,$4,$5) RETURNING *',
-    [entry.comment,entry.creationDate, entry.imageURL, entry.drawer_id, entry.originURL]
+  const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *',
+    [entry.comment,entry.creationDate, entry.imageURL, entry.drawer_id, entry.originURL, entry.selText]
   );
   return newEntry
 }

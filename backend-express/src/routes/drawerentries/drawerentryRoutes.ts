@@ -134,10 +134,13 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctio
  *                     imageURL:
  *                        type: string[]
  *                        required: false
+ *                     selText:
+ *                        type: string[]
+ *                        required: false
  */
-router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
+router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response, next:express.NextFunction) => {
     try {
-        const updatedEntry = await drawerentryFunctions.updateEntry(req)
+        const updatedEntry = await drawerentryFunctions.updateEntry(req, res, next)
         res.status(201).json("successfully changed a drawer entry")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
@@ -207,6 +210,8 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
  *                     drawer_id:
  *                        type: number
  *                     originURL:
+ *                        type: string
+ *                     selText:
  *                        type: string
  */
 router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
