@@ -31,6 +31,17 @@ a {
   top: 0px;
 }
 
+/* TopComponent Background pexels-Johanes */
+.backgroundDark {
+  /* background-image: url("../public/assets/bg_spotlight.jpg"); */
+  background-color:rgb(73, 77, 75);
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  z-index: -1;
+  top: 0px;
+}
+
 /* Navbar */
 .img-logo {
   width: 40px;

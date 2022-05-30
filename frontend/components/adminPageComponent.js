@@ -18,14 +18,11 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
+import { MdSupervisorAccount } from "react-icons/md";
 
 
 
-
-
-
-
-const AxiosPost = () => {
+const adminPageComponent = () => {
 
   const router = useRouter();
   const forceReload = () => {
@@ -105,10 +102,6 @@ const AxiosPost = () => {
     Router.push("/userpage")
   }
 
-  const welcome = () => {
-    return Storage = localStorage.getItem("email");
-  }
-
 
   const [get, setPosts] = useState({ blogs: [] });
 
@@ -135,21 +128,10 @@ const AxiosPost = () => {
   let decodedToken = jwtDecode(token);
   const name = decodedToken.email; */
 
-  const saveDrawer = (e, _id) => {
-    e.preventDefault();
-    console.log(_id)
-    localStorage.setItem("drawer_id", _id);
-  }
-
-  const saveDrawerName = (e, _name) => {
-    e.preventDefault();
-    console.log(_name)
-    localStorage.setItem("drawerName", _name);
-  }
-
   return (
+
     <div style={{ marginTop: "20px" }}>
-      {/* <h1>{xxx()}</h1> */}
+      <h1></h1>
       {/* Searchfield */}
       <input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ margin: "10px", width: "200px", height: "30px", paddingLeft: "10px", fontSize: "15px" }} />
       <ReactBootStrap.Table striped bordered hover>
@@ -158,9 +140,9 @@ const AxiosPost = () => {
             {/* <th>ID</th> */}
             <th>Title</th>
             <th>Date</th>
-            <th><button type="button" class="btn btn-secondary" onClick={handleShow}><MdAdd /></button>
+            <th><button type="button" class="btn btn-secondary" onClick={handleShow} style={{marginRight:"10px"}}><MdAdd /></button>
 
-              {/*  <button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple"}}><MdSupervisorAccount/></button>*/}
+               <button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple"}}><MdSupervisorAccount/></button>
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>Modal heading</Modal.Title>
@@ -200,16 +182,16 @@ const AxiosPost = () => {
                 <td>{item.drawertitle}</td>
                 <td>{dayjs(item.creationdate).format('MMM, D, YYYY')}</td>
                 <td><button type="button" class="btn btn-success" style={{ marginRight: "10px" }} onClick={(e) => { { goNext(e, item.drawer_id) } }}><MdOpenInNew /></button>
-                  <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleShowUpd() }}><MdOutlineModeEdit /></button>
+                  <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={handleShowUpd}><MdOutlineModeEdit /></button>
                   <Modal show={showUpd} onHide={handleCloseUpd}>
                     <Modal.Header closeButton>
-                      <Modal.Title>Update Drawer</Modal.Title>
+                      <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                       <Form>
                         <Form.Group className="mb-3" id="updateName">
                           <Form.Label>New Name</Form.Label>
-                          <Form.Control id="drawerNew" type="text" placeholder={localStorage.getItem("drawerName")} name="newName" onChange={handleName} />
+                          <Form.Control id="drawerNew" type="text" placeholder={item.drawertitle} name="newName" onChange={handleName} />
                         </Form.Group>
                       </Form>
                     </Modal.Body>
@@ -218,26 +200,26 @@ const AxiosPost = () => {
                         <MdClose />
                       </Button>
                       <Button variant="primary"
-                        onClick={(e) => { handleUpdate(e, localStorage.getItem("drawer_id")); handleCloseUpd() }} >
+                        onClick={(e) => { handleUpdate(e, item.drawer_id); handleCloseUpd() }} >
                         <MdCheck />
                       </Button>
                     </Modal.Footer>
                   </Modal>
                   {/* <button type="button" class="btn btn-danger" onClick={(e) => deleteDrawer(e, item.drawer_id)}><MdDeleteForever/></button> */}
-                  <button type="button" class="btn btn-danger" style={{ marginRight: "10px" }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleDeleteShow() }} ><MdDeleteForever /></button>
+                  <button type="button" class="btn btn-danger" style={{ marginRight: "10px" }} onClick={handleDeleteShow}><MdDeleteForever /></button>
                   <Modal show={showDelete} onHide={handleCloseDelete}>
                     <Modal.Header closeButton>
-                      <Modal.Title>Delete Drawer</Modal.Title>
+                      <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                      Are you sure you want to permanently delete {localStorage.getItem("drawerName")} ?
+                      Are you sure you want to permanently delete {item.drawertitle}?
                     </Modal.Body>
                     <Modal.Footer>
                       <Button variant="secondary" onClick={handleCloseDelete}>
                         <MdClose />
                       </Button>
                       <Button variant="primary"
-                        onClick={(e) => { deleteDrawer(e, localStorage.getItem("drawer_id")); handleCloseDelete() }}>
+                        onClick={(e) => { deleteDrawer(e, item.drawer_id); handleCloseDelete() }}>
                         <MdCheck />
                       </Button>
                     </Modal.Footer>
@@ -252,4 +234,4 @@ const AxiosPost = () => {
   );
 };
 
-export default AxiosPost;
+export default adminPageComponent;
