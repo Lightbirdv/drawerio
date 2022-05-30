@@ -68,7 +68,10 @@ async function updateEntry(req: any, res: express.Response, next: express.NextFu
   return newEntry
 }
 
-async function deleteEntry(req: express.Request, res: express.Response) {
+async function deleteEntry(req: any, res: express.Response) {
+  if(req.entry) {
+    req.params.id = req.entry.drawerentry_id
+  }
   const entry = pool.query('DELETE FROM drawerentries WHERE drawerentry_id=$1',
     [req.params.id]
   );

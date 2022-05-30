@@ -69,6 +69,9 @@ function updateEntry(req, res, next) {
 }
 function deleteEntry(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (req.entry) {
+            req.params.id = req.entry.drawerentry_id;
+        }
         const entry = pool.query('DELETE FROM drawerentries WHERE drawerentry_id=$1', [req.params.id]);
         return entry;
     });
