@@ -124,7 +124,7 @@ const UserManagement = () => {
                                     <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={handleShowUpd}><MdOutlineModeEdit /></button>
                                     <Modal show={showUpd} onHide={handleCloseUpd}>
                                         <Modal.Header closeButton>
-                                            <Modal.Title>Modal heading</Modal.Title>
+                                            <Modal.Title>Update User</Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             <Form>
@@ -152,7 +152,7 @@ const UserManagement = () => {
                                     <button type="button" class="btn btn-danger" style={{ marginRight: "10px" }} onClick={handleDeleteShow}><MdDeleteForever /></button>
                                     <Modal show={showDelete} onHide={handleCloseDelete}>
                                         <Modal.Header closeButton>
-                                            <Modal.Title>Modal heading</Modal.Title>
+                                            <Modal.Title>Delete User</Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             Are you sure you want to permanently delete {item.email}?
