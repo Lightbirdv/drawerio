@@ -1,23 +1,48 @@
+/*global chrome*/
 import React, { useEffect, useState } from "react";
 import "./UserPage.css";
 import cheerio from "cheerio";
 import axios from "axios";
 import LoginForm from "./LoginForm";
 import jwtDecode from "jwt-decode";
+import ImagePicker from "react-image-picker";
+import "react-image-picker/dist/index.css";
 
 const UserPage = function () {
   const [allImages, setAllImages] = useState([]);
-  const [grabUrl, setGrabUrl] = useState("");
   const [deleted, setDeleted] = useState(false);
   const [drawer, setDrawer] = useState([]);
   const [textfieldInput, setTextfieldInput] = useState("");
   const [optionValue, setOptionValue] = useState({ id: "Select Drawer..." });
+  const [tabURL, setTabURL] = useState("");
+  const [selectedText, setSelectedText] = useState("");
+  const [selectImgArr, setSelectImgArr] = useState([]);
   var imgArr = [];
   var date = new Date();
 
-  const textareaHandler = function (event) {
-    setGrabUrl(event.target.value);
-  };
+  useEffect(async () => {
+    let queryOptions = { active: true, lastFocusedWindow: true };
+    let [tab] = await chrome.tabs.query(queryOptions);
+    setTabURL(tab.url);
+    let result;
+    try {
+      [{ result }] = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: () => getSelection().toString(),
+      });
+    } catch (e) {
+      return;
+    }
+    setSelectedText(result);
+    console.log(tab.url);
+    return tab;
+  }, []);
+
+  console.log(selectedText);
+
+  function onPick(image) {
+    setSelectImgArr(image);
+  }
 
   const logOut = () => {
     localStorage.removeItem("token");
@@ -31,21 +56,35 @@ const UserPage = function () {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => setDrawer(response.data.rows));
+      .then((response) => {
+        setDrawer(response.data);
+      });
   }, []);
 
   const handleClick = function (event) {
     event.preventDefault();
-    for (let i = 0; i < allImages.length; i++) {
-      imgArr[i] = allImages[i].IMAGESRC;
+    for (let i = 0; i < selectImgArr.length; i++) {
+      imgArr[i] = selectImgArr[i].src;
     }
-    if (optionValue.id !== "Select Drawer..." && allImages.length !== 0) {
+
+    console.log(selectImgArr);
+    if (tabURL !== "" && optionValue.id !== "Select Drawer...") {
       axios
-        .post("http://localhost:5000/drawerentry/add", {
-          comment: textfieldInput,
-          imageURL: imgArr,
-          drawer_id: optionValue.id,
-        })
+        .post(
+          "http://localhost:5000/drawerentry/add",
+          {
+            comment: textfieldInput,
+            imageURL: imgArr,
+            drawer_id: optionValue.id,
+            originURL: tabURL,
+            selText: selectedText,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
         .then((response) => console.log(response));
     }
   };
@@ -85,9 +124,10 @@ const UserPage = function () {
   };
 
   const grabHandler = function () {
-    axios.get(grabUrl).then((res) => {
+    axios.get(tabURL).then((res) => {
       const $ = cheerio.load(res.data);
-      $("img", res.data).each((index, image) => {
+      console.log($("img"));
+      $("img").each((index, image) => {
         const IMAGESRC = $(image).attr("src");
         setAllImages((allImages) => [...allImages, { IMAGESRC }]);
       });
@@ -114,14 +154,6 @@ const UserPage = function () {
           </option>
         ))}
       </select>
-      <input
-        name="http"
-        type="url"
-        placeholder="URL"
-        size="45"
-        className="userpage-text--url__design"
-        onChange={textareaHandler}
-      />
       <button
         className="userpage-text--button-grab__design"
         onClick={grabHandler}
@@ -138,14 +170,22 @@ const UserPage = function () {
           cols={50}
         ></textarea>
       </div>
-      {allImages.map((images) => (
+      <ImagePicker
+        images={allImages.map((image, i) => ({
+          src: image.IMAGESRC,
+          value: i,
+        }))}
+        onPick={onPick}
+        multiple
+      />
+      {/* {allImages.map((images) => (
         <div className="userpage-middle">
           <img
             className="userpage-middle--images__design"
             src={images.IMAGESRC}
           ></img>
         </div>
-      ))}
+      ))} */}
       <div className="down-site">
         <div className="userpage-bottom--button">
           <button
