@@ -120,6 +120,8 @@ const ThirdPage = () => {
             {/* <th>ID</th> */}
             <th style={{ paddingLeft: "50px", paddingRight: "50px" }}>Date</th>
             <th>Comment</th>
+            <th>Text</th>
+            <th>URL</th>
             <th>Pictures</th>
           </tr>
         </thead>
@@ -136,7 +138,8 @@ const ThirdPage = () => {
               <tr key={item.id}>
                 <td>{dayjs(item.creationdate).format('MMM, D, YYYY')}</td>
                 <td>{item.comment}</td>
-
+                <td>{item.seltext}</td>
+                <td>{item.originurl}</td>
                 <td><div className="grid grid-cols-6 gap-1">
                   {item.imageurl &&
                     item.imageurl.map((x) => (
