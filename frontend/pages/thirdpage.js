@@ -1,14 +1,14 @@
 import PrivateComponent from "../components/PrivateComponent"
 import Navbar from "../components/NavbarTwo";
 import ThirdPage from "../components/ThirdPageComponent";
-export default function Thirdpage(){
-    return <div>
+export default function Thirdpage() {
+  return <div>
     <main>
 
-    <Navbar />
-    <PrivateComponent/>
-    <ThirdPage />
+      <Navbar />
+      <PrivateComponent />
+      <ThirdPage />
 
-  </main>
+    </main>
   </div>
 }

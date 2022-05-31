@@ -7,8 +7,13 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { updateUser } from "../lib/updateUser";
 import { deleteUser } from "../lib/deleteUser";
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import { makeAdmin } from "../lib/makeAdmin";
+import { MdAdminPanelSettings } from "react-icons/md";
+import { MdOutlineModeEdit } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
+import { MdCheck } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 
 
 
@@ -25,6 +30,10 @@ const UserManagement = () => {
     const [showUpd, setShowUpd] = useState(false);
     const handleCloseUpd = () => setShowUpd(false);
     const handleShowUpd = () => setShowUpd(true);
+
+    const [showDelete, setShowDelete] = useState(false);
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleDeleteShow = () => setShowDelete(true);
 
     const handleChange = event => {
         setPw({ password: event.target.value });
@@ -48,7 +57,7 @@ const UserManagement = () => {
     const deleteU = (e, _id) => {
         e.preventDefault();
         deleteUser(_id)
-        /* forceReload() */
+        forceReload()
     }
 
     const handleAdmin = (e, _id) => {
@@ -58,7 +67,7 @@ const UserManagement = () => {
         forceReload()
     }
 
-    
+
 
 
     const [posts, setPosts] = useState({ blogs: [] });
@@ -82,8 +91,13 @@ const UserManagement = () => {
         fetchPostList();
     }, [setPosts]);
 
+    /* Searchinput */
+    const [searchTerm, setSearchTerm] = useState('');
+
     return (
         <div style={{ marginTop: "50px" }}>
+            {/* Searchfield */}
+            <input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ margin: "10px", width: "200px", height: "30px", paddingLeft: "10px", fontSize: "15px" }} />
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
                     <tr>
@@ -94,16 +108,23 @@ const UserManagement = () => {
                 </thead>
                 <tbody>
                     {posts.blogs &&
-                        posts.blogs.map((item) => (
-                            <tr key={item.id}>
+                        posts.blogs.filter((item) => {
+                            if (searchTerm == "") {
+                                return item
+                            } else if (item.email.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                return item
+                            }
+                        }
+                        ).map((item) => (
+                            <tr key={item.users_id}>
                                 <td>{item.users_id}</td>
                                 <td>{item.email}</td>
                                 <td>{item.isadmin.toString()}</td>
                                 <td>
-                                    <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={handleShowUpd}>Edit</button>
+                                    <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={handleShowUpd}><MdOutlineModeEdit /></button>
                                     <Modal show={showUpd} onHide={handleCloseUpd}>
                                         <Modal.Header closeButton>
-                                            <Modal.Title>Modal heading</Modal.Title>
+                                            <Modal.Title>Update User</Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             <Form>
@@ -119,16 +140,34 @@ const UserManagement = () => {
                                         </Modal.Body>
                                         <Modal.Footer>
                                             <Button variant="secondary" onClick={handleCloseUpd}>
-                                                Close
+                                                <MdClose />
                                             </Button>
                                             <Button variant="primary"
                                                 onClick={(e) => { handleUpdate(e, item.users_id); handleCloseUpd() }} >
-                                                Save Changes
+                                                <MdCheck />
                                             </Button>
                                         </Modal.Footer>
                                     </Modal>
-                                    <button type="button" class="btn btn-success" style={{ marginRight: "10px" }} onClick={(e) => handleAdmin(e, item.email)}>Set Admin</button>
-                                    <button type="button" class="btn btn-danger" onClick={(e) => deleteU(e, item.users_id)}>Delete</button></td>
+                                    <button type="button" class="btn btn-success" style={{ marginRight: "10px" }} onClick={(e) => handleAdmin(e, item.email)}><MdAdminPanelSettings /></button>
+                                    <button type="button" class="btn btn-danger" style={{ marginRight: "10px" }} onClick={handleDeleteShow}><MdDeleteForever /></button>
+                                    <Modal show={showDelete} onHide={handleCloseDelete}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Delete User</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            Are you sure you want to permanently delete {item.email}?
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={handleCloseDelete}>
+                                                <MdClose />
+                                            </Button>
+                                            <Button variant="primary"
+                                                onClick={(e) => { deleteU(e, item.users_id); handleCloseDelete() }}>
+                                                <MdCheck />
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
+                                </td>
                             </tr>
                         ))}
                 </tbody>

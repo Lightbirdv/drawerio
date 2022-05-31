@@ -44,6 +44,7 @@ export default function Home() {
         <AboutComponent />
         <DownloadComponent />
         <ContactComponent />
+        
         {/* <LoginComponent/> */}
 
       </main>

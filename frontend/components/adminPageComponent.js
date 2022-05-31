@@ -18,14 +18,11 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
+import { MdSupervisorAccount } from "react-icons/md";
 
 
 
-
-
-
-
-const AxiosPost = () => {
+const adminPageComponent = () => {
 
   const router = useRouter();
   const forceReload = () => {
@@ -158,9 +155,9 @@ const AxiosPost = () => {
             {/* <th>ID</th> */}
             <th>Title</th>
             <th>Date</th>
-            <th><button type="button" class="btn btn-secondary" onClick={handleShow}><MdAdd /></button>
+            <th><button type="button" class="btn btn-secondary" onClick={handleShow} style={{marginRight:"10px"}}><MdAdd /></button>
 
-              {/*  <button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple"}}><MdSupervisorAccount/></button>*/}
+               <button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple"}}><MdSupervisorAccount/></button>
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>Modal heading</Modal.Title>
@@ -252,4 +249,5 @@ const AxiosPost = () => {
   );
 };
 
-export default AxiosPost;
+
+export default adminPageComponent;
