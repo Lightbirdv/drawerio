@@ -1,4 +1,5 @@
 import express from 'express'
+import { Drawerentry } from './drawerentryFunctions'
 
 const router = express.Router()
 const drawerentryFunctions = require('./drawerentryFunctions')
@@ -22,7 +23,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
         const drawerentries = await drawerentryFunctions.getEntries()
-        res.json(drawerentries.rows);
+        res.json(drawerentries);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -33,6 +34,8 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  * /drawerentry/all/{drawerid}:
  *    get:
  *      description: Returns all entries for specific drawer
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -48,7 +51,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the drawer
  *            required: true
  */
- router.get('/all/:drawerid', async(req: express.Request, res: express.Response) => {
+ router.get('/all/:drawerid', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
     try {
         const drawerentries = await drawerentryFunctions.getEntriesByDrawer(req)
         if(!drawerentries) {
@@ -65,6 +68,8 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  * /drawerentry/{id}:
  *    get:
  *      description: Returns specific entry
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -80,10 +85,15 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the entry
  *            required: true
  */
-router.get('/:id', async(req: express.Request, res: express.Response) => {
+router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: any, res: express.Response) => {
     try {
-        const entry = await drawerentryFunctions.getSingleEntry(req)
-        res.json(entry);
+        if(req.entry) {
+            const entry = req.entry
+            res.json(entry);
+        } else {
+            const entry = await drawerentryFunctions.getSingleEntry(req)
+            res.json(entry);
+        }
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -124,11 +134,14 @@ router.get('/:id', async(req: express.Request, res: express.Response) => {
  *                     imageURL:
  *                        type: string[]
  *                        required: false
+ *                     selText:
+ *                        type: string[]
+ *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response, next:express.NextFunction) => {
     try {
-        const updatedEntry = await drawerentryFunctions.updateEntry(req)
-        res.json(updatedEntry);
+        const updatedEntry = await drawerentryFunctions.updateEntry(req, res, next)
+        res.status(201).json("successfully changed a drawer entry")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -156,10 +169,10 @@ router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Reques
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deletedEntry = await drawerentryFunctions.deleteEntry(req)
-        res.json(deletedEntry);
+        res.status(201).json("successfully deleted a drawer entry")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -184,7 +197,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Reque
  *          description: Failed to create entry
  *      requestBody:
  *          content:
- *             application/x-www-form-urlencoded:
+ *             application/json:
  *               schema:
  *                  type: object
  *                  properties:
@@ -196,11 +209,15 @@ router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Reque
  *                           type: string
  *                     drawer_id:
  *                        type: number
+ *                     originURL:
+ *                        type: string
+ *                     selText:
+ *                        type: string
  */
-router.post('/add', async(req: express.Request, res: express.Response) => {
+router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
     try {
         var newEntry = await drawerentryFunctions.addEntry(req)
-        res.status(201).json(newEntry)
+        res.status(201).json("successfully created a drawer entry")
     } catch (err: any) {
         res.status(400).json({ message: err.message })
     }

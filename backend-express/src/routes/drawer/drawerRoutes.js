@@ -34,7 +34,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
 router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawers = yield drawerFunctions.getDrawers();
-        res.json(drawers.rows);
+        res.json(drawers);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -57,11 +57,11 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  */
 router.get('/all/user', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const drawer = yield drawerFunctions.getDrawersByUser(req);
-        if (!drawer) {
+        const drawers = yield drawerFunctions.getDrawersByUser(req);
+        if (!drawers) {
             res.status(500).json({ message: "retrieval of drawers failed" });
         }
-        res.status(201).json(drawer);
+        res.status(200).json(drawers);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -72,6 +72,8 @@ router.get('/all/user', authenticationFunctions.authenticateToken, (req, res) =>
  * /drawer/{id}:
  *    get:
  *      description: Returns specific drawer
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -87,10 +89,16 @@ router.get('/all/user', authenticationFunctions.authenticateToken, (req, res) =>
  *            description: id of the drawer
  *            required: true
  */
-router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const drawer = yield drawerFunctions.getSingleDrawer(req);
-        res.json(drawer);
+        if (req.drawer) {
+            const drawer = req.drawer;
+            res.json(drawer);
+        }
+        else {
+            const drawer = yield drawerFunctions.getSingleDrawer(req, res, next);
+            res.json(drawer);
+        }
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -128,17 +136,11 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *                     drawerTitle:
  *                        type: string
  *                        required: false
- *                     creationDate:
- *                        type: string
- *                        required: false
- *                     users_id:
- *                        type: number
- *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedDrawer = yield drawerFunctions.updateDrawer(req);
-        res.json(updatedDrawer);
+        res.status(201).json("successfully changed a drawer");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -166,10 +168,10 @@ router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(vo
  *            description: id of the drawer
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedDrawer = yield drawerFunctions.deleteDrawer(req);
-        res.json(deletedDrawer);
+        res.status(201).json("successfully deleted a drawer");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -203,7 +205,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(v
 router.post('/add', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newDrawer = yield drawerFunctions.addDrawer(req);
-        res.status(201).json(newDrawer);
+        res.status(201).json("successfully created new drawer");
     }
     catch (err) {
         res.status(400).json({ message: err.message });

@@ -1,10 +1,11 @@
 import express from 'express'
+import HttpException from '../../exceptions/HttpException'
 const pool = require('../../queries').pool;
 const bcrypt = require('bcrypt');
 const userFunctions = require('../user/userFunctions')
 const jwt = require('jsonwebtoken')
 
-interface User {
+export interface User {
   users_id: number;
   email: string;
   password: string;
@@ -18,14 +19,13 @@ interface UncodedToken {
     exp: number;
 }
 
-async function login(req: express.Request, res: express.Response) {
+async function login(req: express.Request, res: express.Response, next: express.NextFunction) {
     if(!req.body) {
-        console.log("Error not json body found")
         return null
     }
-    let user = await userFunctions.getUserByEmail(req.body.email, res)
+    let user = await userFunctions.getUserByEmail(req.body.email, res, next)
     if(!user) {
-        return null
+        return next()
     }
     if(await bcrypt.compare(req.body.password, user.password)) {
         let accessToken = jwt.sign({ 'user': user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h', algorithm: 'HS256'})
@@ -45,8 +45,10 @@ async function authenticateToken(req: express.Request, res: express.Response, ne
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any, uncodedToken: UncodedToken) => {
         if (err) return res.sendStatus(403)
-        console.log(uncodedToken)
-        let user = await userFunctions.getUserByEmail(uncodedToken.user, res)
+        let user = await userFunctions.getUserByEmail(uncodedToken.user, res, next)
+        if(!user) {
+            return next()
+        }
         req.user = user
         next()
     })
@@ -57,8 +59,10 @@ async function authenticateRefreshToken(req: express.Request, res: express.Respo
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err: any, uncodedToken: UncodedToken) => {
         if (err) return res.sendStatus(403)
-        console.log(uncodedToken)
-        let user = await userFunctions.getUserByEmail(uncodedToken.user, res)
+        let user = await userFunctions.getUserByEmail(uncodedToken.user, res, next)
+        if(!user) {
+            return next()
+        }
         req.user = user
         next()
     })
@@ -93,12 +97,15 @@ async function isAdmin(req: any, res: express.Response, next:express.NextFunctio
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any,tokenuser: any) => {
         if (err) return res.sendStatus(403)
-        let user: User = await userFunctions.getUserByEmail(tokenuser.user, res)
+        let user: User = await userFunctions.getUserByEmail(tokenuser.user, res, next)
+        if(!user) {
+            return next
+        }
         if(user.isadmin == true){
             req.user = user
             next()
         } else {
-            return res.status(500).send ({ message : 'This function is only available for admins' })
+            next(new HttpException(403, 'This function is only available for admins'));
         }
     })
 }
@@ -109,5 +116,5 @@ module.exports = {
     authenticateRefreshToken,
     refreshTheToken,
     deleteRefreshToken,
-    isAdmin
+    isAdmin,
 };

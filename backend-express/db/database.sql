@@ -22,7 +22,7 @@ CREATE TABLE drawer(
     users_id INTEGER,
     CONSTRAINT fk_users
         FOREIGN KEY(users_id) 
-	        REFERENCES users(users_id)
+	        REFERENCES users(users_id) ON DELETE CASCADE
 );
 
 --drawerentries table
@@ -30,10 +30,12 @@ CREATE TABLE drawer(
 CREATE TABLE drawerentries(
     drawerentry_id SERIAL PRIMARY KEY,
     creationDate TIMESTAMP NOT NULL,
-    comment VARCHAR(255),
+    originURL VARCHAR(255),
+    comment VARCHAR,
+    selText VARCHAR,
     imageURL TEXT[],
     drawer_id INTEGER,
     CONSTRAINT fk_drawer
         FOREIGN KEY(drawer_id) 
-	        REFERENCES drawer(drawer_id)
+	        REFERENCES drawer(drawer_id) ON DELETE CASCADE
 );

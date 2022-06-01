@@ -1,53 +1,77 @@
 import express from 'express'
 const pool = require('../../queries').pool;
+import { Drawer } from '../drawer/drawerFunctions';
+const drawerFunctions = require('../drawer/drawerFunctions');
+import HttpException from '../../exceptions/HttpException';
+import { debug } from 'console';
 
-interface Drawerentry {
+export interface Drawerentry {
+   drawerentry_id: number,
     comment: string;
     imageURL: string[],
     drawer_id: number,
-    creationDate: Date
+    creationDate: Date,
+    originURL: string,
+    selText: string,
 }
 
 async function getEntries(req: express.Request, res: express.Response) {
-    const entries = pool.query('SELECT * FROM drawerentries ORDER BY drawerentry_id ASC');
-    return entries
+    const entries = await pool.query('SELECT * FROM drawerentries ORDER BY drawerentry_id ASC');
+    return entries.rows
 }
 
 async function getEntriesByDrawer(req: express.Request, res: express.Response) {
-  const entries = pool.query('SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC',
+  const entries = await pool.query('SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC',
     [req.params.drawerid]
   );
-  return entries
+  return entries.rows
 }
 
-async function getSingleEntry(req: express.Request, res: express.Response) {
-  const entry = pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1',
+async function getSingleEntry(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const result = await pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1',
     [req.params.id]
   );
+  if(result.rowCount == 0) {
+    return next(new HttpException(404, 'Drawerentry not found'));
+  } 
+  let entry: Drawerentry = {
+    drawerentry_id: result.rows[0].drawerentry_id,
+    comment: result.rows[0].comment,
+    imageURL: result.rows[0].imageurl,
+    drawer_id: result.rows[0].drawer_id,
+    creationDate: result.rows[0].creationdate,
+    originURL: result.rows[0].originurl,
+    selText: result.rows[0].seltext
+  }
   return entry
 }
 
-async function updateEntry(req: express.Request, res: express.Response) {
-  const entry = await getSingleEntry(req, res)
-  let oldEntry = { 
-      comment: entry.rows[0].comment, 
-      imageURL: entry.rows[0].imageURL,
-      creationDate: entry.rows[0].creationDate,
-      drawer_id: entry.rows[0].drawer_id
-    }
-  const newEntry = pool.query('UPDATE drawerentries SET drawer_id=$1, comment=$2, imageURL=$3, creationDate=$4  WHERE drawerentry_id=$5',
+async function updateEntry(req: any, res: express.Response, next: express.NextFunction) {
+  let entry: Drawerentry | void;
+  if(req.entry) {
+    entry = req.entry
+    req.params.id = req.entry.drawerentry_id
+  } else {
+    entry = await getSingleEntry(req, res, next)
+  }
+  if(!entry) {
+    return next()
+  }
+  const newEntry = await pool.query('UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3 WHERE drawerentry_id=$4',
     [
-        (req.body.comment != null && req.body.comment.length ? req.body.comment : oldEntry.comment),
-        (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : oldEntry.imageURL),  
-        (req.body.creationDate != null && req.body.creationDate.length ? req.body.creationDate : oldEntry.creationDate), 
-        (req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : oldEntry.drawer_id), 
-        req.params.id
+      (req.body.selText != null && req.body.selText.length ? req.body.selText : entry.selText),
+      (req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment),
+      (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : entry.imageURL),  
+      req.params.id
     ]
   );
   return newEntry
 }
 
-async function deleteEntry(req: express.Request, res: express.Response) {
+async function deleteEntry(req: any, res: express.Response) {
+  if(req.entry) {
+    req.params.id = req.entry.drawerentry_id
+  }
   const entry = pool.query('DELETE FROM drawerentries WHERE drawerentry_id=$1',
     [req.params.id]
   );
@@ -56,12 +80,37 @@ async function deleteEntry(req: express.Request, res: express.Response) {
 
 async function addEntry(req: express.Request, res: express.Response) {
   var entry: Drawerentry = req.body;
-  console.log(entry)
   entry.creationDate = new Date();
-  const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id) VALUES ($1,$2,$3,$4) RETURNING *',
-    [entry.comment,entry.creationDate, entry.imageURL, entry.drawer_id]
+  const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *',
+    [entry.comment,entry.creationDate, entry.imageURL, entry.drawer_id, entry.originURL, entry.selText]
   );
   return newEntry
+}
+
+async function isAuthorOrAdmin(req: any, res: express.Response, next:express.NextFunction) {
+  if(req.params.drawerid) {
+    req.params.id = req.params.drawerid;
+  } else if(req.body.drawer_id) {
+    req.params.id = req.body.drawer_id;
+  }
+  else {
+    let entry: Drawerentry | void = await getSingleEntry(req, res, next);
+    if(!entry) {
+      return next()
+    }
+    req.entry = entry
+    req.params.id = entry.drawer_id;
+  }
+  
+  let drawer: Drawer | void = await drawerFunctions.getSingleDrawer(req, res, next)
+  if(!drawer || !req.user) return next()
+  if(req.user.isadmin == true){
+    next()
+  } else if( drawer.users_id == req.user.users_id) { 
+    next()
+  } else {
+    return res.status(403).send ({ message : 'This function is only available for admins or the user of the drawer' })
+  }
 }
 
 module.exports = {
@@ -70,5 +119,6 @@ module.exports = {
     getSingleEntry,
     updateEntry,
     deleteEntry,
-    addEntry
+    addEntry,
+    isAuthorOrAdmin
 };

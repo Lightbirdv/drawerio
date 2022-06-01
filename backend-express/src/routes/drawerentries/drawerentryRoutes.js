@@ -34,7 +34,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
 router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawerentries = yield drawerentryFunctions.getEntries();
-        res.json(drawerentries.rows);
+        res.json(drawerentries);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -45,6 +45,8 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  * /drawerentry/all/{drawerid}:
  *    get:
  *      description: Returns all entries for specific drawer
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -60,7 +62,7 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  *            description: id of the drawer
  *            required: true
  */
-router.get('/all/:drawerid', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/all/:drawerid', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawerentries = yield drawerentryFunctions.getEntriesByDrawer(req);
         if (!drawerentries) {
@@ -77,6 +79,8 @@ router.get('/all/:drawerid', (req, res) => __awaiter(void 0, void 0, void 0, fun
  * /drawerentry/{id}:
  *    get:
  *      description: Returns specific entry
+ *      security:
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -92,10 +96,16 @@ router.get('/all/:drawerid', (req, res) => __awaiter(void 0, void 0, void 0, fun
  *            description: id of the entry
  *            required: true
  */
-router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const entry = yield drawerentryFunctions.getSingleEntry(req);
-        res.json(entry);
+        if (req.entry) {
+            const entry = req.entry;
+            res.json(entry);
+        }
+        else {
+            const entry = yield drawerentryFunctions.getSingleEntry(req);
+            res.json(entry);
+        }
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -136,11 +146,14 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
  *                     imageURL:
  *                        type: string[]
  *                        required: false
+ *                     selText:
+ *                        type: string[]
+ *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updatedEntry = yield drawerentryFunctions.updateEntry(req);
-        res.json(updatedEntry);
+        const updatedEntry = yield drawerentryFunctions.updateEntry(req, res, next);
+        res.status(201).json("successfully changed a drawer entry");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -168,10 +181,10 @@ router.patch('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(vo
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedEntry = yield drawerentryFunctions.deleteEntry(req);
-        res.json(deletedEntry);
+        res.status(201).json("successfully deleted a drawer entry");
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -195,7 +208,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(v
  *          description: Failed to create entry
  *      requestBody:
  *          content:
- *             application/x-www-form-urlencoded:
+ *             application/json:
  *               schema:
  *                  type: object
  *                  properties:
@@ -207,11 +220,15 @@ router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(v
  *                           type: string
  *                     drawer_id:
  *                        type: number
+ *                     originURL:
+ *                        type: string
+ *                     selText:
+ *                        type: string
  */
-router.post('/add', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newEntry = yield drawerentryFunctions.addEntry(req);
-        res.status(201).json(newEntry);
+        res.status(201).json("successfully created a drawer entry");
     }
     catch (err) {
         res.status(400).json({ message: err.message });

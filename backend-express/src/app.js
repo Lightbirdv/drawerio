@@ -16,6 +16,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const fileupload = require("express-fileupload");
 var cors = require('cors');
+const error_middleware_1 = __importDefault(require("./middleware/error.middleware"));
 const port = process.env.APIPORT || 5000;
 const swaggerOptions = {
     swaggerDefinition: {
@@ -60,3 +61,4 @@ app.use('/drawerentry', drawerentryRouter);
 app.listen(port, () => {
     console.log("started");
 });
+app.use(error_middleware_1.default);

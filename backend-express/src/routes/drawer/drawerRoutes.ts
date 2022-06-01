@@ -22,7 +22,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
     try {
         const drawers = await drawerFunctions.getDrawers()
-        res.json(drawers.rows);
+        res.json(drawers);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -45,11 +45,11 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  */
  router.get('/all/user', authenticationFunctions.authenticateToken, async(req: express.Request, res: express.Response) => {
     try {
-        const drawer = await drawerFunctions.getDrawersByUser(req)
-        if(!drawer) {
+        const drawers = await drawerFunctions.getDrawersByUser(req)
+        if(!drawers) {
             res.status(500).json({ message: "retrieval of drawers failed" })
         }
-        res.status(201).json(drawer);
+        res.status(200).json(drawers);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -60,6 +60,8 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  * /drawer/{id}:
  *    get:
  *      description: Returns specific drawer
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -75,10 +77,16 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the drawer
  *            required: true
  */
-router.get('/:id', async(req: express.Request, res: express.Response) => {
+router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async(req: any, res: express.Response, next:express.NextFunction) => {
     try {
-        const drawer = await drawerFunctions.getSingleDrawer(req)
-        res.json(drawer);
+        if(req.drawer) {
+            const drawer = req.drawer
+            res.json(drawer);
+        } else {
+            const drawer = await drawerFunctions.getSingleDrawer(req, res ,next);
+            res.json(drawer);
+        }
+        
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -116,17 +124,11 @@ router.get('/:id', async(req: express.Request, res: express.Response) => {
  *                     drawerTitle:
  *                        type: string
  *                        required: false
- *                     creationDate:
- *                        type: string
- *                        required: false
- *                     users_id:
- *                        type: number
- *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const updatedDrawer = await drawerFunctions.updateDrawer(req)
-        res.json(updatedDrawer);
+        res.status(201).json("successfully changed a drawer")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -154,10 +156,10 @@ router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Reques
  *            description: id of the drawer
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+router.delete('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deletedDrawer = await drawerFunctions.deleteDrawer(req)
-        res.json(deletedDrawer);
+        res.status(201).json("successfully deleted a drawer")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -192,7 +194,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Reque
 router.post('/add', authenticationFunctions.authenticateToken, async(req: express.Request, res: express.Response) => {
     try {
         var newDrawer = await drawerFunctions.addDrawer(req)
-        res.status(201).json(newDrawer)
+        res.status(201).json("successfully created new drawer")
     } catch (err: any) {
         res.status(400).json({ message: err.message })
     }

@@ -39,9 +39,9 @@ const authenticationFunctions = require('./authenticationFunctions');
  *                        type: string
  *
  */
-router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { accessToken, refreshToken } = yield authenticationFunctions.login(req, res);
+        const { accessToken, refreshToken } = yield authenticationFunctions.login(req, res, next);
         if (!accessToken) {
             res.status(500).json({ message: "login not successful!" });
         }
@@ -96,5 +96,27 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, (
         return res.sendStatus(401);
     }
     res.json(newAccessToken);
+}));
+/**
+ * @swagger
+ * /auth/isAdmin:
+ *    get:
+ *      description: Returns bool if user is admin
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully checked user
+ *        '500':
+ *          description: Failed to check for user
+ */
+router.get('/isAdmin', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.user) {
+        return res.status(500).json("Something went wrong!");
+    }
+    let json = { "isadmin": req.user.isadmin };
+    return res.status(200).json(json);
 }));
 module.exports = router;

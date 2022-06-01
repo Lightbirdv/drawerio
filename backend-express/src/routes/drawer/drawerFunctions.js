@@ -8,40 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
+const jwt = require('jsonwebtoken');
+const HttpException_1 = __importDefault(require("../../exceptions/HttpException"));
 function getDrawers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const drawers = pool.query('SELECT * FROM drawer ORDER BY drawer_id ASC');
-        return drawers;
+        const drawers = yield pool.query('SELECT * FROM drawer ORDER BY drawer_id ASC');
+        return drawers.rows;
     });
 }
 function getDrawersByUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const drawers = pool.query('SELECT * FROM drawer where users_id=$1 ORDER BY drawer_id ASC', [req.user.users_id]);
-        return drawers;
+        const drawers = yield pool.query('SELECT * FROM drawer where users_id=$1 ORDER BY drawer_id ASC', [req.user.users_id]);
+        return drawers.rows;
     });
 }
-function getSingleDrawer(req, res) {
+function getSingleDrawer(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const drawer = pool.query('SELECT * FROM drawer WHERE drawer_id=$1', [req.params.id]);
+        const result = yield pool.query('SELECT * FROM drawer WHERE drawer_id=$1', [req.params.id]);
+        if (result.rowCount == 0) {
+            return next(new HttpException_1.default(404, 'Drawer not found'));
+        }
+        let drawer = {
+            drawer_id: result.rows[0].drawer_id,
+            drawerTitle: result.rows[0].drawertitle,
+            creationDate: result.rows[0].creationdate,
+            drawerLogo: result.rows[0].drawerlogo,
+            users_id: result.rows[0].users_id,
+        };
         return drawer;
     });
 }
-function updateDrawer(req, res) {
+function updateDrawer(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const drawer = yield getSingleDrawer(req, res);
-        let oldDrawer = {
-            drawer_id: drawer.rows[0].drawer_id,
-            drawerTitle: drawer.rows[0].drawerTitle,
-            creationDate: drawer.rows[0].creationDate,
-            users_id: drawer.rows[0].users_id
-        };
+        const drawer = yield getSingleDrawer(req, res, next);
+        if (!drawer) {
+            return next();
+        }
         const newUser = pool.query('UPDATE drawer SET drawer_id=$1, drawerTitle=$2, creationDate=$3, users_id=$4  WHERE drawer_id=$5', [
-            (req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : oldDrawer.drawer_id),
-            (req.body.drawerTitle != null && req.body.drawerTitle.length ? req.body.drawerTitle : oldDrawer.drawerTitle),
-            (req.body.creationDate != null && req.body.creationDate.length ? req.body.creationDate : oldDrawer.creationDate),
-            (req.body.users_id != null && req.body.users_id.length ? req.body.users_id : oldDrawer.users_id),
+            (req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : drawer.drawer_id),
+            (req.body.drawerTitle != null && req.body.drawerTitle.length ? req.body.drawerTitle : drawer.drawerTitle),
+            (req.body.creationDate != null && req.body.creationDate.length ? req.body.creationDate : drawer.creationDate),
+            (req.body.users_id != null && req.body.users_id.length ? req.body.users_id : drawer.users_id),
             req.params.id
         ]);
         return newUser;
@@ -68,6 +80,24 @@ function addDefaultDrawer(users_id) {
         return newDrawer;
     });
 }
+function isAuthorOrAdmin(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let drawer = yield getSingleDrawer(req, res, next);
+        if (!drawer) {
+            return next();
+        }
+        if (!req.user) {
+            return next(new HttpException_1.default(404, 'No request user'));
+        }
+        req.drawer = drawer;
+        if (req.user.isadmin == true || drawer.users_id == req.user.users_id) {
+            next();
+        }
+        else {
+            return res.status(500).send({ message: 'This function is only available for admins or the user of the drawer' });
+        }
+    });
+}
 module.exports = {
     getDrawers,
     getDrawersByUser,
@@ -76,4 +106,5 @@ module.exports = {
     deleteDrawer,
     addDrawer,
     addDefaultDrawer,
+    isAuthorOrAdmin,
 };

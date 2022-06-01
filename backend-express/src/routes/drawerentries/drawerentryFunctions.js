@@ -8,40 +8,60 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
+const drawerFunctions = require('../drawer/drawerFunctions');
+const HttpException_1 = __importDefault(require("../../exceptions/HttpException"));
 function getEntries(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const entries = pool.query('SELECT * FROM drawerentries ORDER BY drawerentry_id ASC');
-        return entries;
+        const entries = yield pool.query('SELECT * FROM drawerentries ORDER BY drawerentry_id ASC');
+        return entries.rows;
     });
 }
 function getEntriesByDrawer(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const entries = pool.query('SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC', [req.params.drawerid]);
-        return entries;
+        const entries = yield pool.query('SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC', [req.params.drawerid]);
+        return entries.rows;
     });
 }
-function getSingleEntry(req, res) {
+function getSingleEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const entry = pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1', [req.params.id]);
+        const result = yield pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1', [req.params.id]);
+        if (result.rowCount == 0) {
+            return next(new HttpException_1.default(404, 'Drawerentry not found'));
+        }
+        let entry = {
+            drawerentry_id: result.rows[0].drawerentry_id,
+            comment: result.rows[0].comment,
+            imageURL: result.rows[0].imageurl,
+            drawer_id: result.rows[0].drawer_id,
+            creationDate: result.rows[0].creationdate,
+            originURL: result.rows[0].originurl,
+            selText: result.rows[0].seltext
+        };
         return entry;
     });
 }
-function updateEntry(req, res) {
+function updateEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const entry = yield getSingleEntry(req, res);
-        let oldEntry = {
-            comment: entry.rows[0].comment,
-            imageURL: entry.rows[0].imageURL,
-            creationDate: entry.rows[0].creationDate,
-            drawer_id: entry.rows[0].drawer_id
-        };
-        const newEntry = pool.query('UPDATE drawerentries SET drawer_id=$1, comment=$2, imageURL=$3, creationDate=$4  WHERE drawerentry_id=$5', [
-            (req.body.comment != null && req.body.comment.length ? req.body.comment : oldEntry.comment),
-            (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : oldEntry.imageURL),
-            (req.body.creationDate != null && req.body.creationDate.length ? req.body.creationDate : oldEntry.creationDate),
-            (req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : oldEntry.drawer_id),
+        let entry;
+        if (req.entry) {
+            entry = req.entry;
+            req.params.id = req.entry.drawerentry_id;
+        }
+        else {
+            entry = yield getSingleEntry(req, res, next);
+        }
+        if (!entry) {
+            return next();
+        }
+        const newEntry = yield pool.query('UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3 WHERE drawerentry_id=$4', [
+            (req.body.selText != null && req.body.selText.length ? req.body.selText : entry.selText),
+            (req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment),
+            (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : entry.imageURL),
             req.params.id
         ]);
         return newEntry;
@@ -49,6 +69,9 @@ function updateEntry(req, res) {
 }
 function deleteEntry(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (req.entry) {
+            req.params.id = req.entry.drawerentry_id;
+        }
         const entry = pool.query('DELETE FROM drawerentries WHERE drawerentry_id=$1', [req.params.id]);
         return entry;
     });
@@ -56,10 +79,39 @@ function deleteEntry(req, res) {
 function addEntry(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         var entry = req.body;
-        console.log(entry);
         entry.creationDate = new Date();
-        const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id) VALUES ($1,$2,$3,$4) RETURNING *', [entry.comment, entry.creationDate, entry.imageURL, entry.drawer_id]);
+        const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *', [entry.comment, entry.creationDate, entry.imageURL, entry.drawer_id, entry.originURL, entry.selText]);
         return newEntry;
+    });
+}
+function isAuthorOrAdmin(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (req.params.drawerid) {
+            req.params.id = req.params.drawerid;
+        }
+        else if (req.body.drawer_id) {
+            req.params.id = req.body.drawer_id;
+        }
+        else {
+            let entry = yield getSingleEntry(req, res, next);
+            if (!entry) {
+                return next();
+            }
+            req.entry = entry;
+            req.params.id = entry.drawer_id;
+        }
+        let drawer = yield drawerFunctions.getSingleDrawer(req, res, next);
+        if (!drawer || !req.user)
+            return next();
+        if (req.user.isadmin == true) {
+            next();
+        }
+        else if (drawer.users_id == req.user.users_id) {
+            next();
+        }
+        else {
+            return res.status(403).send({ message: 'This function is only available for admins or the user of the drawer' });
+        }
     });
 }
 module.exports = {
@@ -68,5 +120,6 @@ module.exports = {
     getSingleEntry,
     updateEntry,
     deleteEntry,
-    addEntry
+    addEntry,
+    isAuthorOrAdmin
 };

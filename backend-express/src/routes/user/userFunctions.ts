@@ -2,11 +2,14 @@ import express from 'express'
 const pool = require('../../queries').pool;
 const drawerFunctions = require('../drawer/drawerFunctions')
 const bcrypt = require('bcrypt');
+import HttpException from '../../exceptions/HttpException';
 
 interface User {
   users_id: number;
   email: string;
   password: string;
+  isAdmin: string;
+  refreshToken: string;
 }
 
 async function getUsers(req: express.Request, res: express.Response) {
@@ -14,27 +17,42 @@ async function getUsers(req: express.Request, res: express.Response) {
     return users
 }
 
-async function getUser(req: express.Request, res: express.Response) {
-  const user = pool.query('SELECT * FROM users WHERE users_id=$1',
+async function getUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const result = await pool.query('SELECT * FROM users WHERE users_id=$1',
     [req.params.id]
   );
+  if(result.rowCount == 0) {
+    return next(new HttpException(404, 'User not found'));
+  } 
+  let user: User = {
+    users_id: result.rows[0].users_id,
+    email: result.rows[0].email,
+    password: result.rows[0].password,
+    isAdmin: result.rows[0].isadmin,
+    refreshToken: result.rows[0].refreshtoken
+  }
   return user
 }
 
-async function getUserByEmail(email:string, res:express.Response) {
+async function getUserByEmail(email:string, res:express.Response, next:express.NextFunction) {
   const user = await pool.query('SELECT * FROM users WHERE email=$1',
     [email]
   );
+  if(user.rowCount == 0) {
+    return next(new HttpException(404, 'User not found'));
+  } 
   return user.rows[0]
 }
 
-async function updateUser(req: express.Request, res: express.Response) {
-  const user = await getUser(req, res)
-  let oldUser = { email: user.rows[0].email, password: user.rows[0].password}
+async function updateUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const user: User | void = await getUser(req, res, next)
+  if(!user) {
+    return next()
+  }
   const newUser = pool.query('UPDATE users SET email=$1, password=$2 WHERE users_id=$3',
     [
-      (req.body.email != null && req.body.email.length ? req.body.email : oldUser.email), 
-      (req.body.password != null && req.body.password.length ? await hashPassword(req.body.password) : oldUser.password), 
+      (req.body.email != null && req.body.email.length ? req.body.email : user.email), 
+      (req.body.password != null && req.body.password.length ? await hashPassword(req.body.password) : user.password), 
       req.params.id
     ]
   );

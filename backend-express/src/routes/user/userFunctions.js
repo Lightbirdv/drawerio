@@ -8,35 +8,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pool = require('../../queries').pool;
 const drawerFunctions = require('../drawer/drawerFunctions');
 const bcrypt = require('bcrypt');
+const HttpException_1 = __importDefault(require("../../exceptions/HttpException"));
 function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const users = pool.query('SELECT * FROM users ORDER BY users_id ASC');
         return users;
     });
 }
-function getUser(req, res) {
+function getUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = pool.query('SELECT * FROM users WHERE users_id=$1', [req.params.id]);
+        const result = yield pool.query('SELECT * FROM users WHERE users_id=$1', [req.params.id]);
+        if (result.rowCount == 0) {
+            return next(new HttpException_1.default(404, 'User not found'));
+        }
+        let user = {
+            users_id: result.rows[0].users_id,
+            email: result.rows[0].email,
+            password: result.rows[0].password,
+            isAdmin: result.rows[0].isadmin,
+            refreshToken: result.rows[0].refreshtoken
+        };
         return user;
     });
 }
-function getUserByEmail(email, res) {
+function getUserByEmail(email, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield pool.query('SELECT * FROM users WHERE email=$1', [email]);
+        if (user.rowCount == 0) {
+            return next(new HttpException_1.default(404, 'User not found'));
+        }
         return user.rows[0];
     });
 }
-function updateUser(req, res) {
+function updateUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = yield getUser(req, res);
-        let oldUser = { email: user.rows[0].email, password: user.rows[0].password };
+        const user = yield getUser(req, res, next);
+        if (!user) {
+            return next();
+        }
         const newUser = pool.query('UPDATE users SET email=$1, password=$2 WHERE users_id=$3', [
-            (req.body.email != null && req.body.email.length ? req.body.email : oldUser.email),
-            (req.body.password != null && req.body.password.length ? yield hashPassword(req.body.password) : oldUser.password),
+            (req.body.email != null && req.body.email.length ? req.body.email : user.email),
+            (req.body.password != null && req.body.password.length ? yield hashPassword(req.body.password) : user.password),
             req.params.id
         ]);
         return newUser;

@@ -51,6 +51,8 @@ router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, 
  * /user/{id}:
  *    get:
  *      description: Returns specific user
+ *      security:
+ *          - bearerAuth: [] 
  *      tags:
  *          - user endpoints
  *      responses:
@@ -66,9 +68,9 @@ router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, 
  *            description: id of the user
  *            required: true
  */
-router.get('/:id', async(req: express.Request, res: express.Response) => {
+router.get('/:id', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-        const user = await userFunctions.getUser(req)
+        const user = await userFunctions.getUser(req, res, next)
         res.json(user);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
@@ -111,10 +113,10 @@ router.get('/:id', async(req: express.Request, res: express.Response) => {
  *                        type: string
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-        const updateduser = await userFunctions.updateUser(req)
-        res.json(updateduser);
+        const updateduser = await userFunctions.updateUser(req, res ,next)
+        res.status(201).json("successfully changed a user")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -145,7 +147,7 @@ router.patch('/:id', authenticationFunctions.isAdmin, async (req: express.Reques
 router.delete('/:id', authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
     try {
         const deleteduser = await userFunctions.deleteUser(req)
-        res.json(deleteduser);
+        res.status(201).json("successfully deleted a user")
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -182,7 +184,7 @@ router.post('/register', async(req: express.Request, res: express.Response) => {
         if(!newUser) {
             res.status(500).json({ message: "register not successful" })
         }
-        res.status(201).json(newUser)
+        res.status(201).json("successfully registered a new user")
     } catch (err: any) {
         res.status(400).json({ message: err.message })
     }
