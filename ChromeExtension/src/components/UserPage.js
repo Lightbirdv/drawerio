@@ -1,7 +1,6 @@
 /*global chrome*/
 import React, { useEffect, useState } from "react";
 import "./UserPage.css";
-import cheerio from "cheerio";
 import axios from "axios";
 import LoginForm from "./LoginForm";
 import jwtDecode from "jwt-decode";
@@ -25,16 +24,35 @@ const UserPage = function () {
     let [tab] = await chrome.tabs.query(queryOptions);
     setTabURL(tab.url);
     let result;
+    let resultTwo;
+
     try {
       [{ result }] = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: () => getSelection().toString(),
       });
+      resultTwo = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: () => {
+          const images = document.querySelectorAll("img");
+          const imagesResult = [];
+          images.forEach(function (image) {
+            if (image.src.startsWith("http")) {
+              imagesResult.push(image.src);
+            }
+          });
+          return imagesResult;
+        },
+      });
     } catch (e) {
+      console.log(e);
       return;
     }
     setSelectedText(result);
-    console.log(tab.url);
+    console.log(resultTwo[0].result);
+    setAllImages([...resultTwo[0].result]);
+    console.log(resultTwo);
+    console.log(result);
     return tab;
   }, []);
 
@@ -123,6 +141,7 @@ const UserPage = function () {
     setTextfieldInput(event.target.value);
   };
 
+  /*
   const grabHandler = function () {
     axios.get(tabURL).then((res) => {
       const $ = cheerio.load(res.data);
@@ -132,7 +151,7 @@ const UserPage = function () {
         setAllImages((allImages) => [...allImages, { IMAGESRC }]);
       });
     });
-  };
+  };*/
 
   return (
     <div>
@@ -154,12 +173,6 @@ const UserPage = function () {
           </option>
         ))}
       </select>
-      <button
-        className="userpage-text--button-grab__design"
-        onClick={grabHandler}
-      >
-        Grab!
-      </button>
       <p className="comment-text__design">Comment:</p>
       <div className="userpage-textarea">
         <textarea
@@ -172,7 +185,7 @@ const UserPage = function () {
       </div>
       <ImagePicker
         images={allImages.map((image, i) => ({
-          src: image.IMAGESRC,
+          src: image,
           value: i,
         }))}
         onPick={onPick}
