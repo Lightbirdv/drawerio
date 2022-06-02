@@ -25,7 +25,7 @@ const LoginForm = function (props) {
   }
 
   return (
-    <div>
+    <div className="login-form-container">
       <div className="login-form--text">
         <p>Hello, please log in!</p>
       </div>
@@ -84,22 +84,21 @@ const LoginForm = function (props) {
           </p>
         </div>
 
-        <div className="login-form--button-login">
-          <button type="submit" className="login-form--button-login__design">
-            Log In
-          </button>
-        </div>
-        <div className="login-form--button-register">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setGoRegPage(true);
-            }}
-            className="login-form--button-register__design"
-          >
-            Register
-          </button>
-        </div>
+   
+        <button type="submit" className="login-form--button-login__design">
+          Log In
+        </button>
+        
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setGoRegPage(true);
+          }}
+          className="login-form--button-register__design"
+        >
+          Register
+        </button>
+        
       </form>
     </div>
   );

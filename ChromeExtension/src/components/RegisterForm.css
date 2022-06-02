@@ -1,22 +1,24 @@
+.register-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  margin-top: 6rem;
+  width: 80%;
+  color: #4F4F4F;
+}
+
 .register-form__design {
   display: flex;
   flex-direction: column;
-  margin-top: 25px;
-  width: 250px;
-}
-
-.register-form--username {
-  margin-left: 10%;
 }
 
 .register-form--password {
-  margin-top: 30px;
-  margin-left: 10%;
+  width: 100%;
 }
 
 .register-form--email {
-  margin-top: 30px;
-  margin-left: 10%;
+  width: 100%;
 }
 
 .register-form--username__design {
@@ -28,6 +30,8 @@
 }
 
 .register-form--password__design {
+  margin-top: 2rem;
+  width: 100%;
   border-left: none;
   border-top: none;
   border-right: none;
@@ -36,6 +40,7 @@
 }
 
 .register-form--email__design {
+  width: 100%;
   border-left: none;
   border-top: none;
   border-right: none;
@@ -45,37 +50,39 @@
 
 .register-form--button-back__design {
   width: 100%;
-  border: none;
-  border-radius: 10px;
-  transition-duration: 0.4s;
-  background-color: rgb(199, 199, 199);
+  height: 2.3rem;
+  border: 1px solid #ACDECE;
+  border-radius: 20px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  background-color: white;
+  color: #ACDECE;
 }
 
 .register-form--button-back {
-  margin-left: 50%;
-  margin-top: 5%;
+
 }
 
 .register-form--button-back__design:hover {
-  background-color: lightgreen;
   transform: scale(1.05);
 }
 
 .register-form--button-create {
-  margin-left: 50%;
-  margin-top: 20%;
+
 }
 
 .register-form--button-create__design {
   width: 100%;
+  height: 2.3rem;
   border: none;
-  border-radius: 10px;
-  transition-duration: 0.4s;
-  background-color: rgb(199, 199, 199);
+  border-radius: 20px;
+  margin: 0 auto;
+  margin-top: 2rem;
+  background-color: #ACDECE;
+  color: white;
 }
 
 .register-form--button-create__design:hover {
-  background-color: lightgreen;
   transform: scale(1.05);
 }
 
@@ -84,9 +91,7 @@
 }
 
 .register-form--text {
-  font-size: 1.1rem;
-  margin-top: 20%;
-  margin-left: 6%;
+  font-size: 1.5rem;
 }
 
 .error-message {

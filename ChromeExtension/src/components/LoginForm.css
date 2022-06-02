@@ -1,20 +1,20 @@
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  margin-top: 6rem;
+  width: 80%;
+  color: #4F4F4F;
+}
+
 .login-form__design {
   display: flex;
   flex-direction: column;
-  margin-top: 55px;
-  width: 250px;
-}
-
-.login-form--email {
-  margin-left: 10%;
-}
-
-.login-form--password {
-  margin-top: 30px;
-  margin-left: 10%;
 }
 
 .login-form--email__design {
+  width: 100%;
   border-left: none;
   border-top: none;
   border-right: none;
@@ -23,6 +23,8 @@
 }
 
 .login-form--password__design {
+  width: 100%;
+  margin-top: 2rem;
   border-left: none;
   border-top: none;
   border-right: none;
@@ -30,39 +32,35 @@
   outline: none;
 }
 
+
+
 .login-form--button-login__design {
   width: 100%;
+  height: 2.3rem;
   border: none;
-  border-radius: 10px;
-  transition-duration: 0.4s;
-  background-color: rgb(199, 199, 199);
-}
-
-.login-form--button-login {
-  margin-left: 50%;
-  margin-top: 20%;
+  border-radius: 20px;
+  margin: 0 auto;
+  margin-top: 2rem;
+  background-color: #ACDECE;
+  color: white;
 }
 
 .login-form--button-login__design:hover {
-  background-color: lightgreen;
   transform: scale(1.05);
-}
-
-.login-form--button-register {
-  margin-left: 50%;
-  margin-top: 5%;
 }
 
 .login-form--button-register__design {
   width: 100%;
-  border: none;
-  border-radius: 10px;
-  transition-duration: 0.4s;
-  background-color: rgb(199, 199, 199);
+  height: 2.3rem;
+  border: 1px solid #ACDECE;
+  border-radius: 20px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  background-color: white;
+  color: #ACDECE;
 }
 
 .login-form--button-register__design:hover {
-  background-color: lightgreen;
   transform: scale(1.05);
 }
 
@@ -71,9 +69,7 @@
 }
 
 .login-form--text {
-  font-size: 1.1rem;
-  margin-top: 20%;
-  margin-left: 6%;
+  font-size: 1.5rem;
 }
 
 .login-form--password-forgot {

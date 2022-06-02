@@ -6,6 +6,7 @@ import LoginForm from "./LoginForm";
 import jwtDecode from "jwt-decode";
 import ImagePicker from "react-image-picker";
 import "react-image-picker/dist/index.css";
+import logoutImage from "../imagesProject/logout.svg";
 
 const UserPage = function () {
   const [allImages, setAllImages] = useState([]);
@@ -155,58 +156,62 @@ const UserPage = function () {
 
   return (
     <div>
-      <button
-        onClick={logOut}
-        className="userpage-text--button-signout__design"
-      >
-        Sign out!
-      </button>
-      <select className="userpage-top--list__design" onChange={handleChange}>
-        <option>Select Drawer...</option>
-        {drawer.map((alldrawer) => (
-          <option
-            key={alldrawer.drawer_id}
-            onSelect={handleChange}
-            value={alldrawer.drawer_id}
-          >
-            {alldrawer.drawertitle}
-          </option>
-        ))}
-      </select>
-      <p className="comment-text__design">Comment:</p>
-      <div className="userpage-textarea">
-        <textarea
-          className="userpage-textarea__design"
-          placeholder="Your text..."
-          onChange={handleTextinput}
-          rows={7}
-          cols={50}
-        ></textarea>
-      </div>
-      <ImagePicker
-        images={allImages.map((image, i) => ({
-          src: image,
-          value: i,
-        }))}
-        onPick={onPick}
-        multiple
-      />
-      {/* {allImages.map((images) => (
-        <div className="userpage-middle">
-          <img
-            className="userpage-middle--images__design"
-            src={images.IMAGESRC}
-          ></img>
+      <div className="user-page-container">
+        <button
+          onClick={logOut}
+          className="userpage-text--button-signout__design"
+        >
+          <p>logout</p><img src={logoutImage} alt="logout svg" className="userpage-image--signout-image"></img>
+        </button>
+        <select className="userpage-top--list__design" onChange={handleChange}>
+          <option>Select Drawer...</option>
+          {drawer.map((alldrawer) => (
+            <option
+              key={alldrawer.drawer_id}
+              onSelect={handleChange}
+              value={alldrawer.drawer_id}
+            >
+              {alldrawer.drawertitle}
+            </option>
+          ))}
+        </select>
+        <p className="comment-text__design">Comment:</p>
+        <div className="userpage-textarea">
+          <textarea
+            className="userpage-textarea__design"
+            placeholder="Your text..."
+            onChange={handleTextinput}
+            rows={7}
+            cols={50}
+          ></textarea>
         </div>
-      ))} */}
-      <div className="down-site">
-        <div className="userpage-bottom--button">
-          <button
-            className="userpage-bottom--button-save__design"
-            onClick={handleClick}
-          >
-            Save
-          </button>
+        <div className="userpage-imagearea">
+          <ImagePicker
+            images={allImages.map((image, i) => ({
+              src: image,
+              value: i,
+            }))}
+            onPick={onPick}
+            multiple
+          />
+        </div>
+        {/* {allImages.map((images) => (
+          <div className="userpage-middle">
+            <img
+              className="userpage-middle--images__design"
+              src={images.IMAGESRC}
+            ></img>
+          </div>
+        ))} */}
+        <div className="down-site">
+          <div className="userpage-bottom--button">
+            <button
+              className="userpage-bottom--button-save__design"
+              onClick={handleClick}
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>

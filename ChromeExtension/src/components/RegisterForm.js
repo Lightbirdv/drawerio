@@ -18,7 +18,7 @@ const RegisterForm = function (props) {
   }
 
   return (
-    <div>
+    <div className="register-form-container">
       <div className="register-form--text">
         <p>Registration</p>
       </div>
