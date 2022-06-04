@@ -1,8 +1,8 @@
-CREATE DATABASE drawerio;
+export const databasequery = `CREATE DATABASE ${process.env.DB};`;
 
---user table
+// user table
 
-CREATE TABLE users(
+export const tableuserquery = `CREATE TABLE IF NOT EXISTS users(
     users_id SERIAL PRIMARY KEY,
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -10,11 +10,11 @@ CREATE TABLE users(
     refreshToken VARCHAR(255),
     forgotToken VARCHAR(255),
     forgotExpires TIMESTAMP
-);
+);`;
 
---drawer table
+// drawer table
 
-CREATE TABLE drawer(
+export const tabledrawerquery = `CREATE TABLE IF NOT EXISTS drawer(
     drawer_id SERIAL PRIMARY KEY,
     drawerTitle VARCHAR(50) NOT NULL,
     creationDate TIMESTAMP NOT NULL,
@@ -23,11 +23,11 @@ CREATE TABLE drawer(
     CONSTRAINT fk_users
         FOREIGN KEY(users_id) 
 	        REFERENCES users(users_id) ON DELETE CASCADE
-);
+);`;
 
---drawerentries table
+// drawerentries table
 
-CREATE TABLE drawerentries(
+export const tabledrawerentriesquery = `CREATE TABLE IF NOT EXISTS drawerentries(
     drawerentry_id SERIAL PRIMARY KEY,
     creationDate TIMESTAMP NOT NULL,
     originURL VARCHAR(255),
@@ -38,4 +38,4 @@ CREATE TABLE drawerentries(
     CONSTRAINT fk_drawer
         FOREIGN KEY(drawer_id) 
 	        REFERENCES drawer(drawer_id) ON DELETE CASCADE
-);
+);`;
