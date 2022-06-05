@@ -3,7 +3,6 @@ require('dotenv').config();
 
 const { databasequery, tableuserquery, tabledrawerquery, tabledrawerentriesquery } = require('./database.ts');
 
-console.log(process.env.PASSWORD)
 let masterclient = new pg.Client({
     host: 'localhost',
     database: 'postgres',

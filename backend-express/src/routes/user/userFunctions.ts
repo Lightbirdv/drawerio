@@ -39,7 +39,7 @@ async function getUserByEmail(email:string, res:express.Response, next:express.N
     [email]
   );
   if(user.rowCount == 0) {
-    return next(new HttpException(404, 'User not found'));
+    return next(new HttpException(401, 'Unauthorized'));
   } 
   return user.rows[0]
 }

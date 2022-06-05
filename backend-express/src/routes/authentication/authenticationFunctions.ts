@@ -25,6 +25,7 @@ async function login(req: express.Request, res: express.Response, next: express.
     }
     let user = await userFunctions.getUserByEmail(req.body.email, res, next)
     if(!user) {
+        console.log("bla1")
         return next()
     }
     if(await bcrypt.compare(req.body.password, user.password)) {
@@ -32,11 +33,11 @@ async function login(req: express.Request, res: express.Response, next: express.
         let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET)
         let updatedUser = await userFunctions.insertRefreshToken(user, refreshToken)
         if(!updatedUser) {
-            return null
+            return next()
         }
         return {accessToken, refreshToken}
     } else {
-        return null
+        return next()
     }
 }
 
@@ -110,6 +111,15 @@ async function isAdmin(req: any, res: express.Response, next:express.NextFunctio
     })
 }
 
+async function logout(req: any, res: express.Response, next:express.NextFunction) { 
+    let user = req.user
+    let updatedUser = await userFunctions.insertRefreshToken(user, '')
+    if(!updatedUser) {
+        return next()
+    }
+    return true
+}
+
 module.exports = {
     login,
     authenticateToken,
@@ -117,4 +127,5 @@ module.exports = {
     refreshTheToken,
     deleteRefreshToken,
     isAdmin,
+    logout
 };

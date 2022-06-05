@@ -9,7 +9,8 @@
     "start": "concurrently npm:start:*",
     "build": "tsc",
     "db:create": "ts-node --prefer-ts-exts ./db/createdb.ts",
-    "db:delete": "ts-node --prefer-ts-exts ./db/deletedb.ts"
+    "db:delete": "ts-node --prefer-ts-exts ./db/deletedb.ts",
+    "db:seed": "ts-node --prefer-ts-exts ./db/seeddb.ts"
   },
   "keywords": [],
   "author": "",
