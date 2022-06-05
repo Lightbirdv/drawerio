@@ -24,6 +24,7 @@ function login(req, res, next) {
         }
         let user = yield userFunctions.getUserByEmail(req.body.email, res, next);
         if (!user) {
+            console.log("bla1");
             return next();
         }
         if (yield bcrypt.compare(req.body.password, user.password)) {
@@ -31,12 +32,12 @@ function login(req, res, next) {
             let refreshToken = jwt.sign({ 'user': user.email }, process.env.REFRESH_TOKEN_SECRET);
             let updatedUser = yield userFunctions.insertRefreshToken(user, refreshToken);
             if (!updatedUser) {
-                return null;
+                return next();
             }
             return { accessToken, refreshToken };
         }
         else {
-            return null;
+            return next();
         }
     });
 }
@@ -120,6 +121,16 @@ function isAdmin(req, res, next) {
         }));
     });
 }
+function logout(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let user = req.user;
+        let updatedUser = yield userFunctions.insertRefreshToken(user, '');
+        if (!updatedUser) {
+            return next();
+        }
+        return true;
+    });
+}
 module.exports = {
     login,
     authenticateToken,
@@ -127,4 +138,5 @@ module.exports = {
     refreshTheToken,
     deleteRefreshToken,
     isAdmin,
+    logout
 };

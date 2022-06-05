@@ -42,12 +42,7 @@ const authenticationFunctions = require('./authenticationFunctions');
 router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { accessToken, refreshToken } = yield authenticationFunctions.login(req, res, next);
-        if (!accessToken) {
-            res.status(500).json({ message: "login not successful!" });
-        }
-        else {
-            res.status(200).json(accessToken);
-        }
+        res.status(200).json(accessToken);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -118,5 +113,29 @@ router.get('/isAdmin', authenticationFunctions.authenticateToken, (req, res) => 
     }
     let json = { "isadmin": req.user.isadmin };
     return res.status(200).json(json);
+}));
+/**
+ * @swagger
+ * /auth/logout:
+ *    post:
+ *      description: Returns refreshed token
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully logged out user
+ *        '500':
+ *          description: Failed to logout user
+ */
+router.post('/logout', authenticationFunctions.authenticateToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield authenticationFunctions.logout(req, res, next);
+        return res.status(200).json("successfully logged out user");
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 }));
 module.exports = router;

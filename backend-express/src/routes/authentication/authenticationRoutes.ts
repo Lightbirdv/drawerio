@@ -30,11 +30,7 @@ import { User } from './authenticationFunctions'
  router.post('/login', async(req: express.Request, res: express.Response, next:express.NextFunction) => {
     try {
         const {accessToken, refreshToken} = await authenticationFunctions.login(req, res, next)
-        if(!accessToken) {
-            res.status(500).json({ message: "login not successful!" })
-        } else {
-            res.status(200).json(accessToken);
-        }
+        res.status(200).json(accessToken);
     } catch (err: any) {
         res.status(500).json({ message: err.message })
     }
@@ -107,6 +103,30 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, a
     }
     let json: JSON= <JSON><unknown>{"isadmin": req.user.isadmin}
     return res.status(200).json(json);
+})
+
+/**
+ * @swagger
+ * /auth/logout:
+ *    post:
+ *      description: Returns refreshed token
+ *      security:
+ *          - bearerAuth: [] 
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully logged out user
+ *        '500':
+ *          description: Failed to logout user
+ */
+ router.post('/logout', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response, next: express.NextFunction) =>{
+    try {
+        await authenticationFunctions.logout(req, res, next);
+        return res.status(200).json("successfully logged out user");
+    } catch (err: any) {
+        res.status(500).json({ message: err.message })
+    }    
 })
 
 module.exports = router
