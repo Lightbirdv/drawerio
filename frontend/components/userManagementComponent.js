@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import * as ReactBootStrap from "react-bootstrap";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -14,15 +14,13 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
+import { Col, Container, Row } from "react-bootstrap";
 
 
 
 const UserManagement = () => {
 
-    const router = useRouter();
-    const forceReload = () => {
-        router.reload();
-    }
+    const [reducerValue, forceUpdate] = useReducer(x => x + 1, 0);
 
     const [pw, setPw] = useState('');
     const [state, setState] = useState('');
@@ -51,20 +49,20 @@ const UserManagement = () => {
         e.preventDefault();
         console.log(email, password, _id)
         updateUser(email, password, _id)
-        forceReload()
+        forceUpdate()
     }
 
     const deleteU = (e, _id) => {
         e.preventDefault();
         deleteUser(_id)
-        forceReload()
+        forceUpdate()
     }
 
     const handleAdmin = (e, _id) => {
         console.log(_id)
         e.preventDefault();
         makeAdmin(_id)
-        forceReload()
+        forceUpdate()
     }
 
 
@@ -89,39 +87,48 @@ const UserManagement = () => {
             console.log(data);
         };
         fetchPostList();
-    }, [setPosts]);
+    }, [reducerValue]);
 
     /* Searchinput */
     const [searchTerm, setSearchTerm] = useState('');
 
     return (
-        <div style={{ marginTop: "50px" }}>
+        <div style={{ marginTop: "20px" }}>
             {/* Searchfield */}
-            <input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ margin: "10px", width: "200px", height: "30px", paddingLeft: "10px", fontSize: "15px" }} />
-            <ReactBootStrap.Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>email</th>
-                        <th>isAdmin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {posts.blogs &&
-                        posts.blogs.filter((item) => {
-                            if (searchTerm == "") {
-                                return item
-                            } else if (item.email.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return item
-                            }
-                        }
-                        ).map((item) => (
-                            <tr key={item.users_id}>
-                                <td>{item.users_id}</td>
-                                <td>{item.email}</td>
-                                <td>{item.isadmin.toString()}</td>
-                                <td>
-                                    <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={handleShowUpd}><MdOutlineModeEdit /></button>
+            
+            <Row style={{ margin: "30px" }}>
+        <Col>
+          <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "45px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
+        </Col>
+        </Row>
+            
+               {posts.blogs &&
+                posts.blogs.filter((item) => {
+                    if (searchTerm == "") {
+                        return item
+                    } else if (item.email.toLowerCase().includes(searchTerm.toLowerCase())) {
+                        return item
+                    }
+                }
+                ).map((item) => (
+                    <Container key={item.users_id}>
+
+                        <Row style={{ marginTop: "20px" }}>
+                            <Col xs="1">
+                                <div style={{ width: "30px", height: "30px", backgroundColor: "white", borderRadius: "50%" }}></div>
+                            </Col>
+
+                            <Col>
+                                <span>{item.users_id}</span>
+                            </Col>
+                            <Col xs="4" style={{ marginRight: "100px" }}>
+                                <span>{item.email}</span>
+                            </Col>
+                            <Col>
+                                <span>{item.isadmin.toString()}</span>
+                            </Col>
+                            <Col>
+                                <span><button type="button" class="btn btn-warning" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={handleShowUpd}><MdOutlineModeEdit /></button>
                                     <Modal show={showUpd} onHide={handleCloseUpd}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>Update User</Modal.Title>
@@ -139,17 +146,17 @@ const UserManagement = () => {
                                             </Form>
                                         </Modal.Body>
                                         <Modal.Footer>
-                                            <Button variant="secondary" onClick={handleCloseUpd}>
+                                            <Button variant="secondary" onClick={handleCloseUpd} style={{ borderRadius: '15px' }}>
                                                 <MdClose />
                                             </Button>
                                             <Button variant="primary"
-                                                onClick={(e) => { handleUpdate(e, item.users_id); handleCloseUpd() }} >
+                                                onClick={(e) => { handleUpdate(e, item.users_id); handleCloseUpd() }} style={{ borderRadius: '15px' }}>
                                                 <MdCheck />
                                             </Button>
                                         </Modal.Footer>
                                     </Modal>
-                                    <button type="button" class="btn btn-success" style={{ marginRight: "10px" }} onClick={(e) => handleAdmin(e, item.email)}><MdAdminPanelSettings /></button>
-                                    <button type="button" class="btn btn-danger" style={{ marginRight: "10px" }} onClick={handleDeleteShow}><MdDeleteForever /></button>
+                                    <button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => handleAdmin(e, item.email)}><MdAdminPanelSettings /></button>
+                                    <button type="button" class="btn btn-danger" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={handleDeleteShow}><MdDeleteForever /></button>
                                     <Modal show={showDelete} onHide={handleCloseDelete}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>Delete User</Modal.Title>
@@ -158,20 +165,23 @@ const UserManagement = () => {
                                             Are you sure you want to permanently delete {item.email}?
                                         </Modal.Body>
                                         <Modal.Footer>
-                                            <Button variant="secondary" onClick={handleCloseDelete}>
+                                            <Button variant="secondary" onClick={handleCloseDelete} style={{ borderRadius: '15px' }}>
                                                 <MdClose />
                                             </Button>
                                             <Button variant="primary"
-                                                onClick={(e) => { deleteU(e, item.users_id); handleCloseDelete() }}>
+                                                onClick={(e) => { deleteU(e, item.users_id); handleCloseDelete() }} style={{ borderRadius: '15px' }}>
                                                 <MdCheck />
                                             </Button>
                                         </Modal.Footer>
-                                    </Modal>
-                                </td>
-                            </tr>
-                        ))}
-                </tbody>
-            </ReactBootStrap.Table>
+                                    </Modal></span>
+                            </Col>
+
+
+
+
+                        </Row>
+                    </Container>
+                ))}
         </div>
     );
 };

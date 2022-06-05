@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import * as ReactBootStrap from "react-bootstrap";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -13,6 +13,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import FullPic from "./fullPic";
+import { Col, Container, Row } from "react-bootstrap";
 
 
 
@@ -24,10 +25,7 @@ const ThirdPage = () => {
     userID: ''
   })
 
-  const router = useRouter();
-  const forceReload = () => {
-    router.reload();
-  }
+  const [reducerValue, forceUpdate] = useReducer(x => x + 1, 0);
 
 
   const [showDelete, setShowDelete] = useState(false);
@@ -66,7 +64,7 @@ const ThirdPage = () => {
     e.preventDefault();
     console.log(_id);
     entryDelete(_id)
-    forceReload();
+    forceUpdate();
   }
 
 
@@ -100,7 +98,7 @@ const ThirdPage = () => {
       console.log(data);
     };
     fetchPostList();
-  }, [setPosts]);
+  }, [reducerValue]);
 
   /* Searchinput */
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,71 +110,96 @@ const ThirdPage = () => {
   }
 
   return (
-    <div style={{ marginTop: "50px" }}>
-      <input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ margin: "10px", width: "200px", height: "30px", paddingLeft: "10px", fontSize: "15px" }} />
-      <ReactBootStrap.Table striped>
-        <thead>
-          <tr>
-            {/* <th>ID</th> */}
-            <th style={{ paddingLeft: "50px", paddingRight: "50px" }}>Date</th>
-            <th>Comment</th>
-            <th>Text</th>
-            <th>URL</th>
-            <th>Pictures</th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.blogs &&
-            posts.blogs.filter((item) => {
-              if (searchTerm == "") {
-                return item
-              } else if (item.comment.toLowerCase().includes(searchTerm.toLowerCase())) {
-                return item
-              }
-            }
-            ).map((item) => (
-              <tr key={item.id}>
-                <td>{dayjs(item.creationdate).format('MMM, D, YYYY')}</td>
-                <td>{item.comment}</td>
-                <td>{item.seltext}</td>
-                <td>{item.originurl}</td>
-                <td><div className="grid grid-cols-6 gap-1">
-                  {item.imageurl &&
-                    item.imageurl.map((x) => (
+    <div style={{ marginTop: "20px" }}>
+      <Row style={{ margin: "30px" }}>
+        <Col>
+          <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "142px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
+        </Col>
+        </Row>
 
-                      <div className="relative" >
-                        <div className="absolute inset-0 z-10 flex transition duration-300 ease-in hover:opacity-0" onClick={(e) => showPicture(e, x)}>
-                          <div className="absolute inset-0 bg-black opacity-30"> </div>
-                          {/* <div className="mx-auto text-white z-10 self-center uppercase tracking-widest text-sm">Hello World</div> */}
+      {posts.blogs &&
+        posts.blogs.filter((item) => {
+          if (searchTerm == "") {
+            return item
+          } else if (item.comment.toLowerCase().includes(searchTerm.toLowerCase())) {
+            return item
+          }
+        }
+        ).map((item) => (
+          <Container style={{width: "70%", textAlign:"left", background:"white", borderRadius: '15px'}} >
+          <p key={item.id}>
+            <Row style={{margin:"20px", paddingTop:"10px"}} >
+              <Col style={{textAlign: "center"}}>
+                <span style={{fontSize:"50px"}}>{dayjs(item.creationdate).format('MMM, D, YYYY')}</span>
+              </Col>
+            </Row>
+            <Row style={{margin:"20px"}}>
+              <Col>
+                <span style={{fontSize:"30px"}}>{item.comment}</span>
+              </Col>
+            </Row>
 
-                        </div>
-                        <img src={x} style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} />
-                      </div>
-                    ))}
-                </div></td>
-                <td>
-                  <button type="button" class="btn btn-danger" style={{ marginRight: "10px" }} onClick={(e) => { saveDrawerEntry(e, item.drawerentry_id); handleDeleteShow() }}><MdDeleteForever /></button>
-                  <Modal show={showDelete} onHide={handleCloseDelete}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Delete Entry</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      Are you sure you want to permanently delete ?
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseDelete}>
-                        <MdClose />
-                      </Button>
-                      <Button variant="primary"
-                        onClick={(e) => { deleteDrawer(e, localStorage.getItem("entry_id")); handleCloseDelete() }}>
-                        <MdCheck />
-                      </Button>
-                    </Modal.Footer>
-                  </Modal></td>
-              </tr>
-            ))}
-        </tbody>
-      </ReactBootStrap.Table>
+            <Row style={{margin:"20px"}}>
+              <Col>
+                <span>{item.seltext}</span>
+              </Col>
+            </Row>
+
+            <Row style={{margin:"20px"}}>
+              <Col>
+              <span><a href={item.originurl}>{item.originurl}</a></span>
+              </Col>
+            </Row>
+           
+            <Row >
+              <Col>
+            <p><div className="grid grid-cols-4 gap-2" >
+              {item.imageurl &&
+                item.imageurl.map((x) => (
+
+                  <div className="relative" >
+                    <div className="absolute inset-0 z-10 flex transition duration-300 ease-in hover:opacity-0" onClick={(e) => showPicture(e, x)}>
+                      <div className="absolute inset-0 bg-black opacity-30"> </div>
+                      {/* <div className="mx-auto text-white z-10 self-center uppercase tracking-widest text-sm">Hello World</div> */}
+
+                    </div>
+                    {/* <div style={{margin:"auto"}}> */}
+                    <img src={x} style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} />
+                    {/* </div> */}
+                  </div>
+                ))}
+            </div></p>
+            {/*   <td> */}
+            </Col>
+            </Row>
+
+            <Row style={{margin:"10px", padding:"10px", textAlign:"right"}}>
+              <Col>
+            <button type="button" class="btn btn-danger" style={{ borderRadius: '15px' }} onClick={(e) => { saveDrawerEntry(e, item.drawerentry_id); handleDeleteShow() }}><MdDeleteForever /></button>
+            <Modal show={showDelete} onHide={handleCloseDelete}>
+              <Modal.Header closeButton>
+                <Modal.Title>Delete Entry</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Are you sure you want to permanently delete ?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseDelete} style={{ borderRadius: '15px' }}>
+                  <MdClose />
+                </Button>
+                <Button variant="primary"
+                  onClick={(e) => { deleteDrawer(e, localStorage.getItem("entry_id")); handleCloseDelete()}} style={{ borderRadius: '15px' }}>
+                  <MdCheck />
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            
+            </Col>
+            </Row></p>
+            </Container>
+        ))}
+      {/*  </tbody> */}
+      {/* </ReactBootStrap.Table> */}
     </div>
   );
 };

@@ -1,5 +1,11 @@
 
+const uhu = "";
 export const getname = (name) => {
     console.log(name)
-        return name;
+
+        uhu = name;
     }
+
+    export const newName = () =>{
+        return uhu;
+    } 

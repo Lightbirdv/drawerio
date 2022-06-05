@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import * as ReactBootStrap from "react-bootstrap";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -19,21 +19,18 @@ import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { MdSupervisorAccount } from "react-icons/md";
+import { Col, Container, Row } from "react-bootstrap";
 
 
 
 const adminPageComponent = () => {
 
-  const router = useRouter();
-  const forceReload = () => {
-    router.reload();
-  }
+  const [reducerValue, forceUpdate] = useReducer(x => x + 1, 0);
 
   const [state, setState] = useState({ drawerName: '' })
   const [newDrawName, setName] = useState('');
   const [newDime, setDime] = useState('');
   const [newUid, setUid] = useState('');
-
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -48,30 +45,22 @@ const adminPageComponent = () => {
   const handleDeleteShow = () => setShowDelete(true);
 
 
-
   const handleChange = event => {
     setState({ [event.target.name]: event.target.value });
     console.log(event.target.name)
   }
+
   const handleName = event => {
     setName({ newName: event.target.value });
     console.log(event.target.name)
   }
-  const handledime = event => {
-    setDime({ dime: event.target.value });
-    console.log(event.target.name)
-  }
-  const handleUid = event => {
-    setUid({ userID: event.target.value });
-    console.log(event.target.name)
-  }
 
-
+  
   const handleSubmit = event => {
     const { drawerName } = state;
     console.log(drawerName)
     addDrawer(localStorage.getItem('token'), drawerName)
-    forceReload();
+    forceUpdate();
   }
 
   const handleUpdate = (e, _id) => {
@@ -81,13 +70,13 @@ const adminPageComponent = () => {
     e.preventDefault();
     console.log(newName, dime, userID, _id)
     updateDrawer(newName, dime, userID, _id)
-    forceReload();
+    forceUpdate();
   }
 
   const deleteDrawer = (e, _id) => {
     e.preventDefault();
     deleteD(_id)
-    forceReload();
+    forceUpdate();
   }
 
   const goNext = (e, _id) => {
@@ -100,10 +89,6 @@ const adminPageComponent = () => {
   const goToUserManagement = (e) => {
     e.preventDefault();
     Router.push("/userpage")
-  }
-
-  const welcome = () => {
-    return Storage = localStorage.getItem("email");
   }
 
 
@@ -122,15 +107,11 @@ const adminPageComponent = () => {
       console.log(data);
     };
     fetchPostList();
-  }, [setPosts]);
+     
+  }, [reducerValue]);
 
   /* Searchinput */
   const [searchTerm, setSearchTerm] = useState('');
-
-  /* Name */
-  /* let token = localStorage.getItem("token");
-  let decodedToken = jwtDecode(token);
-  const name = decodedToken.email; */
 
   const saveDrawer = (e, _id) => {
     e.preventDefault();
@@ -146,58 +127,61 @@ const adminPageComponent = () => {
 
   return (
     <div style={{ marginTop: "20px" }}>
-      {/* <h1>{xxx()}</h1> */}
-      {/* Searchfield */}
-      <input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ margin: "10px", width: "200px", height: "30px", paddingLeft: "10px", fontSize: "15px" }} />
-      <ReactBootStrap.Table striped bordered hover>
-        <thead>
-          <tr>
-            {/* <th>ID</th> */}
-            <th>Title</th>
-            <th>Date</th>
-            <th><button type="button" class="btn btn-secondary" onClick={handleShow} style={{marginRight:"10px"}}><MdAdd /></button>
+      <Row style={{ margin: "30px" }}>
+        <Col>
+          <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "30px", marginRight:"10px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
+        {/* </Col>
+        <Col style={{ marginLeft: "-500px" }}> */}
+          <span ><button type="button" class="btn btn-secondary" onClick={handleShow} style={{ borderRadius: '15px',marginRight:"10px" }}><MdAdd /></button>
+             <span><button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple", borderRadius: '15px'}}><MdSupervisorAccount/></button></span>
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add a new Drawer</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Group className="mb-3" id="drawerName">
+                    <Form.Label>Set a Name</Form.Label>
+                    <Form.Control id="drawerNew" type="text" placeholder="new Drawer Name" name='drawerName' onChange={handleChange} />
+                  </Form.Group>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose} style={{ borderRadius: '15px' }}>
+                  <MdClose />
+                </Button>
+                <Button variant="primary"
+                  onClick={(e) => { handleSubmit(); handleClose() }} style={{ borderRadius: '15px' }}>
+                  <MdCheck />
+                </Button>
+              </Modal.Footer>
+            </Modal></span>
+        </Col>
+      </Row>
+      {get.blogs &&
+        get.blogs.filter((item) => {
+          if (searchTerm == "") {
+            return item
+          } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase())) {
+            return item
+          }
+        }
+        ).map((item) => (
+          <Container key={item.id}>
+            <Row style={{ marginTop: "20px" }} >
+            <Col xs="1">
+              <div style={{width:"30px", height:"30px", backgroundColor: "white", borderRadius: "50%"}}></div>
+              </Col>
 
-               <button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple"}}><MdSupervisorAccount/></button>
-              <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form>
-                    <Form.Group className="mb-3" id="drawerName">
-                      <Form.Label>Set a Name</Form.Label>
-                      <Form.Control id="drawerNew" type="text" placeholder="new Drawer Name" name='drawerName' onChange={handleChange} />
-                    </Form.Group>
-                  </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    <MdClose />
-                  </Button>
-                  <Button variant="primary"
-                    onClick={(e) => { handleSubmit(); handleClose() }} >
-                    <MdCheck />
-                  </Button>
-                </Modal.Footer>
-              </Modal></th>
-          </tr>
-        </thead>
-        <tbody>
-          {get.blogs &&
-            get.blogs.filter((item) => {
-              if (searchTerm == "") {
-                return item
-              } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase())) {
-                return item
-              }
-            }
-            ).map((item) => (
-              <tr key={item.id}>
-                {/*  <td>{item.drawer_id}</td> */}
-                <td>{item.drawertitle}</td>
-                <td>{dayjs(item.creationdate).format('MMM, D, YYYY')}</td>
-                <td><button type="button" class="btn btn-success" style={{ marginRight: "10px" }} onClick={(e) => { { goNext(e, item.drawer_id) } }}><MdOpenInNew /></button>
-                  <button type="button" class="btn btn-warning" style={{ marginRight: "10px" }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleShowUpd() }}><MdOutlineModeEdit /></button>
+              <Col xs="4" style={{ marginRight: "100px" }}>
+                <span>{item.drawertitle}</span>
+              </Col>
+              <Col xs="2">
+                <span>{dayjs(item.creationdate).format('MMM, D, YYYY')}</span>
+              </Col>
+              <Col>
+                <span><button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { { goNext(e, item.drawer_id) } }}><MdOpenInNew /></button>
+                  <button type="button" class="btn btn-warning" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleShowUpd() }} ><MdOutlineModeEdit /></button>
                   <Modal show={showUpd} onHide={handleCloseUpd}>
                     <Modal.Header closeButton>
                       <Modal.Title>Update Drawer</Modal.Title>
@@ -211,17 +195,17 @@ const adminPageComponent = () => {
                       </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseUpd}>
+                      <Button variant="secondary" onClick={handleCloseUpd} style={{ borderRadius: '15px' }}>
                         <MdClose />
                       </Button>
                       <Button variant="primary"
-                        onClick={(e) => { handleUpdate(e, localStorage.getItem("drawer_id")); handleCloseUpd() }} >
+                        onClick={(e) => { handleUpdate(e, localStorage.getItem("drawer_id")); handleCloseUpd() }} style={{ borderRadius: '15px' }}>
                         <MdCheck />
                       </Button>
                     </Modal.Footer>
                   </Modal>
                   {/* <button type="button" class="btn btn-danger" onClick={(e) => deleteDrawer(e, item.drawer_id)}><MdDeleteForever/></button> */}
-                  <button type="button" class="btn btn-danger" style={{ marginRight: "10px" }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleDeleteShow() }} ><MdDeleteForever /></button>
+                  <button type="button" class="btn btn-danger" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleDeleteShow() }}><MdDeleteForever /></button>
                   <Modal show={showDelete} onHide={handleCloseDelete}>
                     <Modal.Header closeButton>
                       <Modal.Title>Delete Drawer</Modal.Title>
@@ -230,21 +214,26 @@ const adminPageComponent = () => {
                       Are you sure you want to permanently delete {localStorage.getItem("drawerName")} ?
                     </Modal.Body>
                     <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseDelete}>
+                      <Button variant="secondary" onClick={handleCloseDelete} style={{ borderRadius: '15px' }}>
                         <MdClose />
                       </Button>
                       <Button variant="primary"
-                        onClick={(e) => { deleteDrawer(e, localStorage.getItem("drawer_id")); handleCloseDelete() }}>
+                        onClick={(e) => { deleteDrawer(e, localStorage.getItem("drawer_id")); handleCloseDelete()}} style={{ borderRadius: '15px' }}>
                         <MdCheck />
                       </Button>
                     </Modal.Footer>
-                  </Modal>
+                  </Modal></span>
+              </Col>
+              <Col>
+                <span></span>
+              </Col>
+            </Row>
 
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </ReactBootStrap.Table>
+
+
+
+          </Container>
+        ))}
     </div>
   );
 };

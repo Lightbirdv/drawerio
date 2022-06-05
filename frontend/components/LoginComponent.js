@@ -19,7 +19,7 @@ class LoginComponent extends React.Component {
         event.preventDefault();
         console.log(email, password)
         loginUser(email, password)
-
+        
     }
 
     render(){
@@ -48,18 +48,18 @@ class LoginComponent extends React.Component {
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
                   {/* Checkbox */}
-                  <div className="form-check mb-0">
+                  {/* <div className="form-check mb-0">
                     <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example3" />
                     <label className="form-check-label" htmlFor="form2Example3">
                       Remember me
                     </label>
                   </div>
-                  <a href="#!" className="text-body">Forgot password?</a>
+                  <a href="#!" className="text-body">Forgot password?</a> */}
                 </div>
                 <div className="text-center text-lg-start mt-4 pt-2">
                   <button type="submit" className="btn btn-primary btn-lg" style={{paddingLeft: '2.5rem', paddingRight: '2.5rem'}}>Login</button>
-                  <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="#!" className="link-danger">Register</a></p>
-                </div>
+{/*                   <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="#!" className="link-danger">Register</a></p>
+ */}                </div>
               </form>
             </div>
           </div>

@@ -8,7 +8,7 @@ function FullPic(){
     console.log("was  " + xxx())
       return (
         <div>
-                <img src={xxx()} style={{display:"block", marginLeft: "auto", marginRight: "auto", marginTop: "50px", width: "50%"}} />
+                <img src={xxx()} style={{display:"block", marginLeft: "auto", marginRight: "auto", marginTop: "50px", width: "50%",/*  borderStyle: "solid", borderWidth:"20px", borderColor:"black" */ boxShadow: "20px 20px 20px 20px white"}} />
         </div>  
       );
     }

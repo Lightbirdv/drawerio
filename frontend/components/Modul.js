@@ -40,10 +40,10 @@ class Modul extends React.Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={this.handleClose}>
+                    <Button variant="secondary" onClick={this.handleClose} style={{ borderRadius: '15px' }}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={this.handleClose}>
+                    <Button variant="primary" onClick={this.handleClose} style={{ borderRadius: '15px' }}>
                         Save Changes
                     </Button>
                 </Modal.Footer>
