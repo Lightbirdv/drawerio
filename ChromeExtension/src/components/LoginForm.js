@@ -9,6 +9,7 @@ import RegisterForm from "./RegisterForm";
 const LoginForm = function (props) {
   const [goUserPage, setGoUserPage] = useState(false);
   const [goRegPage, setGoRegPage] = useState(false);
+  const [wrongLogin, setWrongLogin] = useState(false);
 
   const {
     register,
@@ -46,6 +47,9 @@ const LoginForm = function (props) {
               if (localStorage.getItem("token")) {
                 setGoUserPage(true);
               }
+            })
+            .catch((error) => {
+              setWrongLogin(true);
             });
         })}
       >
@@ -80,15 +84,24 @@ const LoginForm = function (props) {
             size="45"
           />
           <p className="error-message">
-            <b>{errors.password?.message}</b>
+            {errors.password?.message ? (
+              <p className="error-message">
+                <b>{errors.password?.message}</b>
+              </p>
+            ) : (
+              wrongLogin && (
+                <p className="error-message">
+                  <b>Wrong Email or Password.</b>
+                </p>
+              )
+            )}
           </p>
         </div>
 
-   
         <button type="submit" className="login-form--button-login__design">
           Log In
         </button>
-        
+
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -98,7 +111,6 @@ const LoginForm = function (props) {
         >
           Register
         </button>
-        
       </form>
     </div>
   );

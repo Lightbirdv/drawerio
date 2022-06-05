@@ -1,0 +1,44 @@
+.drawerpage-text--drawer__design {
+  margin-top: 13%;
+  margin-left: 5%;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.drawerpage-text--button-back__design {
+  margin-top: 100px;
+  margin-left: 10px;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid lightgray;
+}
+
+.drawerpage-text--button-back__design:hover {
+  transform: scale(1.02);
+}
+
+.drawerpage-text--button-create__design {
+  margin-top: 30px;
+  margin-left: 140px;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid lightgray;
+}
+
+.drawerpage-text--button-create__design:hover {
+  transform: scale(1.02);
+}
+
+.error-message {
+  margin-left: 22px;
+  color: red;
+}
+
+.success-message {
+  margin-left: 22px;
+  color: lightgreen;
+}
+

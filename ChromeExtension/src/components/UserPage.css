@@ -7,14 +7,23 @@ select {
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
-  color: #4F4F4F;
+  color: #4f4f4f;
   margin-top: 6rem;
 }
 
 .userpage-textarea__design {
   width: 100%;
   border-radius: 20px;
-  border: 1px solid #E8E8E8;
+  border: 1px solid #e8e8e8;
+  resize: none;
+  padding: 1rem;
+}
+
+.userpage-textareaSelect__design {
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid #e8e8e8;
+  color: black;
   resize: none;
   padding: 1rem;
 }
@@ -26,7 +35,7 @@ select {
   position: fixed;
   bottom: 0;
   background-color: white;
-  border-top: 1px solid #E8E8E8;
+  border-top: 1px solid #e8e8e8;
   width: 90%;
   margin: auto;
   height: 50px;
@@ -39,7 +48,7 @@ select {
   width: 6rem;
   height: 1.5rem;
   transition-duration: 0.4s;
-  background-color: #ACDECE;
+  background-color: #acdece;
   color: white;
 }
 
@@ -54,15 +63,14 @@ select {
 .userpage-text--button-signout__design {
   display: inline-flex;
   justify-content: space-between;
-  margin-left:auto;
+  margin-left: auto;
   width: fit-content;
   background-color: white;
-  border:none;
+  border: none;
 }
 
 .userpage-text--button-signout__design:hover {
   color: #999999;
-  
 }
 
 .userpage-image--signout-image {
@@ -73,21 +81,44 @@ select {
 
 .userpage-top--list__design {
   margin-top: 1rem;
-  border: 1px solid #E8E8E8;
-  height:2rem;
+  margin-left: 1rem;
+  border: 1px solid #e8e8e8;
+  height: 2rem;
   border-radius: 20px;
-} 
+}
 
 .userpage-imagearea {
-  width:90%;
+  width: 90%;
   margin: auto;
   margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
 .thumbnail:hover {
-  box-shadow: 0 0 2px 1px #ACDECE!important;
+  box-shadow: 0 0 2px 1px #acdece !important;
 }
 
 .image_picker .responsive .selected {
-  background-color: #ACDECE!important;
+  background-color: #acdece !important;
+}
+
+.userpage-text--button-plus__design {
+  margin-left: -0.75rem;
+  margin-bottom: -3.5rem;
+  width: max-content;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid lightgray;
+}
+
+.userpage-text--button-plus__design:hover {
+  transform: scale(1.02);
+}
+
+.success-message {
+  color: lightgreen;
+}
+
+.error-message {
+  color: red;
 }
