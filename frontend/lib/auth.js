@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Router from 'next/router';
+import { Component } from 'react';
 import { getname } from '../lib/getname';
 
 export const loginUser = (email, password) => {
@@ -9,8 +10,8 @@ export const loginUser = (email, password) => {
     console.log(response);
     if (response.status === 200 && email !== "" && password !== "") {
       const token = localStorage.setItem("token", response.data);
-      const user = localStorage.setItem("user", email);
-      
+     /*  const user = localStorage.setItem("user", email); */
+      const user = getname(email);
 
       const headers = {
         'Content-Type': 'application/json',
@@ -24,7 +25,7 @@ export const loginUser = (email, password) => {
       ).then((response) => {
 
         if (response.data.isadmin === true) {
-         /*  getname(email); */
+          
           Router.push("/adminpage")
         } else if (response.data.isadmin === false) {
          /*  getname(email); */
