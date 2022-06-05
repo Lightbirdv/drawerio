@@ -16,7 +16,7 @@ const UserPage = function () {
   const [successSaved, setSuccessSave] = useState(false);
   const [drawer, setDrawer] = useState([]);
   const [textfieldInput, setTextfieldInput] = useState("");
-  const [optionValue, setOptionValue] = useState("");
+  const [optionValue, setOptionValue] = useState(0);
   const [tabURL, setTabURL] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [selectImgArr, setSelectImgArr] = useState([]);
@@ -84,7 +84,7 @@ const UserPage = function () {
       })
       .then((response) => {
         setDrawer(response.data);
-        setOptionValue(response.data[0].drawer_id);
+        setOptionValue(parseInt(response.data[0].drawer_id));
         console.log(response.data[0].drawer_id);
       });
   }, []);
@@ -117,7 +117,8 @@ const UserPage = function () {
   };
 
   const handleChange = function (event) {
-    setOptionValue({ id: event.target.value });
+    const integerID = parseInt(event.target.value);
+    setOptionValue(integerID);
   };
 
   if (deleted) {
@@ -175,7 +176,10 @@ const UserPage = function () {
           >
             <p>+</p>
           </button>
-          <select className="userpage-top--list__design" onChange={handleChange}>
+          <select
+            className="userpage-top--list__design"
+            onChange={handleChange}
+          >
             {drawer.map((alldrawer) => (
               <option
                 key={alldrawer.drawer_id}
