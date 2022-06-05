@@ -168,23 +168,25 @@ const UserPage = function () {
             className="userpage-image--signout-image"
           ></img>
         </button>
-        <button
-          onClick={goToDrawer}
-          className="userpage-text--button-plus__design"
-        >
-          <p>+</p>
-        </button>
-        <select className="userpage-top--list__design" onChange={handleChange}>
-          {drawer.map((alldrawer) => (
-            <option
-              key={alldrawer.drawer_id}
-              onSelect={handleChange}
-              value={alldrawer.drawer_id}
-            >
-              {alldrawer.drawertitle}
-            </option>
-          ))}
-        </select>
+        <div className="userpage-drawer--container">
+          <button
+            onClick={goToDrawer}
+            className="userpage-text--button-plus__design"
+          >
+            <p>+</p>
+          </button>
+          <select className="userpage-top--list__design" onChange={handleChange}>
+            {drawer.map((alldrawer) => (
+              <option
+                key={alldrawer.drawer_id}
+                onSelect={handleChange}
+                value={alldrawer.drawer_id}
+              >
+                {alldrawer.drawertitle}
+              </option>
+            ))}
+          </select>
+        </div>
         {successSaved && (
           <p className="success-message">
             <b>Saved successfully!</b>

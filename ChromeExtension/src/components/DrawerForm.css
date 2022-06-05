@@ -1,19 +1,32 @@
+.drawer-create-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
+  color: #4f4f4f;
+  margin-top: 6rem;
+}
+
 .drawerpage-text--drawer__design {
-  margin-top: 13%;
-  margin-left: 5%;
-  border-left: none;
-  border-right: none;
-  border-top: none;
+  margin-top: 2rem;
+  border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   outline: none;
 }
 
 .drawerpage-text--button-back__design {
-  margin-top: 100px;
-  margin-left: 10px;
-  background-color: white;
-  border-radius: 20px;
-  border: 1px solid lightgray;
+  margin-top: 3rem;
+  height:2rem;
+  width: 3rem;
+  background-color: #acdece;
+  border: none;
+  border-radius: 10px;
+}
+
+.drawerpage-text--button-back__design img {
+  width: 1rem;
+  height: 1rem;
+  margin: auto;
 }
 
 .drawerpage-text--button-back__design:hover {
@@ -21,11 +34,15 @@
 }
 
 .drawerpage-text--button-create__design {
-  margin-top: 30px;
-  margin-left: 140px;
-  background-color: white;
-  border-radius: 20px;
-  border: 1px solid lightgray;
+  border: none;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 2rem;
+  width: 9rem;
+  height: 2rem;
+  transition-duration: 0.4s;
+  background-color: #acdece;
+  color: white;
 }
 
 .drawerpage-text--button-create__design:hover {

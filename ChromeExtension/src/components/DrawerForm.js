@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./DrawerForm.css";
 import axios from "axios";
 import UserPage from "./UserPage";
+import backImage from "../imagesProject/back.svg";
 
 const DrawerForm = function (props) {
   const [drawerName, setDrawerName] = useState("");
@@ -33,7 +34,10 @@ const DrawerForm = function (props) {
             },
           }
         )
-        .then((response) => console.log(response));
+        .then((response) => {
+          console.log(response)
+          setGoBack(true);
+        });
     } else {
       setMissingName(true);
       setSuccessCreated(false);
@@ -45,12 +49,12 @@ const DrawerForm = function (props) {
   }
 
   return (
-    <div>
+    <div className="drawer-create-container">
       <button
         className="drawerpage-text--button-back__design"
         onClick={onClickGoBackHandler}
       >
-        Go Back
+        <img src={backImage} alt="go back"></img>
       </button>
       <input
         name="drawer"

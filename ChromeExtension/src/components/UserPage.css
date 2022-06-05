@@ -13,7 +13,7 @@ select {
 
 .userpage-textarea__design {
   width: 100%;
-  border-radius: 20px;
+  border-radius: 10px;
   border: 1px solid #e8e8e8;
   resize: none;
   padding: 1rem;
@@ -21,7 +21,8 @@ select {
 
 .userpage-textareaSelect__design {
   width: 100%;
-  border-radius: 20px;
+  height: 8rem;
+  border-radius: 10px;
   border: 1px solid #e8e8e8;
   color: black;
   resize: none;
@@ -46,7 +47,7 @@ select {
   border-radius: 10px;
   margin: auto;
   width: 6rem;
-  height: 1.5rem;
+  height: 2rem;
   transition-duration: 0.4s;
   background-color: #acdece;
   color: white;
@@ -79,12 +80,19 @@ select {
   margin: auto;
 }
 
-.userpage-top--list__design {
+.userpage-drawer--container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   margin-top: 1rem;
-  margin-left: 1rem;
+}
+
+.userpage-top--list__design {
+  margin-left: 0.5rem;
   border: 1px solid #e8e8e8;
   height: 2rem;
-  border-radius: 20px;
+  border-radius: 10px;
+  width: 100%;
 }
 
 .userpage-imagearea {
@@ -103,12 +111,18 @@ select {
 }
 
 .userpage-text--button-plus__design {
-  margin-left: -0.75rem;
-  margin-bottom: -3.5rem;
-  width: max-content;
-  background-color: white;
-  border-radius: 20px;
-  border: 1px solid lightgray;
+  display: flex;
+  border: none;
+  height:2rem;
+  width: 3rem;
+  background-color: #acdece;
+  color: white;
+  border-radius: 10px;
+}
+
+.userpage-text--button-plus__design p {
+  margin: auto;
+  font-size: 1rem;
 }
 
 .userpage-text--button-plus__design:hover {

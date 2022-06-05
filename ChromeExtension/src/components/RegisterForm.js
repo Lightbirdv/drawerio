@@ -39,7 +39,7 @@ const RegisterForm = function (props) {
               setSuccessReg(true);
               setTimeout(() => {
                 setGoLoginPage(true);
-              }, 2000);
+              }, 1000);
             })
             .catch((error) => {
               setSameUser(true);
