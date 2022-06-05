@@ -6,6 +6,8 @@ import LoginForm from "./LoginForm";
 
 const RegisterForm = function (props) {
   const [goLoginPage, setGoLoginPage] = useState(false);
+  const [sameUser, setSameUser] = useState(false);
+  const [successReg, setSuccessReg] = useState(false);
 
   const {
     register,
@@ -18,7 +20,7 @@ const RegisterForm = function (props) {
   }
 
   return (
-    <div>
+    <div className="register-form-container">
       <div className="register-form--text">
         <p>Registration</p>
       </div>
@@ -33,7 +35,14 @@ const RegisterForm = function (props) {
             })
             .then((response) => {
               console.log(response);
-              setGoLoginPage(true);
+              setSameUser(false);
+              setSuccessReg(true);
+              setTimeout(() => {
+                setGoLoginPage(true);
+              }, 1000);
+            })
+            .catch((error) => {
+              setSameUser(true);
             });
         })}
       >
@@ -68,8 +77,23 @@ const RegisterForm = function (props) {
             size="45"
           />
           <p className="error-message">
-            <b>{errors.password?.message}</b>
+            {errors.password?.message ? (
+              <p className="error-message">
+                <b>{errors.password?.message}</b>
+              </p>
+            ) : (
+              sameUser && (
+                <p className="error-message">
+                  <b>User with same Email already exists.</b>
+                </p>
+              )
+            )}
           </p>
+          {successReg && (
+            <p className="success-message">
+              <b>Successfully registered Account.</b>
+            </p>
+          )}
         </div>
         <div className="register-form--button-create">
           <button

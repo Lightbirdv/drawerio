@@ -9,6 +9,7 @@ import RegisterForm from "./RegisterForm";
 const LoginForm = function (props) {
   const [goUserPage, setGoUserPage] = useState(false);
   const [goRegPage, setGoRegPage] = useState(false);
+  const [wrongLogin, setWrongLogin] = useState(false);
 
   const {
     register,
@@ -25,7 +26,7 @@ const LoginForm = function (props) {
   }
 
   return (
-    <div>
+    <div className="login-form-container">
       <div className="login-form--text">
         <p>Hello, please log in!</p>
       </div>
@@ -46,6 +47,9 @@ const LoginForm = function (props) {
               if (localStorage.getItem("token")) {
                 setGoUserPage(true);
               }
+            })
+            .catch((error) => {
+              setWrongLogin(true);
             });
         })}
       >
@@ -80,26 +84,33 @@ const LoginForm = function (props) {
             size="45"
           />
           <p className="error-message">
-            <b>{errors.password?.message}</b>
+            {errors.password?.message ? (
+              <p className="error-message">
+                <b>{errors.password?.message}</b>
+              </p>
+            ) : (
+              wrongLogin && (
+                <p className="error-message">
+                  <b>Wrong Email or Password.</b>
+                </p>
+              )
+            )}
           </p>
         </div>
 
-        <div className="login-form--button-login">
-          <button type="submit" className="login-form--button-login__design">
-            Log In
-          </button>
-        </div>
-        <div className="login-form--button-register">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setGoRegPage(true);
-            }}
-            className="login-form--button-register__design"
-          >
-            Register
-          </button>
-        </div>
+        <button type="submit" className="login-form--button-login__design">
+          Log In
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setGoRegPage(true);
+          }}
+          className="login-form--button-register__design"
+        >
+          Register
+        </button>
       </form>
     </div>
   );

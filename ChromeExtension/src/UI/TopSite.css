@@ -2,10 +2,10 @@
   position: fixed;
   z-index: 100;
   top: 0;
-  background-color: lightgrey;
-  border-bottom: 2px solid black;
   width: 400px;
-  height: 50px;
+  height: 80px;
+  background-color: white;
+  color: #4F4F4F;
 }
 
 @-webkit-keyframes wiggle {
@@ -73,10 +73,14 @@
   -ms-animation-timing-function: ease-in-out;
 }
 
+.image-wiggle {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
 .text__change {
-  text-align: center;
-  top: 0;
-  position: fixed;
-  width: 100%;
-  font-size: 1.2rem;
+  margin: 1rem auto;
+  width: fit-content;
+  font-size: 2rem;
 }
