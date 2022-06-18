@@ -12,26 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const pool = require('../../queries').pool;
-const drawerFunctions = require('../drawer/drawerFunctions');
+const pool = require("../../queries").pool;
+const drawerFunctions = require("../drawer/drawerFunctions");
 const HttpException_1 = __importDefault(require("../../exceptions/HttpException"));
 function getEntries(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const entries = yield pool.query('SELECT * FROM drawerentries ORDER BY drawerentry_id ASC');
+        const entries = yield pool.query("SELECT * FROM drawerentries ORDER BY drawerentry_id ASC");
         return entries.rows;
     });
 }
 function getEntriesByDrawer(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const entries = yield pool.query('SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC', [req.params.drawerid]);
+        const entries = yield pool.query("SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC", [req.params.drawerid]);
         return entries.rows;
     });
 }
 function getSingleEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield pool.query('SELECT * FROM drawerentries WHERE drawerentry_id=$1', [req.params.id]);
+        const result = yield pool.query("SELECT * FROM drawerentries WHERE drawerentry_id=$1", [req.params.id]);
         if (result.rowCount == 0) {
-            return next(new HttpException_1.default(404, 'Drawerentry not found'));
+            return next(new HttpException_1.default(404, "Drawerentry not found"));
         }
         let entry = {
             drawerentry_id: result.rows[0].drawerentry_id,
@@ -40,7 +40,7 @@ function getSingleEntry(req, res, next) {
             drawer_id: result.rows[0].drawer_id,
             creationDate: result.rows[0].creationdate,
             originURL: result.rows[0].originurl,
-            selText: result.rows[0].seltext
+            selText: result.rows[0].seltext,
         };
         return entry;
     });
@@ -58,11 +58,17 @@ function updateEntry(req, res, next) {
         if (!entry) {
             return next();
         }
-        const newEntry = yield pool.query('UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3 WHERE drawerentry_id=$4', [
-            (req.body.selText != null && req.body.selText.length ? req.body.selText : entry.selText),
-            (req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment),
-            (req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : entry.imageURL),
-            req.params.id
+        const newEntry = yield pool.query("UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3 WHERE drawerentry_id=$4", [
+            req.body.selText != null && req.body.selText.length
+                ? req.body.selText
+                : entry.selText,
+            req.body.comment != null && req.body.comment.length
+                ? req.body.comment
+                : entry.comment,
+            req.body.imageURL != null && req.body.imageURL.length
+                ? req.body.imageURL
+                : entry.imageURL,
+            req.params.id,
         ]);
         return newEntry;
     });
@@ -72,7 +78,7 @@ function deleteEntry(req, res) {
         if (req.entry) {
             req.params.id = req.entry.drawerentry_id;
         }
-        const entry = pool.query('DELETE FROM drawerentries WHERE drawerentry_id=$1', [req.params.id]);
+        const entry = pool.query("DELETE FROM drawerentries WHERE drawerentry_id=$1", [req.params.id]);
         return entry;
     });
 }
@@ -80,10 +86,18 @@ function addEntry(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         var entry = req.body;
         entry.creationDate = new Date();
-        const newEntry = pool.query('INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *', [entry.comment, entry.creationDate, entry.imageURL, entry.drawer_id, entry.originURL, entry.selText]);
+        const newEntry = pool.query("INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *", [
+            entry.comment,
+            entry.creationDate,
+            entry.imageURL,
+            entry.drawer_id,
+            entry.originURL,
+            entry.selText,
+        ]);
         return newEntry;
     });
 }
+// middleware
 function isAuthorOrAdmin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         if (req.params.drawerid) {
@@ -110,7 +124,11 @@ function isAuthorOrAdmin(req, res, next) {
             next();
         }
         else {
-            return res.status(403).send({ message: 'This function is only available for admins or the user of the drawer' });
+            return res
+                .status(403)
+                .send({
+                message: "This function is only available for admins or the user of the drawer",
+            });
         }
     });
 }
@@ -121,5 +139,5 @@ module.exports = {
     updateEntry,
     deleteEntry,
     addEntry,
-    isAuthorOrAdmin
+    isAuthorOrAdmin,
 };

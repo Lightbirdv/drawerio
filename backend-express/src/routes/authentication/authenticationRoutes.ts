@@ -1,7 +1,7 @@
-import express from 'express';
-const router = express.Router()
-const authenticationFunctions = require('./authenticationFunctions')
-import { User } from './authenticationFunctions'
+import express from "express";
+const router = express.Router();
+const authenticationFunctions = require("./authenticationFunctions");
+import { User } from "./authenticationFunctions";
 
 /**
  * @swagger
@@ -25,16 +25,27 @@ import { User } from './authenticationFunctions'
  *                        type: string
  *                     password:
  *                        type: string
- *                   
+ *
  */
- router.post('/login', async(req: express.Request, res: express.Response, next:express.NextFunction) => {
+router.post(
+  "/login",
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     try {
-        const {accessToken, refreshToken} = await authenticationFunctions.login(req, res, next)
-        res.status(200).json(accessToken);
+      const { accessToken, refreshToken } = await authenticationFunctions.login(
+        req,
+        res,
+        next
+      );
+      res.status(200).json(accessToken);
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -42,7 +53,7 @@ import { User } from './authenticationFunctions'
  *    post:
  *      description: Returns refreshed token
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - authentication endpoints
  *      responses:
@@ -51,13 +62,20 @@ import { User } from './authenticationFunctions'
  *        '500':
  *          description: Failed to refresh token of user
  */
- router.post('/token', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) =>{
-    let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
-    if(newAccessToken == null){
-        return res.sendStatus(401)
+router.post(
+  "/token",
+  authenticationFunctions.authenticateToken,
+  async (req: express.Request, res: express.Response) => {
+    let newAccessToken = await authenticationFunctions.refreshTheToken(
+      req,
+      res
+    );
+    if (newAccessToken == null) {
+      return res.sendStatus(401);
     }
-    res.json(newAccessToken)
-})
+    res.json(newAccessToken);
+  }
+);
 
 /**
  * @swagger
@@ -65,7 +83,7 @@ import { User } from './authenticationFunctions'
  *    post:
  *      description: Returns refreshed token
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - authentication endpoints
  *      responses:
@@ -74,13 +92,20 @@ import { User } from './authenticationFunctions'
  *        '500':
  *          description: Failed to refresh token of user
  */
-router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, async (req: express.Request, res: express.Response) =>{
-    let newAccessToken = await authenticationFunctions.refreshTheToken(req, res)
-    if(newAccessToken == null){
-        return res.sendStatus(401)
+router.post(
+  "/tokenRefresh",
+  authenticationFunctions.authenticateRefreshToken,
+  async (req: express.Request, res: express.Response) => {
+    let newAccessToken = await authenticationFunctions.refreshTheToken(
+      req,
+      res
+    );
+    if (newAccessToken == null) {
+      return res.sendStatus(401);
     }
-    res.json(newAccessToken)
-})
+    res.json(newAccessToken);
+  }
+);
 
 /**
  * @swagger
@@ -88,7 +113,7 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, a
  *    get:
  *      description: Returns bool if user is admin
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - authentication endpoints
  *      responses:
@@ -97,13 +122,17 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, a
  *        '500':
  *          description: Failed to check for user
  */
- router.get('/isAdmin', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) =>{
-    if(!req.user) {
-        return res.status(500).json("Something went wrong!")
+router.get(
+  "/isAdmin",
+  authenticationFunctions.authenticateToken,
+  async (req: express.Request, res: express.Response) => {
+    if (!req.user) {
+      return res.status(500).json("Something went wrong!");
     }
-    let json: JSON= <JSON><unknown>{"isadmin": req.user.isadmin}
+    let json: JSON = <JSON>(<unknown>{ isadmin: req.user.isadmin });
     return res.status(200).json(json);
-})
+  }
+);
 
 /**
  * @swagger
@@ -111,7 +140,7 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, a
  *    post:
  *      description: Returns refreshed token
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - authentication endpoints
  *      responses:
@@ -120,13 +149,21 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, a
  *        '500':
  *          description: Failed to logout user
  */
- router.post('/logout', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response, next: express.NextFunction) =>{
+router.post(
+  "/logout",
+  authenticationFunctions.authenticateToken,
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     try {
-        await authenticationFunctions.logout(req, res, next);
-        return res.status(200).json("successfully logged out user");
+      await authenticationFunctions.logout(req, res, next);
+      return res.status(200).json("successfully logged out user");
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
-    }    
-})
+      res.status(500).json({ message: err.message });
+    }
+  }
+);
 
-module.exports = router
+module.exports = router;

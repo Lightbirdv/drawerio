@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const drawerentryFunctions = require('./drawerentryFunctions');
-const authenticationFunctions = require('../authentication/authenticationFunctions');
+const drawerentryFunctions = require("./drawerentryFunctions");
+const authenticationFunctions = require("../authentication/authenticationFunctions");
 /**
  * @swagger
  * /drawerentry/all:
@@ -31,7 +31,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for drawerentries
  */
-router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/all", authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawerentries = yield drawerentryFunctions.getEntries();
         res.json(drawerentries);
@@ -62,7 +62,7 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  *            description: id of the drawer
  *            required: true
  */
-router.get('/all/:drawerid', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/all/:drawerid", authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drawerentries = yield drawerentryFunctions.getEntriesByDrawer(req);
         if (!drawerentries) {
@@ -96,7 +96,7 @@ router.get('/all/:drawerid', authenticationFunctions.authenticateToken, draweren
  *            description: id of the entry
  *            required: true
  */
-router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.entry) {
             const entry = req.entry;
@@ -150,7 +150,7 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctio
  *                        type: string[]
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/:id", authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedEntry = yield drawerentryFunctions.updateEntry(req, res, next);
         res.status(201).json("successfully changed a drawer entry");
@@ -181,7 +181,7 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunct
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedEntry = yield drawerentryFunctions.deleteEntry(req);
         res.status(201).json("successfully deleted a drawer entry");
@@ -225,7 +225,7 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
  *                     selText:
  *                        type: string
  */
-router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/add", authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newEntry = yield drawerentryFunctions.addEntry(req);
         res.status(201).json("successfully created a drawer entry");
