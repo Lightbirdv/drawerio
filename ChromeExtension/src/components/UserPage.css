@@ -102,6 +102,12 @@ select {
   margin-bottom: 3rem;
 }
 
+.userpage-video-player {
+  margin: auto;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
 .thumbnail:hover {
   box-shadow: 0 0 2px 1px #acdece !important;
 }
@@ -113,7 +119,7 @@ select {
 .userpage-text--button-plus__design {
   display: flex;
   border: none;
-  height:2rem;
+  height: 2rem;
   width: 3rem;
   background-color: #acdece;
   color: white;

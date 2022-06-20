@@ -1,5 +1,6 @@
 /*global chrome*/
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import "./UserPage.css";
 import axios from "axios";
 import LoginForm from "./LoginForm";
@@ -20,6 +21,9 @@ const UserPage = function () {
   const [tabURL, setTabURL] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [selectImgArr, setSelectImgArr] = useState([]);
+  const [youtubeID, setYoutubeID] = useState([]);
+  const [isYoutube, setIsYoutube] = useState(false);
+  const [runOnce, setRunOnce] = useState(true);
   var imgArr = [];
   var date = new Date();
 
@@ -52,15 +56,11 @@ const UserPage = function () {
       console.log(e);
       return;
     }
+
     setSelectedText(result);
-    console.log(resultTwo[0].result);
     setAllImages([...resultTwo[0].result]);
-    console.log(resultTwo);
-    console.log(result);
     return tab;
   }, []);
-
-  console.log(selectedText);
 
   function onPick(image) {
     setSelectImgArr(image);
@@ -151,6 +151,13 @@ const UserPage = function () {
     }
   }
 
+  if (runOnce && tabURL.startsWith("https://www.youtube")) {
+    setYoutubeID(tabURL.split("v="));
+    setIsYoutube(true);
+    setRunOnce(false);
+    console.log(youtubeID[1]);
+  }
+
   const handleTextinput = function (event) {
     setTextfieldInput(event.target.value);
   };
@@ -226,6 +233,18 @@ const UserPage = function () {
             multiple
           />
         </div>
+        {isYoutube && (
+          <div className="userpage-video-player">
+            <iframe
+              width="300"
+              height="300"
+              src={`https://www.youtube.com/embed/${youtubeID[1]}`}
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            ></iframe>
+          </div>
+        )}
         <div className="down-site">
           <div className="userpage-bottom--button">
             <button
