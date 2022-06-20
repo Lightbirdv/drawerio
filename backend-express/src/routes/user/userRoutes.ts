@@ -258,4 +258,92 @@ router.post(
   }
 );
 
+
+/**
+ * @swagger
+ * /user/forgot:
+ *    get:
+ *      description: sends forgot email to user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ */
+
+router.post('/forgot', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  try {
+      userFunctions.forgotPassword(req, res ,next)
+      res.json({ message: 'Email successfully send' })
+  } catch (err: any) {
+      res.status(400).json({ message: err.message })
+  }
+})
+
+/**
+ * @swagger
+ * /user/passwordReset/:hash:
+ *    get:
+ *      description: sends forgot email to user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ *      parameters:
+ *          - in: path
+ *            name: hash
+ *            schema:
+ *              type: integer
+ *            description: hash of user that forgot password
+ *            required: true
+ */
+router.post('/passwordReset/:hash', async (req: express.Request, res: express.Response) => {
+  try {
+    userFunctions.changePassword(req, res)
+      res.json({ message: 'Password successfully changed' })
+  } catch (err: any) {
+      res.status(400).json({ message: err.message })
+  }
+})
+
+/**
+ * @swagger
+ * /user/confirm/:hash:
+ *    get:
+ *      description: activates user account after email confirmation
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully activated user
+ *        '500':
+ *          description: Failed to activate user
+ *      parameters:
+ *          - in: path
+ *            name: hash
+ *            schema:
+ *              type: integer
+ *            description: hash of user for activation
+ *            required: true
+ */
+ router.post('/confirm/:hash', async (req: express.Request, res: express.Response) => {
+  try {
+    userFunctions.activateAccount(req, res)
+      res.json({ message: 'Successfully activated account' })
+  } catch (err: any) {
+      res.status(400).json({ message: err.message })
+  }
+})
+
 module.exports = router;

@@ -9,7 +9,9 @@ export const tableuserquery = `CREATE TABLE IF NOT EXISTS users(
     isAdmin BOOLEAN DEFAULT false,
     refreshToken VARCHAR(255),
     forgotToken VARCHAR(255),
-    forgotExpires TIMESTAMP
+    forgotExpires TIMESTAMP,
+    confirmationToken VARCHAR(255),
+    enabled BOOLEAN DEFAULT false
 );`;
 
 // drawer table

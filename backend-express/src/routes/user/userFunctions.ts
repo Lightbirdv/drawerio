@@ -2,6 +2,8 @@ import express from "express";
 const pool = require("../../queries").pool;
 const drawerFunctions = require("../drawer/drawerFunctions");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const nodemailer = require('nodemailer')
 import HttpException from "../../exceptions/HttpException";
 
 interface User {
@@ -10,6 +12,10 @@ interface User {
   password: string;
   isAdmin: string;
   refreshToken: string;
+  forgotToken: string;
+  forgotExpires: number;
+  confirmationToken: string;
+  enabled: boolean;
 }
 
 async function getUsers(req: express.Request, res: express.Response) {
@@ -34,6 +40,10 @@ async function getUser(
     password: result.rows[0].password,
     isAdmin: result.rows[0].isadmin,
     refreshToken: result.rows[0].refreshtoken,
+    forgotToken: result.rows[0].forgottoken,
+    forgotExpires: result.rows[0].forgotexpires,
+    confirmationToken: result.rows[0].confirmationtoken,
+    enabled: result.rows[0].enabled,
   };
   return user;
 }
@@ -45,6 +55,20 @@ async function getUserByEmail(
 ) {
   const user = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
   return user;
+}
+
+async function getUserByForgotToken(
+  forgotToken: string,
+) {
+  const result = await pool.query("SELECT * FROM users WHERE forgotToken=$1", [forgotToken]);
+  return result;
+}
+
+async function getUserByConfirmToken(
+ confirmationToken: string,
+) {
+  const result = await pool.query("SELECT * FROM users WHERE confirmationToken=$1", [confirmationToken]);
+  return result;
 }
 
 async function updateUser(
@@ -71,10 +95,34 @@ async function updateUser(
   return newUser;
 }
 
+async function updateForgotUser(
+  req: express.Request,
+  forgotToken: string,
+  password: string
+) {
+  const result = await pool.query("UPDATE users SET forgotToken=$1, forgotExpires=$2, password=$3 WHERE forgotToken=$4", ["", null, await hashPassword(password),forgotToken]);
+  return result;
+}
+
+async function activateUserAccount(
+  user: User
+) {
+  const result = await pool.query("UPDATE users SET enabled=$1 WHERE email=$2", [true, user.email]);
+  return result;
+}
+
 async function insertRefreshToken(user: User, refreshToken: string) {
   const updatedUser = pool.query(
     "UPDATE users SET refreshToken=$1 WHERE users_id=$2",
     [refreshToken, user.users_id]
+  );
+  return updatedUser;
+}
+
+async function insertForgotToken(email: string, forgotToken: string, forgotExpires: number) {
+  const updatedUser = pool.query(
+    "UPDATE users SET forgotToken=$1, forgotExpires=$2 WHERE email=$3",
+    [forgotToken, forgotExpires, email]
   );
   return updatedUser;
 }
@@ -125,6 +173,77 @@ async function hashPassword(password: string) {
   return bcrypt.hash(password, 10);
 }
 
+async function forgotPassword(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const result = await getUserByEmail(req.body.email, res, next);
+  if(!result.rows.length) {
+    return next(new HttpException(404, "User not found"));
+  }
+  let user: User = result.rows[0];
+  let resetToken = crypto.randomBytes(20).toString("hex")
+  let forgotToken = resetToken
+  let forgotExpires = Date.now() + 3600000;
+  insertForgotToken(user.email, forgotToken, forgotExpires)
+  const link = process.env.BASEURL + '/user/passwordReset/' + resetToken
+  sendForgotEmail(link,user.email)
+}
+
+async function changePassword(req: express.Request, res: express.Response, next: express.NextFunction) {
+  let result = await getUserByForgotToken(req.params.hash)
+  if(!result.rows.length) {
+    return next(new HttpException(404, "User not found"));
+  }
+  let user: User = result.rows[0];
+  if(user.forgotExpires > Date.now()) {
+    return next(new HttpException(403, "Token is expired"));
+  }
+  let updateduser = await updateForgotUser(req, user.forgotToken, req.body.password)
+  if(!updateduser.rows.length) {
+    return next(new HttpException(500, "Updating of Password failed"));
+  }
+  return updateduser;
+}
+
+async function activateAccount(req: express.Request, res: express.Response, next: express.NextFunction) {
+  let result = await getUserByConfirmToken(req.params.hash)
+  if(!result.rows.length) {
+    return next(new HttpException(404, "User not found"));
+  }
+  let user: User = result.rows[0];
+  let activateduser = await activateUserAccount(user)
+  if(!activateduser.rows.length) {
+    return next(new HttpException(500, "Updating of Password failed"));
+  }
+  return activateduser;
+}
+
+function sendForgotEmail(link: string, email: string) {
+  var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAILPW
+      }
+    });
+    const Text = 'Hello,\nYou are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+    'Please click on the following link, or paste this into your browser to complete the process:\n\n' + link +
+    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+
+    var mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'You forgot your password',
+      text: Text
+    };
+    
+    transporter.sendMail(mailOptions, function(error: any, info: any){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+}
+
 module.exports = {
   getUsers,
   getUser,
@@ -135,4 +254,7 @@ module.exports = {
   registerUser,
   registerAdmin,
   promoteToAdmin,
+  forgotPassword,
+  changePassword,
+  activateAccount,
 };
