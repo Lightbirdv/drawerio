@@ -262,7 +262,7 @@ router.post(
 /**
  * @swagger
  * /user/forgot:
- *    get:
+ *    post:
  *      description: sends forgot email to user
  *      security:
  *          - bearerAuth: []
@@ -273,12 +273,22 @@ router.post(
  *          description: Successfully send email to user
  *        '500':
  *          description: Failed to send email to user
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
  */
 
-router.post('/forgot', authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+router.post('/forgot', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
-      userFunctions.forgotPassword(req, res ,next)
-      res.json({ message: 'Email successfully send' })
+      let sendmail = await userFunctions.forgotPassword(req, res ,next)
+      if(sendmail) {
+        res.json({ message: 'Email successfully send' })
+      }
   } catch (err: any) {
       res.status(400).json({ message: err.message })
   }
@@ -286,8 +296,8 @@ router.post('/forgot', authenticationFunctions.authenticateToken, async (req: ex
 
 /**
  * @swagger
- * /user/passwordReset/:hash:
- *    get:
+ * /user/passwordReset/{hash}:
+ *    post:
  *      description: sends forgot email to user
  *      security:
  *          - bearerAuth: []
@@ -302,23 +312,33 @@ router.post('/forgot', authenticationFunctions.authenticateToken, async (req: ex
  *          - in: path
  *            name: hash
  *            schema:
- *              type: integer
+ *              type: string
  *            description: hash of user that forgot password
  *            required: true
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     password:
+ *                        type: string
  */
-router.post('/passwordReset/:hash', async (req: express.Request, res: express.Response) => {
+router.post('/passwordReset/:hash', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
-    userFunctions.changePassword(req, res)
-      res.json({ message: 'Password successfully changed' })
+    let changeduser = await userFunctions.changePassword(req, res, next)
+    if(changeduser) {
+      res.status(200).json({message: "Password successfully changed"});
+    }
   } catch (err: any) {
-      res.status(400).json({ message: err.message })
+    res.status(400).json({ message: err.message })
   }
 })
 
 /**
  * @swagger
- * /user/confirm/:hash:
- *    get:
+ * /user/confirm/{hash}:
+ *    post:
  *      description: activates user account after email confirmation
  *      security:
  *          - bearerAuth: []
@@ -333,14 +353,16 @@ router.post('/passwordReset/:hash', async (req: express.Request, res: express.Re
  *          - in: path
  *            name: hash
  *            schema:
- *              type: integer
+ *              type: string
  *            description: hash of user for activation
  *            required: true
  */
  router.post('/confirm/:hash', async (req: express.Request, res: express.Response) => {
   try {
-    userFunctions.activateAccount(req, res)
+    let sendmail = await userFunctions.activateAccount(req, res)
+    if(sendmail) {
       res.json({ message: 'Successfully activated account' })
+    }
   } catch (err: any) {
       res.status(400).json({ message: err.message })
   }

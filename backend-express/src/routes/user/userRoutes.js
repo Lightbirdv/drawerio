@@ -238,4 +238,110 @@ router.post("/promotetoadmin", authenticationFunctions.isAdmin, (req, res) => __
         res.status(400).json({ message: err.message });
     }
 }));
+/**
+ * @swagger
+ * /user/forgot:
+ *    post:
+ *      description: sends forgot email to user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ */
+router.post('/forgot', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let sendmail = yield userFunctions.forgotPassword(req, res, next);
+        if (sendmail) {
+            res.json({ message: 'Email successfully send' });
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/passwordReset/{hash}:
+ *    post:
+ *      description: sends forgot email to user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ *      parameters:
+ *          - in: path
+ *            name: hash
+ *            schema:
+ *              type: string
+ *            description: hash of user that forgot password
+ *            required: true
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     password:
+ *                        type: string
+ */
+router.post('/passwordReset/:hash', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let changeduser = yield userFunctions.changePassword(req, res, next);
+        if (changeduser) {
+            res.status(200).json({ message: "Password successfully changed" });
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/confirm/{hash}:
+ *    post:
+ *      description: activates user account after email confirmation
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully activated user
+ *        '500':
+ *          description: Failed to activate user
+ *      parameters:
+ *          - in: path
+ *            name: hash
+ *            schema:
+ *              type: string
+ *            description: hash of user for activation
+ *            required: true
+ */
+router.post('/confirm/:hash', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        userFunctions.activateAccount(req, res);
+        res.json({ message: 'Successfully activated account' });
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
 module.exports = router;

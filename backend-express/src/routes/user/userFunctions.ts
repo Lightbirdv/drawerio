@@ -3,7 +3,7 @@ const pool = require("../../queries").pool;
 const drawerFunctions = require("../drawer/drawerFunctions");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const nodemailer = require('nodemailer')
+const Sib = require('sib-api-v3-sdk')
 import HttpException from "../../exceptions/HttpException";
 
 interface User {
@@ -11,10 +11,10 @@ interface User {
   email: string;
   password: string;
   isAdmin: string;
-  refreshToken: string;
-  forgotToken: string;
+  refreshtoken: string;
+  forgottoken: string;
   forgotExpires: number;
-  confirmationToken: string;
+  confirmationtoken: string;
   enabled: boolean;
 }
 
@@ -39,10 +39,10 @@ async function getUser(
     email: result.rows[0].email,
     password: result.rows[0].password,
     isAdmin: result.rows[0].isadmin,
-    refreshToken: result.rows[0].refreshtoken,
-    forgotToken: result.rows[0].forgottoken,
+    refreshtoken: result.rows[0].refreshtoken,
+    forgottoken: result.rows[0].forgottoken,
     forgotExpires: result.rows[0].forgotexpires,
-    confirmationToken: result.rows[0].confirmationtoken,
+    confirmationtoken: result.rows[0].confirmationtoken,
     enabled: result.rows[0].enabled,
   };
   return user;
@@ -119,7 +119,7 @@ async function insertRefreshToken(user: User, refreshToken: string) {
   return updatedUser;
 }
 
-async function insertForgotToken(email: string, forgotToken: string, forgotExpires: number) {
+async function insertForgotToken(email: string, forgotToken: string, forgotExpires: Date) {
   const updatedUser = pool.query(
     "UPDATE users SET forgotToken=$1, forgotExpires=$2 WHERE email=$3",
     [forgotToken, forgotExpires, email]
@@ -173,7 +173,8 @@ async function hashPassword(password: string) {
   return bcrypt.hash(password, 10);
 }
 
-async function forgotPassword(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function forgotPassword(req: any, res: express.Response, next: express.NextFunction) {
+  console.log(req.body)
   const result = await getUserByEmail(req.body.email, res, next);
   if(!result.rows.length) {
     return next(new HttpException(404, "User not found"));
@@ -181,25 +182,30 @@ async function forgotPassword(req: express.Request, res: express.Response, next:
   let user: User = result.rows[0];
   let resetToken = crypto.randomBytes(20).toString("hex")
   let forgotToken = resetToken
-  let forgotExpires = Date.now() + 3600000;
+  let datecopy = new Date(Date.now());
+  datecopy.setDate(datecopy.getDate() + 1);
+  let forgotExpires = datecopy;
   insertForgotToken(user.email, forgotToken, forgotExpires)
   const link = process.env.BASEURL + '/user/passwordReset/' + resetToken
   sendForgotEmail(link,user.email)
+  return true
 }
 
 async function changePassword(req: express.Request, res: express.Response, next: express.NextFunction) {
+  console.log(req.params.hash)
   let result = await getUserByForgotToken(req.params.hash)
+  console.log(result)
   if(!result.rows.length) {
     return next(new HttpException(404, "User not found"));
   }
   let user: User = result.rows[0];
+  console.log(user)
   if(user.forgotExpires > Date.now()) {
     return next(new HttpException(403, "Token is expired"));
   }
-  let updateduser = await updateForgotUser(req, user.forgotToken, req.body.password)
-  if(!updateduser.rows.length) {
-    return next(new HttpException(500, "Updating of Password failed"));
-  }
+  console.log(req.body.password)
+  let updateduser = await updateForgotUser(req, user.forgottoken, req.body.password)
+  console.log(updateduser)
   return updateduser;
 }
 
@@ -217,31 +223,30 @@ async function activateAccount(req: express.Request, res: express.Response, next
 }
 
 function sendForgotEmail(link: string, email: string) {
-  var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAILPW
-      }
-    });
-    const Text = 'Hello,\nYou are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-    'Please click on the following link, or paste this into your browser to complete the process:\n\n' + link +
-    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-
-    var mailOptions = {
-      from: process.env.EMAIL,
-      to: email,
-      subject: 'You forgot your password',
-      text: Text
-    };
-    
-    transporter.sendMail(mailOptions, function(error: any, info: any){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
+  const client = Sib.ApiClient.instance
+  const apiKey = client.authentications['api-key']
+  apiKey.apiKey = process.env.EMAIL_API_KEY
+  const tranEmailApi = new Sib.TransactionalEmailsApi()
+  const sender = {
+      email: process.env.EMAIL,
+      name: 'drawerio',
+  }
+  const receivers = [
+      {
+          email: email,
+      },
+  ]
+  tranEmailApi
+    .sendTransacEmail({
+        sender,
+        to: receivers,
+        subject: 'You forgot your password',
+        textContent: 'Hello,\nYou are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+        'Please click on the following link, or paste this into your browser to complete the process:\n\n' + link +
+        '\nIf you did not request this, please ignore this email and your password will remain unchanged.\n'
+    })
+    .then(console.log)
+    .catch(console.log)
 }
 
 module.exports = {

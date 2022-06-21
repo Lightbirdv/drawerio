@@ -91,7 +91,8 @@ function authenticateToken(req, res, next) {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.sendStatus(403);
-            let result = yield userFunctions.getUserByEmail(req.body.email, res, next);
+            let result = yield userFunctions.getUserByEmail(uncodedToken.user, res, next);
+            console.log(result);
             if (!result.rows.length) {
                 return next(new HttpException_1.default(404, "No user found"));
             }
@@ -122,10 +123,10 @@ function isAdmin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const authHeader = req.headers["authorization"];
         const token = authHeader && authHeader.split(" ")[1];
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, tokenuser) => __awaiter(this, void 0, void 0, function* () {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.sendStatus(403);
-            let user = yield userFunctions.getUserByEmail(tokenuser.user, res, next);
+            let user = yield userFunctions.getUserByEmail(uncodedToken.user, res, next);
             if (!user) {
                 return next;
             }

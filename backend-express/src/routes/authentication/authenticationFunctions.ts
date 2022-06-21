@@ -125,10 +125,11 @@ async function authenticateToken(
     async (err: any, uncodedToken: UncodedToken) => {
       if (err) return res.sendStatus(403);
       let result = await userFunctions.getUserByEmail(
-        req.body.email,
+        uncodedToken.user,
         res,
         next
       );
+      console.log(result)
       if (!result.rows.length) {
         return next(new HttpException(404, "No user found"));
       }
@@ -176,10 +177,10 @@ async function isAdmin(
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET,
-    async (err: any, tokenuser: any) => {
+    async (err: any, uncodedToken: any) => {
       if (err) return res.sendStatus(403);
       let user: User = await userFunctions.getUserByEmail(
-        tokenuser.user,
+        uncodedToken.user,
         res,
         next
       );
