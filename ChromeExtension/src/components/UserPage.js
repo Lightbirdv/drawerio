@@ -151,7 +151,7 @@ const UserPage = function () {
     }
   }
 
-  if (runOnce && tabURL.startsWith("https://www.youtube")) {
+  if (runOnce && tabURL.startsWith("https://www.youtube.com/watch")) {
     setYoutubeID(tabURL.split("v="));
     setIsYoutube(true);
     setRunOnce(false);
