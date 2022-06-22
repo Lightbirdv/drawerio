@@ -39,19 +39,8 @@ async function getSingleEntry(
     "SELECT * FROM drawerentries WHERE drawerentry_id=$1",
     [req.params.id]
   );
-  if (result.rowCount == 0) {
-    return next(new HttpException(404, "Drawerentry not found"));
-  }
-  let entry: Drawerentry = {
-    drawerentry_id: result.rows[0].drawerentry_id,
-    comment: result.rows[0].comment,
-    imageURL: result.rows[0].imageurl,
-    drawer_id: result.rows[0].drawer_id,
-    creationDate: result.rows[0].creationdate,
-    originURL: result.rows[0].originurl,
-    selText: result.rows[0].seltext,
-  };
-  return entry;
+
+  return result;
 }
 
 async function updateEntry(
@@ -127,31 +116,30 @@ async function isAuthorOrAdmin(
   } else if (req.body.drawer_id) {
     req.params.id = req.body.drawer_id;
   } else {
-    let entry: Drawerentry | void = await getSingleEntry(req, res, next);
-    if (!entry) {
-      return next();
+    let result = await getSingleEntry(req, res, next);
+    if (!result.rows.length) {
+      return next(new HttpException(404, "Drawerentry not found"));
     }
+    let entry: Drawerentry = result.rows[0];
     req.entry = entry;
     req.params.id = entry.drawer_id;
   }
 
-  let drawer: Drawer | void = await drawerFunctions.getSingleDrawer(
-    req,
-    res,
-    next
-  );
+  let result: any = await drawerFunctions.getSingleDrawer(req, res, next);
+  if (!result.rows.length) {
+    return next(new HttpException(404, "Drawer not found"));
+  }
+  let drawer: Drawer = result.rows[0];
   if (!drawer || !req.user) return next();
   if (req.user.isadmin == true) {
     next();
   } else if (drawer.users_id == req.user.users_id) {
     next();
   } else {
-    return res
-      .status(403)
-      .send({
-        message:
-          "This function is only available for admins or the user of the drawer",
-      });
+    return res.status(403).send({
+      message:
+        "This function is only available for admins or the user of the drawer",
+    });
   }
 }
 

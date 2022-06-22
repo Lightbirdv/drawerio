@@ -30,19 +30,7 @@ function getEntriesByDrawer(req, res) {
 function getSingleEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield pool.query("SELECT * FROM drawerentries WHERE drawerentry_id=$1", [req.params.id]);
-        if (result.rowCount == 0) {
-            return next(new HttpException_1.default(404, "Drawerentry not found"));
-        }
-        let entry = {
-            drawerentry_id: result.rows[0].drawerentry_id,
-            comment: result.rows[0].comment,
-            imageURL: result.rows[0].imageurl,
-            drawer_id: result.rows[0].drawer_id,
-            creationDate: result.rows[0].creationdate,
-            originURL: result.rows[0].originurl,
-            selText: result.rows[0].seltext,
-        };
-        return entry;
+        return result;
     });
 }
 function updateEntry(req, res, next) {
@@ -107,14 +95,19 @@ function isAuthorOrAdmin(req, res, next) {
             req.params.id = req.body.drawer_id;
         }
         else {
-            let entry = yield getSingleEntry(req, res, next);
-            if (!entry) {
-                return next();
+            let result = yield getSingleEntry(req, res, next);
+            if (!result.rows.length) {
+                return next(new HttpException_1.default(404, "Drawerentry not found"));
             }
+            let entry = result.rows[0];
             req.entry = entry;
             req.params.id = entry.drawer_id;
         }
-        let drawer = yield drawerFunctions.getSingleDrawer(req, res, next);
+        let result = yield drawerFunctions.getSingleDrawer(req, res, next);
+        if (!result.rows.length) {
+            return next(new HttpException_1.default(404, "Drawer not found"));
+        }
+        let drawer = result.rows[0];
         if (!drawer || !req.user)
             return next();
         if (req.user.isadmin == true) {
@@ -124,9 +117,7 @@ function isAuthorOrAdmin(req, res, next) {
             next();
         }
         else {
-            return res
-                .status(403)
-                .send({
+            return res.status(403).send({
                 message: "This function is only available for admins or the user of the drawer",
             });
         }
