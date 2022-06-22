@@ -172,12 +172,13 @@ const ThirdPage = () => {
                   </div></p>
                   <div>
                   {(item.originurl).split("v=")[0] === "https://www.youtube.com/watch?" ? <iframe
-                  width="300"
-                  height="300"
+                  width="600"
+                  height="400"
                   src={`https://www.youtube.com/embed/${(item.originurl).split("v=")[1]}`}
                   title="YouTube video player"
                   frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
                 ></iframe> : <p></p>}
                   
                   
