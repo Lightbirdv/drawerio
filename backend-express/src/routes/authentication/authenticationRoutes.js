@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const authenticationFunctions = require('./authenticationFunctions');
+const authenticationFunctions = require("./authenticationFunctions");
 /**
  * @swagger
  * /auth/login:
@@ -39,7 +39,7 @@ const authenticationFunctions = require('./authenticationFunctions');
  *                        type: string
  *
  */
-router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/login", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { accessToken, refreshToken } = yield authenticationFunctions.login(req, res, next);
         res.status(200).json(accessToken);
@@ -63,7 +63,7 @@ router.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, func
  *        '500':
  *          description: Failed to refresh token of user
  */
-router.post('/token', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/token", authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let newAccessToken = yield authenticationFunctions.refreshTheToken(req, res);
     if (newAccessToken == null) {
         return res.sendStatus(401);
@@ -85,7 +85,7 @@ router.post('/token', authenticationFunctions.authenticateToken, (req, res) => _
  *        '500':
  *          description: Failed to refresh token of user
  */
-router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/tokenRefresh", authenticationFunctions.authenticateRefreshToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let newAccessToken = yield authenticationFunctions.refreshTheToken(req, res);
     if (newAccessToken == null) {
         return res.sendStatus(401);
@@ -107,11 +107,11 @@ router.post('/tokenRefresh', authenticationFunctions.authenticateRefreshToken, (
  *        '500':
  *          description: Failed to check for user
  */
-router.get('/isAdmin', authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/isAdmin", authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user) {
         return res.status(500).json("Something went wrong!");
     }
-    let json = { "isadmin": req.user.isadmin };
+    let json = { isadmin: req.user.isadmin };
     return res.status(200).json(json);
 }));
 /**
@@ -129,7 +129,7 @@ router.get('/isAdmin', authenticationFunctions.authenticateToken, (req, res) => 
  *        '500':
  *          description: Failed to logout user
  */
-router.post('/logout', authenticationFunctions.authenticateToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/logout", authenticationFunctions.authenticateToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield authenticationFunctions.logout(req, res, next);
         return res.status(200).json("successfully logged out user");

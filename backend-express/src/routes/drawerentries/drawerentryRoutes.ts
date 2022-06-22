@@ -1,9 +1,9 @@
-import express from 'express'
-import { Drawerentry } from './drawerentryFunctions'
+import express from "express";
+import { Drawerentry } from "./drawerentryFunctions";
 
-const router = express.Router()
-const drawerentryFunctions = require('./drawerentryFunctions')
-const authenticationFunctions = require('../authentication/authenticationFunctions')
+const router = express.Router();
+const drawerentryFunctions = require("./drawerentryFunctions");
+const authenticationFunctions = require("../authentication/authenticationFunctions");
 
 /**
  * @swagger
@@ -11,7 +11,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *    get:
  *      description: Returns all drawerentries
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -20,14 +20,18 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for drawerentries
  */
- router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
+router.get(
+  "/all",
+  authenticationFunctions.isAdmin,
+  async (req: express.Request, res: express.Response) => {
     try {
-        const drawerentries = await drawerentryFunctions.getEntries()
-        res.json(drawerentries);
+      const drawerentries = await drawerentryFunctions.getEntries();
+      res.json(drawerentries);
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -35,7 +39,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *    get:
  *      description: Returns all entries for specific drawer
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -51,17 +55,22 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the drawer
  *            required: true
  */
- router.get('/all/:drawerid', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
+router.get(
+  "/all/:drawerid",
+  authenticationFunctions.authenticateToken,
+  drawerentryFunctions.isAuthorOrAdmin,
+  async (req: express.Request, res: express.Response) => {
     try {
-        const drawerentries = await drawerentryFunctions.getEntriesByDrawer(req)
-        if(!drawerentries) {
-            res.status(500).json({ message: "retrieval of drawerentries failed" })
-        }
-        res.status(201).json(drawerentries);
+      const drawerentries = await drawerentryFunctions.getEntriesByDrawer(req);
+      if (!drawerentries) {
+        res.status(500).json({ message: "retrieval of drawerentries failed" });
+      }
+      res.status(201).json(drawerentries);
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -69,7 +78,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *    get:
  *      description: Returns specific entry
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -85,19 +94,24 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the entry
  *            required: true
  */
-router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: any, res: express.Response) => {
+router.get(
+  "/:id",
+  authenticationFunctions.authenticateToken,
+  drawerentryFunctions.isAuthorOrAdmin,
+  async (req: any, res: express.Response) => {
     try {
-        if(req.entry) {
-            const entry = req.entry
-            res.json(entry);
-        } else {
-            const entry = await drawerentryFunctions.getSingleEntry(req)
-            res.json(entry);
-        }
+      if (req.entry) {
+        const entry = req.entry;
+        res.json(entry);
+      } else {
+        const entry = await drawerentryFunctions.getSingleEntry(req);
+        res.json(entry);
+      }
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -107,7 +121,7 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctio
  *          - application/x-www-form-urlencoded
  *      description: Updates specific entry
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -138,14 +152,27 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerentryFunctio
  *                        type: string[]
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response, next:express.NextFunction) => {
+router.patch(
+  "/:id",
+  authenticationFunctions.authenticateToken,
+  drawerentryFunctions.isAuthorOrAdmin,
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     try {
-        const updatedEntry = await drawerentryFunctions.updateEntry(req, res, next)
-        res.status(201).json("successfully changed a drawer entry")
+      const updatedEntry = await drawerentryFunctions.updateEntry(
+        req,
+        res,
+        next
+      );
+      res.status(201).json("successfully changed a drawer entry");
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -153,7 +180,7 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunct
  *    delete:
  *      description: Delete specific entry
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawerentry endpoints
  *      responses:
@@ -169,15 +196,19 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerentryFunct
  *            description: id of the entry
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
+router.delete(
+  "/:id",
+  authenticationFunctions.authenticateToken,
+  drawerentryFunctions.isAuthorOrAdmin,
+  async (req: express.Request, res: express.Response) => {
     try {
-        const deletedEntry = await drawerentryFunctions.deleteEntry(req)
-        res.status(201).json("successfully deleted a drawer entry")
+      const deletedEntry = await drawerentryFunctions.deleteEntry(req);
+      res.status(201).json("successfully deleted a drawer entry");
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
-
+  }
+);
 
 /**
  * @swagger
@@ -185,7 +216,7 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
  *    post:
  *      description: Returns specific entry
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      tags:
@@ -214,13 +245,18 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerentryFunc
  *                     selText:
  *                        type: string
  */
-router.post('/add', authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, async(req: express.Request, res: express.Response) => {
+router.post(
+  "/add",
+  authenticationFunctions.authenticateToken,
+  drawerentryFunctions.isAuthorOrAdmin,
+  async (req: express.Request, res: express.Response) => {
     try {
-        var newEntry = await drawerentryFunctions.addEntry(req)
-        res.status(201).json("successfully created a drawer entry")
+      var newEntry = await drawerentryFunctions.addEntry(req);
+      res.status(201).json("successfully created a drawer entry");
     } catch (err: any) {
-        res.status(400).json({ message: err.message })
+      res.status(400).json({ message: err.message });
     }
-})
+  }
+);
 
-module.exports = router
+module.exports = router;

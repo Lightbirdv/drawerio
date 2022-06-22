@@ -1,8 +1,8 @@
-import express from 'express'
+import express from "express";
 
-const router = express.Router()
-const drawerFunctions = require('./drawerFunctions')
-const authenticationFunctions = require('../authentication/authenticationFunctions')
+const router = express.Router();
+const drawerFunctions = require("./drawerFunctions");
+const authenticationFunctions = require("../authentication/authenticationFunctions");
 
 /**
  * @swagger
@@ -10,7 +10,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *    get:
  *      description: Returns all drawer
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -19,14 +19,18 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for drawers
  */
- router.get('/all', authenticationFunctions.isAdmin, async(req: express.Request, res: express.Response) => {
+router.get(
+  "/all",
+  authenticationFunctions.isAdmin,
+  async (res: express.Response) => {
     try {
-        const drawers = await drawerFunctions.getDrawers()
-        res.json(drawers);
+      const drawers = await drawerFunctions.getDrawers();
+      res.json(drawers);
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -34,7 +38,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *    get:
  *      description: Returns all drawer for specific user
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -43,17 +47,21 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for drawers
  */
- router.get('/all/user', authenticationFunctions.authenticateToken, async(req: express.Request, res: express.Response) => {
+router.get(
+  "/all/user",
+  authenticationFunctions.authenticateToken,
+  async (req: express.Request, res: express.Response) => {
     try {
-        const drawers = await drawerFunctions.getDrawersByUser(req)
-        if(!drawers) {
-            res.status(500).json({ message: "retrieval of drawers failed" })
-        }
-        res.status(200).json(drawers);
+      const drawers = await drawerFunctions.getDrawersByUser(req);
+      if (!drawers) {
+        res.status(500).json({ message: "retrieval of drawers failed" });
+      }
+      res.status(200).json(drawers);
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -61,7 +69,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *    get:
  *      description: Returns specific drawer
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -77,20 +85,25 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *            description: id of the drawer
  *            required: true
  */
-router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async(req: any, res: express.Response, next:express.NextFunction) => {
+router.get(
+  "/:id",
+  authenticationFunctions.authenticateToken,
+  drawerFunctions.isAuthorOrAdmin,
+  async (req: any, res: express.Response, next: express.NextFunction) => {
     try {
-        if(req.drawer) {
-            const drawer = req.drawer
-            res.json(drawer);
-        } else {
-            const drawer = await drawerFunctions.getSingleDrawer(req, res ,next);
-            res.json(drawer);
-        }
-        
+      if (req.drawer) {
+        const drawer = req.drawer;
+        res.json(drawer);
+      } else {
+        res
+          .status(500)
+          .json({ message: "there was a problem in the middle ware function" });
+      }
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -100,7 +113,7 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.is
  *          - application/x-www-form-urlencoded
  *      description: Updates specific drawer
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -125,14 +138,23 @@ router.get('/:id', authenticationFunctions.authenticateToken, drawerFunctions.is
  *                        type: string
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
+router.patch(
+  "/:id",
+  authenticationFunctions.authenticateToken,
+  drawerFunctions.isAuthorOrAdmin,
+  async (req: express.Request, res: express.Response) => {
     try {
-        const updatedDrawer = await drawerFunctions.updateDrawer(req)
-        res.status(201).json("successfully changed a drawer")
+      const updatedDrawer = await drawerFunctions.updateDrawer(req);
+      if (!updatedDrawer) {
+        res.status(500).json({ message: "update of drawer failed" });
+      } else {
+        res.status(201).json("successfully changed a drawer");
+      }
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
+  }
+);
 
 /**
  * @swagger
@@ -140,7 +162,7 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.
  *    delete:
  *      description: Delete specific drawer
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      tags:
  *          - drawer endpoints
  *      responses:
@@ -156,15 +178,20 @@ router.patch('/:id', authenticationFunctions.authenticateToken, drawerFunctions.
  *            description: id of the drawer
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.authenticateToken, drawerFunctions.isAuthorOrAdmin, async (req: express.Request, res: express.Response) => {
+router.delete(
+  "/:id",
+  authenticationFunctions.authenticateToken,
+  drawerFunctions.isAuthorOrAdmin,
+  async (req: express.Request, res: express.Response) => {
     try {
-        const deletedDrawer = await drawerFunctions.deleteDrawer(req)
-        res.status(201).json("successfully deleted a drawer")
+      const deletedDrawer = await drawerFunctions.deleteDrawer(req);
+      console.log(deletedDrawer);
+      res.status(201).json("successfully deleted a drawer");
     } catch (err: any) {
-        res.status(500).json({ message: err.message })
+      res.status(500).json({ message: err.message });
     }
-})
-
+  }
+);
 
 /**
  * @swagger
@@ -172,7 +199,7 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerFunctions
  *    post:
  *      description: Returns specific user
  *      security:
- *          - bearerAuth: [] 
+ *          - bearerAuth: []
  *      consumes:
  *          - application/x-www-form-urlencoded
  *      tags:
@@ -191,13 +218,17 @@ router.delete('/:id', authenticationFunctions.authenticateToken, drawerFunctions
  *                     drawerTitle:
  *                        type: string
  */
-router.post('/add', authenticationFunctions.authenticateToken, async(req: express.Request, res: express.Response) => {
+router.post(
+  "/add",
+  authenticationFunctions.authenticateToken,
+  async (req: express.Request, res: express.Response) => {
     try {
-        var newDrawer = await drawerFunctions.addDrawer(req)
-        res.status(201).json("successfully created new drawer")
+      var newDrawer = await drawerFunctions.addDrawer(req);
+      res.status(201).json("successfully created new drawer");
     } catch (err: any) {
-        res.status(400).json({ message: err.message })
+      res.status(400).json({ message: err.message });
     }
-})
+  }
+);
 
-module.exports = router
+module.exports = router;

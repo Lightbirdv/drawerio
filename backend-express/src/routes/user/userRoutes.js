@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const userFunctions = require('./userFunctions');
-const authenticationFunctions = require('../authentication/authenticationFunctions');
+const userFunctions = require("./userFunctions");
+const authenticationFunctions = require("../authentication/authenticationFunctions");
 /**
  * @swagger
  * components:
@@ -32,7 +32,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *              password:
  *                  type: string
  *                  description: password of the user
-*/
+ */
 /**
  * @swagger
  * /user/all:
@@ -48,7 +48,7 @@ const authenticationFunctions = require('../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for users
  */
-router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/all", authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield userFunctions.getUsers();
         res.json(users.rows);
@@ -79,7 +79,7 @@ router.get('/all', authenticationFunctions.isAdmin, (req, res) => __awaiter(void
  *            description: id of the user
  *            required: true
  */
-router.get('/:id', authenticationFunctions.isAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", authenticationFunctions.isAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield userFunctions.getUser(req, res, next);
         res.json(user);
@@ -124,7 +124,7 @@ router.get('/:id', authenticationFunctions.isAdmin, (req, res, next) => __awaite
  *                        type: string
  *                        required: false
  */
-router.patch('/:id', authenticationFunctions.isAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/:id", authenticationFunctions.isAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updateduser = yield userFunctions.updateUser(req, res, next);
         res.status(201).json("successfully changed a user");
@@ -155,7 +155,7 @@ router.patch('/:id', authenticationFunctions.isAdmin, (req, res, next) => __awai
  *            description: id of the user
  *            required: true
  */
-router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deleteduser = yield userFunctions.deleteUser(req);
         res.status(201).json("successfully deleted a user");
@@ -189,7 +189,7 @@ router.delete('/:id', authenticationFunctions.isAdmin, (req, res) => __awaiter(v
  *                     password:
  *                        type: string
  */
-router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var newUser = yield userFunctions.registerUser(req);
         if (!newUser) {
@@ -226,13 +226,147 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
  *                     email:
  *                        type: string
  */
-router.post('/promotetoadmin', authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/promotetoadmin", authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var updatedUser = yield userFunctions.promoteToAdmin(req);
         if (!updatedUser) {
             res.status(500).json({ message: "promotion not successful" });
         }
         res.status(201).json(updatedUser);
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/forgot:
+ *    post:
+ *      description: sends forgot email to user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ */
+router.post('/forgot', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let sendmail = yield userFunctions.forgotPassword(req, res, next);
+        if (sendmail) {
+            res.json({ message: 'Email successfully send' });
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/confirm:
+ *    post:
+ *      description: sends confirmation email to user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ */
+router.post('/confirm', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let sendmail = yield userFunctions.confirmEmail(req, res, next);
+        if (sendmail) {
+            res.json({ message: 'Email successfully send' });
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/passwordReset/{hash}:
+ *    post:
+ *      description: sends forgot email to user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ *      parameters:
+ *          - in: path
+ *            name: hash
+ *            schema:
+ *              type: string
+ *            description: hash of user that forgot password
+ *            required: true
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     password:
+ *                        type: string
+ */
+router.post('/passwordReset/:hash', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let changeduser = yield userFunctions.changePassword(req, res, next);
+        if (changeduser) {
+            res.status(200).json({ message: "Password successfully changed" });
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /user/confirmation/{hash}:
+ *    post:
+ *      description: activates user account after email confirmation
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully activated user
+ *        '500':
+ *          description: Failed to activate user
+ *      parameters:
+ *          - in: path
+ *            name: hash
+ *            schema:
+ *              type: string
+ *            description: hash of user for activation
+ *            required: true
+ */
+router.post('/confirmation/:hash', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let sendmail = yield userFunctions.activateAccount(req, res, next);
+        if (sendmail) {
+            res.json({ message: 'Successfully activated account' });
+        }
     }
     catch (err) {
         res.status(400).json({ message: err.message });

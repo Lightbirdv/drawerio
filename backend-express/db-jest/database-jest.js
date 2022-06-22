@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tabledrawerentriesquery = exports.tabledrawerquery = exports.tableuserquery = exports.databasequery = void 0;
-exports.databasequery = `CREATE DATABASE ${process.env.DB};`;
+exports.databasequery = `CREATE DATABASE ${process.env.DBTEST};`;
 // user table
 exports.tableuserquery = `CREATE TABLE IF NOT EXISTS users(
     users_id SERIAL PRIMARY KEY,
@@ -10,9 +10,7 @@ exports.tableuserquery = `CREATE TABLE IF NOT EXISTS users(
     isAdmin BOOLEAN DEFAULT false,
     refreshToken VARCHAR(255),
     forgotToken VARCHAR(255),
-    forgotExpires TIMESTAMP,
-    confirmationToken VARCHAR(255),
-    enabled BOOLEAN DEFAULT false
+    forgotExpires TIMESTAMP
 );`;
 // drawer table
 exports.tabledrawerquery = `CREATE TABLE IF NOT EXISTS drawer(

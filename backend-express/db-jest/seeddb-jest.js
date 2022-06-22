@@ -37,7 +37,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 let client = new pg.Client({
     host: 'localhost',
-    database: process.env.DB,
+    database: process.env.DBTEST,
     user: process.env.USER,
     password: process.env.PASSWORD,
     port: parseInt(process.env.PORT) || 5432
@@ -45,9 +45,9 @@ let client = new pg.Client({
 const execute = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield client.connect();
-        let firstuser = yield client.query(`INSERT INTO users (email,password,isAdmin,enabled) VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING`, ["seedtestadminuser", yield bcrypt.hash("seedtestadminpassword", 10), "true", true]);
+        let firstuser = yield client.query(`INSERT INTO users (email,password,isAdmin) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING`, ["seedtestadminuser", yield bcrypt.hash("seedtestadminpassword", 10), "true"]);
         console.log('Testadminuser created successfully');
-        let seconduser = yield client.query(`INSERT INTO users (email,password,enabled) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING`, ["seedtestuser", yield bcrypt.hash("seedtestpassword", 10), true]);
+        let seconduser = yield client.query(`INSERT INTO users (email,password) VALUES ($1,$2) ON CONFLICT DO NOTHING`, ["seedtestuser", yield bcrypt.hash("seedtestpassword", 10)]);
         console.log('Testuser created successfully');
         let firstdrawer = yield client.query('INSERT INTO drawer (drawerTitle, creationDate, users_id) VALUES ($1,$2,$3)   RETURNING *', ["testdrawer for adminuser", new Date(), 1]);
         console.log('First drawer created successfully');

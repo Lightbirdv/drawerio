@@ -5,5 +5,6 @@ declare namespace Express {
            iat?: number,
            isadmin?: boolean,
        }
+       drawer?
     }
  }
