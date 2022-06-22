@@ -33,9 +33,9 @@ export default function Navbar() {
     return (
         <nav className="flex filter drop-shadow-md bg-white px-4 py-4 h-20 items-center">
             <MobileNav open={open} setOpen={setOpen}/>
-            <div className="w-3/12 flex items-center">
+            <div className="w-3/12 flex items-center ml-28">
                 <a className="text-2xl font-semibold" href="/"><img src="assets/logo.jpg" className="img-logo" style={{marginRight: "15px", maxHeight: "130px"}}/></a>
-                <a className="text-2xl font-semibold" href="/">Drawer.io</a>
+                <a className="text-2xl font-semibold text-blue-800 hover:no-underline" href="/">Drawer.io</a>
             </div>
 
             <div className="w-9/12 flex justify-end items-center">
@@ -49,12 +49,12 @@ export default function Navbar() {
                     <span className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${open ? "-rotate-45 -translate-y-3.5" : ""}`} />
                 </div>
 
-                <div className="hidden md:flex">
+                <div className="hidden md:flex items-center mr-20">
                     <NavLink to="/login">
-                    <button className="x">Login</button>
+                    <button className="bg-white w-36 h-10 border-2 border-blue-800 text-blue-800 rounded text-xl">Login</button>
                     </NavLink>
                     <NavLink to="/registration">
-                    <button className="y">Sign Up</button>
+                    <button className="bg-blue-800 w-36 h-10 text-white rounded text-xl">Sign Up</button>
                     </NavLink>
                 </div>
             </div>
