@@ -71,14 +71,14 @@ export default function Navbar() {
                     <span className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${open ? "-rotate-45 -translate-y-3.5" : ""}`} />
                 </div>
 
-                <div className="hidden md:flex">
-                    <b id="a" style={{ fontSize: "25px" }}>{welcome()}</b>
+                {/* <div className="hidden md:flex">
+                    <b id="a" style={{ fontSize: "25px" }}>{welcome()}</b> */}
                    {/*  <NavLink>
                         <button type="button" class="btn btn-secondary" onClick={router.back} style={{ backgroundColor: "darkmagenta", padding: "10px", borderRadius: '15px' }}><MdBackspace /></button>
                     </NavLink> */}
-                    <NavLink to="/">
+                  {/*   <NavLink to="/">
                         <button type="button" class="btn btn-secondary" onClick={clearx} style={{ backgroundColor: "darkmagenta", padding: "10px", borderRadius: '15px' }}><MdLogout /></button>                    </NavLink>
-                </div>
+                </div> */}
             </div>
         </nav>
     )

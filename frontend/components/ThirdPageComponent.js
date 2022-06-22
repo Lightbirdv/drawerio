@@ -74,7 +74,6 @@ const ThirdPage = () => {
 
     const src = localStorage.setItem("src", src_id);
     /* FullPic() */
-
     Router.push("/showfullpic")
   }
 
@@ -115,7 +114,7 @@ const ThirdPage = () => {
         <Col>
           <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "142px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
         </Col>
-        </Row>
+      </Row>
 
       {posts.blogs &&
         posts.blogs.filter((item) => {
@@ -126,77 +125,91 @@ const ThirdPage = () => {
           }
         }
         ).map((item) => (
-          <Container style={{width: "70%", textAlign:"left", background:"white", borderRadius: '15px'}} >
-          <p key={item.id}>
-            <Row style={{margin:"20px", paddingTop:"10px"}} >
-              <Col style={{textAlign: "center"}}>
-                <span style={{fontSize:"50px"}}>{dayjs(item.creationdate).format('MMM, D, YYYY')}</span>
-              </Col>
-            </Row>
-            <Row style={{margin:"20px"}}>
-              <Col>
-                <span style={{fontSize:"30px"}}>{item.comment}</span>
-              </Col>
-            </Row>
+          <Container style={{ width: "70%", textAlign: "left", background: "white", borderRadius: '15px' }} >
+            <p key={item.id}>
+              <Row style={{ margin: "20px", paddingTop: "10px" }} >
+                <Col style={{ textAlign: "center" }}>
+                  <span style={{ fontSize: "50px" }}>{dayjs(item.creationdate).format('MMM, D, YYYY')}</span>
+                </Col>
+              </Row>
+              <Row style={{ margin: "20px" }}>
+                <Col>
+                  <span style={{ fontSize: "30px" }}>{item.comment}</span>
+                </Col>
+              </Row>
 
-            <Row style={{margin:"20px"}}>
-              <Col>
-                <span>{item.seltext}</span>
-              </Col>
-            </Row>
+              <Row style={{ margin: "20px" }}>
+                <Col>
+                  <span>{item.seltext}</span>
+                </Col>
+              </Row>
 
-            <Row style={{margin:"20px"}}>
-              <Col>
-              <span><a href={item.originurl}>{item.originurl}</a></span>
-              </Col>
-            </Row>
-           
-            <Row >
-              <Col>
-            <p><div className="grid grid-cols-4 gap-2" >
-              {item.imageurl &&
-                item.imageurl.map((x) => (
+              <Row style={{ margin: "20px" }}>
+                <Col>
+                  <span><a href={item.originurl}>{item.originurl}</a></span>
+                </Col>
+              </Row>
 
-                  <div className="relative" >
-                    <div className="absolute inset-0 z-10 flex transition duration-300 ease-in hover:opacity-0" onClick={(e) => showPicture(e, x)}>
-                      <div className="absolute inset-0 bg-black opacity-30"> </div>
-                      {/* <div className="mx-auto text-white z-10 self-center uppercase tracking-widest text-sm">Hello World</div> */}
+              <Row >
+                <Col>
+                  <p><div className="grid grid-cols-4 gap-2" >
+                    {item.imageurl &&
+                      item.imageurl.map((x) => (
 
-                    </div>
-                    {/* <div style={{margin:"auto"}}> */}
-                    <img src={x} style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} />
-                    {/* </div> */}
+                        <div className="relative" >
+                          <div className="absolute inset-0 z-10 flex transition duration-300 ease-in hover:opacity-0" onClick={(e) => showPicture(e, x)}>
+                            <div className="absolute inset-0 bg-black opacity-30"> </div>
+                            {/* <div className="mx-auto text-white z-10 self-center uppercase tracking-widest text-sm">Hello World</div> */}
+
+                          </div>
+                          {/* <div style={{margin:"auto"}}> */}
+
+                          <img src={x} style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} />
+                          
+                          {/* </div> */}
+                        </div>
+                      ))}
+                  </div></p>
+                  <div>
+                  {(item.originurl).split("v=")[0] === "https://www.youtube.com/watch?" ? <iframe
+                  width="300"
+                  height="300"
+                  src={`https://www.youtube.com/embed/${(item.originurl).split("v=")[1]}`}
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                ></iframe> : <p></p>}
+                  
+                  
                   </div>
-                ))}
-            </div></p>
-            {/*   <td> */}
-            </Col>
-            </Row>
+                  {/*   <td> */}
+                </Col>
+              </Row>
 
-            <Row style={{margin:"10px", padding:"10px", textAlign:"right"}}>
-              <Col>
-            <button type="button" class="btn btn-danger" style={{ borderRadius: '15px' }} onClick={(e) => { saveDrawerEntry(e, item.drawerentry_id); handleDeleteShow() }}><MdDeleteForever /></button>
-            <Modal show={showDelete} onHide={handleCloseDelete}>
-              <Modal.Header closeButton>
-                <Modal.Title>Delete Entry</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Are you sure you want to permanently delete ?
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseDelete} style={{ borderRadius: '15px' }}>
-                  <MdClose />
-                </Button>
-                <Button variant="primary"
-                  onClick={(e) => { deleteDrawer(e, localStorage.getItem("entry_id")); handleCloseDelete()}} style={{ borderRadius: '15px' }}>
-                  <MdCheck />
-                </Button>
-              </Modal.Footer>
-            </Modal>
-            
-            </Col>
-            </Row></p>
-            </Container>
+              <Row style={{ margin: "10px", padding: "10px", textAlign: "right" }}>
+                <Col>
+                  <button type="button" class="btn btn-danger" style={{ borderRadius: '15px' }} onClick={(e) => { saveDrawerEntry(e, item.drawerentry_id); handleDeleteShow() }}><MdDeleteForever /></button>
+                  <Modal show={showDelete} onHide={handleCloseDelete}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Delete Entry</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      Are you sure you want to permanently delete ?
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseDelete} style={{ borderRadius: '15px' }}>
+                        <MdClose />
+                      </Button>
+                      <Button variant="primary"
+                        onClick={(e) => { deleteDrawer(e, localStorage.getItem("entry_id")); handleCloseDelete() }} style={{ borderRadius: '15px' }}>
+                        <MdCheck />
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+
+                </Col>
+              </Row></p>
+          </Container>
         ))}
       {/*  </tbody> */}
       {/* </ReactBootStrap.Table> */}

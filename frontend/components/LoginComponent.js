@@ -1,7 +1,7 @@
 import {loginUser} from '../lib/auth';
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
-import Navbar from "../components/NavbarTwo";
+import Navbar from "../components/NavbarThree";
 
 class LoginComponent extends React.Component {
 
@@ -27,7 +27,7 @@ class LoginComponent extends React.Component {
         <div>
         <Navbar />   
         <section className="vh-100">
-        <div className="container-fluid h-custom" style={{backgroundColor: 'rgb(172, 222, 206)'}}>
+        <div className="container-fluid h-custom" style={{backgroundColor: 'rgb(167 243 208)'}}>
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-md-9 col-lg-6 col-xl-5">
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample image" />
@@ -36,6 +36,7 @@ class LoginComponent extends React.Component {
               <form onSubmit={this.handleSubmit}>
                 {/* Email input */}
                 <div className="form-outline mb-4">
+                  <h1>Please Login here!</h1>
                   <input type="test" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
                   <label className="form-label" htmlFor="form3Example3">Email address</label>
                    
