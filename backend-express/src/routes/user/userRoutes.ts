@@ -264,8 +264,6 @@ router.post(
  * /user/forgot:
  *    post:
  *      description: sends forgot email to user
- *      security:
- *          - bearerAuth: []
  *      tags:
  *          - user endpoints
  *      responses:
@@ -294,13 +292,46 @@ router.post('/forgot', async (req: express.Request, res: express.Response, next:
   }
 })
 
+
+/**
+ * @swagger
+ * /user/confirm:
+ *    post:
+ *      description: sends confirmation email to user
+ *      tags:
+ *          - user endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully send email to user
+ *        '500':
+ *          description: Failed to send email to user
+ *      requestBody:
+ *          content:
+ *             application/x-www-form-urlencoded:
+ *               schema:
+ *                  type: object
+ *                  properties:
+ *                     email:
+ *                        type: string
+ */
+
+ router.post('/confirm', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  try {
+      let sendmail = await userFunctions.confirmEmail(req, res ,next)
+      if(sendmail) {
+        res.json({ message: 'Email successfully send' })
+      }
+  } catch (err: any) {
+      res.status(400).json({ message: err.message })
+  }
+})
+
+
 /**
  * @swagger
  * /user/passwordReset/{hash}:
  *    post:
  *      description: sends forgot email to user
- *      security:
- *          - bearerAuth: []
  *      tags:
  *          - user endpoints
  *      responses:
@@ -337,11 +368,9 @@ router.post('/passwordReset/:hash', async (req: express.Request, res: express.Re
 
 /**
  * @swagger
- * /user/confirm/{hash}:
+ * /user/confirmation/{hash}:
  *    post:
  *      description: activates user account after email confirmation
- *      security:
- *          - bearerAuth: []
  *      tags:
  *          - user endpoints
  *      responses:
@@ -357,9 +386,9 @@ router.post('/passwordReset/:hash', async (req: express.Request, res: express.Re
  *            description: hash of user for activation
  *            required: true
  */
- router.post('/confirm/:hash', async (req: express.Request, res: express.Response) => {
+ router.post('/confirmation/:hash', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
-    let sendmail = await userFunctions.activateAccount(req, res)
+    let sendmail = await userFunctions.activateAccount(req, res, next)
     if(sendmail) {
       res.json({ message: 'Successfully activated account' })
     }

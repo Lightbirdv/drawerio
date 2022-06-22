@@ -107,7 +107,7 @@ async function updateForgotUser(
 async function activateUserAccount(
   user: User
 ) {
-  const result = await pool.query("UPDATE users SET enabled=$1 WHERE email=$2", [true, user.email]);
+  const result = await pool.query("UPDATE users SET enabled=$1, confirmationToken=$2 WHERE email=$3", [true,"", user.email]);
   return result;
 }
 
@@ -123,6 +123,14 @@ async function insertForgotToken(email: string, forgotToken: string, forgotExpir
   const updatedUser = pool.query(
     "UPDATE users SET forgotToken=$1, forgotExpires=$2 WHERE email=$3",
     [forgotToken, forgotExpires, email]
+  );
+  return updatedUser;
+}
+
+async function insertConfirmToken(email: string, confirmToken: string) {
+  const updatedUser = pool.query(
+    "UPDATE users SET confirmationToken=$1 WHERE email=$2",
+    [confirmToken, email]
   );
   return updatedUser;
 }
@@ -191,6 +199,20 @@ async function forgotPassword(req: any, res: express.Response, next: express.Nex
   return true
 }
 
+async function confirmEmail(req: any, res: express.Response, next: express.NextFunction) {
+  console.log(req.body.email)
+  const result = await getUserByEmail(req.body.email, res, next);
+  if(!result.rows.length) {
+    return next(new HttpException(404, "User not found or Account already activated"));
+  }
+  let user: User = result.rows[0];
+  let confirmToken = crypto.randomBytes(20).toString("hex")
+  insertConfirmToken(user.email, confirmToken)
+  const link = process.env.BASEURL + '/user/confirmation/' + confirmToken
+  sendConfirmEmail(link,user.email)
+  return true
+}
+
 async function changePassword(req: express.Request, res: express.Response, next: express.NextFunction) {
   console.log(req.params.hash)
   let result = await getUserByForgotToken(req.params.hash)
@@ -216,8 +238,9 @@ async function activateAccount(req: express.Request, res: express.Response, next
   }
   let user: User = result.rows[0];
   let activateduser = await activateUserAccount(user)
-  if(!activateduser.rows.length) {
-    return next(new HttpException(500, "Updating of Password failed"));
+  console.log(activateduser)
+  if(activateduser.rowCount = 0) {
+    return next(new HttpException(500, "Activating user failed"));
   }
   return activateduser;
 }
@@ -249,6 +272,32 @@ function sendForgotEmail(link: string, email: string) {
     .catch(console.log)
 }
 
+function sendConfirmEmail(link: string, email: string) {
+  const client = Sib.ApiClient.instance
+  const apiKey = client.authentications['api-key']
+  apiKey.apiKey = process.env.EMAIL_API_KEY
+  const tranEmailApi = new Sib.TransactionalEmailsApi()
+  const sender = {
+      email: process.env.EMAIL,
+      name: 'drawerio',
+  }
+  const receivers = [
+      {
+          email: email,
+      },
+  ]
+  tranEmailApi
+    .sendTransacEmail({
+        sender,
+        to: receivers,
+        subject: 'Please confirm your email',
+        textContent: 'Hello,\nPlease click the provided link to activate your account.\n\n' +
+         link 
+    })
+    .then(console.log)
+    .catch(console.log)
+}
+
 module.exports = {
   getUsers,
   getUser,
@@ -260,6 +309,7 @@ module.exports = {
   registerAdmin,
   promoteToAdmin,
   forgotPassword,
+  confirmEmail,
   changePassword,
   activateAccount,
 };

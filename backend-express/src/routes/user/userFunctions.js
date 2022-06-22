@@ -90,7 +90,7 @@ function updateForgotUser(req, forgotToken, password) {
 }
 function activateUserAccount(user) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield pool.query("UPDATE users SET enabled=$1 WHERE email=$2", [true, user.email]);
+        const result = yield pool.query("UPDATE users SET enabled=$1, confirmationToken=$2 WHERE email=$3", [true, "", user.email]);
         return result;
     });
 }
@@ -103,6 +103,12 @@ function insertRefreshToken(user, refreshToken) {
 function insertForgotToken(email, forgotToken, forgotExpires) {
     return __awaiter(this, void 0, void 0, function* () {
         const updatedUser = pool.query("UPDATE users SET forgotToken=$1, forgotExpires=$2 WHERE email=$3", [forgotToken, forgotExpires, email]);
+        return updatedUser;
+    });
+}
+function insertConfirmToken(email, confirmToken) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const updatedUser = pool.query("UPDATE users SET confirmationToken=$1 WHERE email=$2", [confirmToken, email]);
         return updatedUser;
     });
 }
@@ -168,6 +174,21 @@ function forgotPassword(req, res, next) {
         return true;
     });
 }
+function confirmEmail(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(req.body.email);
+        const result = yield getUserByEmail(req.body.email, res, next);
+        if (!result.rows.length) {
+            return next(new HttpException_1.default(404, "User not found or Account already activated"));
+        }
+        let user = result.rows[0];
+        let confirmToken = crypto.randomBytes(20).toString("hex");
+        insertConfirmToken(user.email, confirmToken);
+        const link = process.env.BASEURL + '/user/confirmation/' + confirmToken;
+        sendConfirmEmail(link, user.email);
+        return true;
+    });
+}
 function changePassword(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(req.params.hash);
@@ -195,8 +216,9 @@ function activateAccount(req, res, next) {
         }
         let user = result.rows[0];
         let activateduser = yield activateUserAccount(user);
-        if (!activateduser.rows.length) {
-            return next(new HttpException_1.default(500, "Updating of Password failed"));
+        console.log(activateduser);
+        if (activateduser.rowCount = 0) {
+            return next(new HttpException_1.default(500, "Activating user failed"));
         }
         return activateduser;
     });
@@ -227,6 +249,31 @@ function sendForgotEmail(link, email) {
         .then(console.log)
         .catch(console.log);
 }
+function sendConfirmEmail(link, email) {
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications['api-key'];
+    apiKey.apiKey = process.env.EMAIL_API_KEY;
+    const tranEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = {
+        email: process.env.EMAIL,
+        name: 'drawerio',
+    };
+    const receivers = [
+        {
+            email: email,
+        },
+    ];
+    tranEmailApi
+        .sendTransacEmail({
+        sender,
+        to: receivers,
+        subject: 'Please confirm your email',
+        textContent: 'Hello,\nPlease click the provided link to activate your account.\n\n' +
+            link
+    })
+        .then(console.log)
+        .catch(console.log);
+}
 module.exports = {
     getUsers,
     getUser,
@@ -238,6 +285,7 @@ module.exports = {
     registerAdmin,
     promoteToAdmin,
     forgotPassword,
+    confirmEmail,
     changePassword,
     activateAccount,
 };
