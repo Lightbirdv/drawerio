@@ -5,13 +5,11 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Router from 'next/router';
-import { useRouter } from 'next/router';
 import { addDrawer } from '../lib/newDrawer';
 import { updateDrawer } from "../lib/updateDrawer";
 import { deleteD } from "../lib/deleteD";
 import dayjs from 'dayjs';
 import { MdAdd } from "react-icons/md";
-import { MdOpenInNew } from "react-icons/md";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
@@ -166,18 +164,18 @@ const AxiosPost = () => {
         ).map((item) => (
           <Container key={item.id}>
             <Row style={{ marginTop: "20px" }} >
-            <Col xs="1">
+            <Col xs="1" onClick={(e) => { { goNext(e, item.drawer_id) } }}>
               <div style={{width:"30px", height:"30px", backgroundColor: "white", borderRadius: "50%"}}></div>
               </Col>
 
-              <Col xs="4" style={{ marginRight: "100px" }}>
+              <Col xs="4" style={{ marginRight: "100px" }} onClick={(e) => { { goNext(e, item.drawer_id) } }}>
                 <span>{item.drawertitle}</span>
               </Col>
-              <Col xs="2">
+              <Col xs="2" onClick={(e) => { { goNext(e, item.drawer_id) } }}>
                 <span>{dayjs(item.creationdate).format('MMM, D, YYYY')}</span>
               </Col>
               <Col>
-                <span><button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { { goNext(e, item.drawer_id) } }}><MdOpenInNew /></button>
+                <span>
                   <button type="button" class="btn btn-warning" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleShowUpd() }} ><MdOutlineModeEdit /></button>
                   <Modal show={showUpd} onHide={handleCloseUpd}>
                     <Modal.Header closeButton>
@@ -220,9 +218,6 @@ const AxiosPost = () => {
                       </Button>
                     </Modal.Footer>
                   </Modal></span>
-              </Col>
-              <Col>
-                <span></span>
               </Col>
             </Row>
 

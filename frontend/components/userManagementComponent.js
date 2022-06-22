@@ -65,8 +65,11 @@ const UserManagement = () => {
         forceUpdate()
     }
 
-
-
+    const saveID = (e, _name) => {
+        e.preventDefault();
+        console.log(_name)
+        localStorage.setItem("_id", _name);
+      }
 
     const [posts, setPosts] = useState({ blogs: [] });
 
@@ -156,7 +159,7 @@ const UserManagement = () => {
                                         </Modal.Footer>
                                     </Modal>
                                     <button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => handleAdmin(e, item.email)}><MdAdminPanelSettings /></button>
-                                    <button type="button" class="btn btn-danger" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={handleDeleteShow}><MdDeleteForever /></button>
+                                    <button type="button" class="btn btn-danger" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveID(e, item.users_id); handleDeleteShow() }} ><MdDeleteForever /></button>
                                     <Modal show={showDelete} onHide={handleCloseDelete}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>Delete User</Modal.Title>
@@ -169,16 +172,12 @@ const UserManagement = () => {
                                                 <MdClose />
                                             </Button>
                                             <Button variant="primary"
-                                                onClick={(e) => { deleteU(e, item.users_id); handleCloseDelete() }} style={{ borderRadius: '15px' }}>
+                                                onClick={(e) => { deleteU(e, localStorage.getItem("_id")); handleCloseDelete() }} style={{ borderRadius: '15px' }}>
                                                 <MdCheck />
                                             </Button>
                                         </Modal.Footer>
                                     </Modal></span>
                             </Col>
-
-
-
-
                         </Row>
                     </Container>
                 ))}

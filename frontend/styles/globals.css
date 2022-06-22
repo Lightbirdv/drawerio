@@ -22,7 +22,7 @@ a {
 
 /* TopComponent Background pexels-Johanes */
 .background {
-  background-color:rgb(172, 222, 206);
+  background-color:rgb(167 243 208);
   height: 100vh;
   width: 100vw;
   position: fixed;
@@ -106,7 +106,6 @@ a {
 }
 
 .z {
-  background-color:darkmagenta;
   color: rgb(255, 255, 255);
   border-radius: 15px;
   margin-left: 5px;
@@ -140,7 +139,7 @@ a {
   margin-right: auto;
 }
 .service-container-bg {
-  background-color: rgb(110, 173, 153);
+  background-color: rgb(255, 255, 255);
   padding-top: 100px;
 }
 /* About Component  */
@@ -154,18 +153,6 @@ a {
   flex-direction: column;
 }
 
-/* Download Component  */
-.download-container-bg {
-  background-color: rgb(110, 173, 153);
-}
-.download-component {
-  min-height: 40vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  
-}
 .img-contact {
   display: flex;
   justify-content: center;

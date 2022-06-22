@@ -1,7 +1,7 @@
 import { regUser } from '../lib/reg';
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
-import Navbar from "../components/NavbarTwo";
+import Navbar from "../components/NavbarThree";
 
 class RegComponent extends React.Component {
 
@@ -34,6 +34,7 @@ class RegComponent extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                   {/* Email input */}
                   <div className="form-outline mb-4">
+                  <h1 >Please Register!</h1>
                     <input type="email" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
                     <label className="form-label" htmlFor="form3Example3">Email address</label>
                   </div>

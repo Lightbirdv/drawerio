@@ -132,7 +132,7 @@ const adminPageComponent = () => {
           <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "30px", marginRight:"10px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
         {/* </Col>
         <Col style={{ marginLeft: "-500px" }}> */}
-          <span ><button type="button" class="btn btn-secondary" onClick={handleShow} style={{ borderRadius: '15px',marginRight:"10px" }}><MdAdd /></button>
+          <span><button type="button" class="btn btn-secondary" onClick={handleShow} style={{ borderRadius: '15px', marginRight: "10px" }}><MdAdd /></button>
              <span><button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple", borderRadius: '15px'}}><MdSupervisorAccount/></button></span>
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton>
@@ -169,18 +169,18 @@ const adminPageComponent = () => {
         ).map((item) => (
           <Container key={item.id}>
             <Row style={{ marginTop: "20px" }} >
-            <Col xs="1">
+            <Col xs="1" onClick={(e) => { { goNext(e, item.drawer_id) } }}>
               <div style={{width:"30px", height:"30px", backgroundColor: "white", borderRadius: "50%"}}></div>
               </Col>
 
-              <Col xs="4" style={{ marginRight: "100px" }}>
+              <Col xs="4" style={{ marginRight: "100px" }} onClick={(e) => { { goNext(e, item.drawer_id) } }}>
                 <span>{item.drawertitle}</span>
               </Col>
-              <Col xs="2">
+              <Col xs="2" onClick={(e) => { { goNext(e, item.drawer_id) } }}>
                 <span>{dayjs(item.creationdate).format('MMM, D, YYYY')}</span>
               </Col>
               <Col>
-                <span><button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { { goNext(e, item.drawer_id) } }}><MdOpenInNew /></button>
+                <span>
                   <button type="button" class="btn btn-warning" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveDrawerName(e, item.drawertitle); saveDrawer(e, item.drawer_id); handleShowUpd() }} ><MdOutlineModeEdit /></button>
                   <Modal show={showUpd} onHide={handleCloseUpd}>
                     <Modal.Header closeButton>
@@ -224,14 +224,7 @@ const adminPageComponent = () => {
                     </Modal.Footer>
                   </Modal></span>
               </Col>
-              <Col>
-                <span></span>
-              </Col>
             </Row>
-
-
-
-
           </Container>
         ))}
     </div>
