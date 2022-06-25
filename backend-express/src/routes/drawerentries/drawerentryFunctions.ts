@@ -4,11 +4,13 @@ import { Drawer } from "../drawer/drawerFunctions";
 const drawerFunctions = require("../drawer/drawerFunctions");
 import HttpException from "../../exceptions/HttpException";
 import { debug } from "console";
+import { resourceLimits } from "worker_threads";
 
 export interface Drawerentry {
   drawerentry_id: number;
   comment: string;
   imageURL: string[];
+  videoURL: string[];
   drawer_id: number;
   creationDate: Date;
   originURL: string;
@@ -48,18 +50,22 @@ async function updateEntry(
   res: express.Response,
   next: express.NextFunction
 ) {
-  let entry: Drawerentry | void;
+  let entry: Drawerentry;
+  let result;
+  console.log(req.entry)
   if (req.entry) {
     entry = req.entry;
     req.params.id = req.entry.drawerentry_id;
   } else {
-    entry = await getSingleEntry(req, res, next);
+    result = await getSingleEntry(req, res, next);
+    if (!result.rows.length) {
+      return next(new HttpException(404, "Drawerentry not found"));
+    }
+    entry = result.rows[0];
   }
-  if (!entry) {
-    return next();
-  }
+  
   const newEntry = await pool.query(
-    "UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3 WHERE drawerentry_id=$4",
+    "UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3, videoURL=$4 WHERE drawerentry_id=$5",
     [
       req.body.selText != null && req.body.selText.length
         ? req.body.selText
@@ -70,6 +76,9 @@ async function updateEntry(
       req.body.imageURL != null && req.body.imageURL.length
         ? req.body.imageURL
         : entry.imageURL,
+      req.body.videoURL != null && req.body.videoURL.length
+        ? req.body.videoURL
+        : entry.videoURL,
       req.params.id,
     ]
   );
@@ -91,11 +100,12 @@ async function addEntry(req: express.Request, res: express.Response) {
   var entry: Drawerentry = req.body;
   entry.creationDate = new Date();
   const newEntry = pool.query(
-    "INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *",
+    "INSERT INTO drawerentries(comment, creationDate, imageURL, videoURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *",
     [
       entry.comment,
       entry.creationDate,
       entry.imageURL,
+      entry.videoURL,
       entry.drawer_id,
       entry.originURL,
       entry.selText,
@@ -123,7 +133,9 @@ async function isAuthorOrAdmin(
     let entry: Drawerentry = result.rows[0];
     req.entry = entry;
     req.params.id = entry.drawer_id;
+    
   }
+  
 
   let result: any = await drawerFunctions.getSingleDrawer(req, res, next);
   if (!result.rows.length) {

@@ -136,24 +136,30 @@ router.get("/:id", authenticationFunctions.authenticateToken, drawerentryFunctio
  *            required: true
  *      requestBody:
  *          content:
- *             application/x-www-form-urlencoded:
+ *             application/json:
  *               schema:
  *                  type: object
  *                  properties:
  *                     comment:
  *                        type: string
- *                        required: false
  *                     imageURL:
- *                        type: string[]
- *                        required: false
+ *                        type: array
+ *                        items:
+ *                           type: string
+ *                     videoURL:
+ *                        type: array
+ *                        items:
+ *                           type: string
  *                     selText:
- *                        type: string[]
+ *                        type: string
  *                        required: false
  */
 router.patch("/:id", authenticationFunctions.authenticateToken, drawerentryFunctions.isAuthorOrAdmin, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedEntry = yield drawerentryFunctions.updateEntry(req, res, next);
-        res.status(201).json("successfully changed a drawer entry");
+        if (updatedEntry) {
+            res.status(201).json("successfully changed a drawer entry");
+        }
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -215,6 +221,10 @@ router.delete("/:id", authenticationFunctions.authenticateToken, drawerentryFunc
  *                     comment:
  *                        type: string
  *                     imageURL:
+ *                        type: array
+ *                        items:
+ *                           type: string
+ *                     videoURL:
  *                        type: array
  *                        items:
  *                           type: string
