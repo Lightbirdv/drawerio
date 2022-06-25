@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const request = require('supertest');
 const app = (0, express_1.default)();
 require("dotenv").config();
 const authRouter = require("./routes/authentication/authenticationRoutes");
@@ -17,14 +18,13 @@ const swaggerUi = require("swagger-ui-express");
 const fileupload = require("express-fileupload");
 var cors = require("cors");
 const error_middleware_1 = __importDefault(require("./middleware/error.middleware"));
-const port = process.env.APIPORT || 5000;
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: "3.0.1",
         info: {
-            title: "Your API title",
+            title: "Drawerio",
             version: "1.0.0",
-            description: "Your API description",
+            description: "This API is used to provide the functionality of the Drawerio application",
         },
         basePath: "/",
         components: {
@@ -54,11 +54,12 @@ userFunctions.registerAdmin();
 app.get("/", (req, res) => {
     return res.redirect("/api-docs");
 });
+app.get("/test", (req, res) => {
+    return res.sendStatus(200);
+});
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/drawer", drawerRouter);
 app.use("/drawerentry", drawerentryRouter);
-app.listen(port, () => {
-    console.log("started");
-});
 app.use(error_middleware_1.default);
+module.exports = app;
