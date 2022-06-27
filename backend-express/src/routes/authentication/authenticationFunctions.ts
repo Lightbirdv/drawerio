@@ -179,14 +179,15 @@ async function isAdmin(
     process.env.ACCESS_TOKEN_SECRET,
     async (err: any, uncodedToken: any) => {
       if (err) return res.sendStatus(403);
-      let user: User = await userFunctions.getUserByEmail(
+      let result = await userFunctions.getUserByEmail(
         uncodedToken.user,
         res,
         next
       );
-      if (!user) {
-        return next;
+      if (!result.rows.length) {
+        return next(new HttpException(404, "No user found"));
       }
+      let user: User = result.rows[0];
       if (user.isadmin == true) {
         req.user = user;
         next();

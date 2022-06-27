@@ -126,10 +126,11 @@ function isAdmin(req, res, next) {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, uncodedToken) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.sendStatus(403);
-            let user = yield userFunctions.getUserByEmail(uncodedToken.user, res, next);
-            if (!user) {
-                return next;
+            let result = yield userFunctions.getUserByEmail(uncodedToken.user, res, next);
+            if (!result.rows.length) {
+                return next(new HttpException_1.default(404, "No user found"));
             }
+            let user = result.rows[0];
             if (user.isadmin == true) {
                 req.user = user;
                 next();
