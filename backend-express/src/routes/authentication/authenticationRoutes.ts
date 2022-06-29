@@ -136,6 +136,33 @@ router.get(
 
 /**
  * @swagger
+ * /auth/isEnabled:
+ *    get:
+ *      description: Returns bool if user is enabled
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - authentication endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully checked user
+ *        '500':
+ *          description: Failed to check for user
+ */
+ router.get(
+  "/isEnabled",
+  authenticationFunctions.authenticateToken,
+  async (req: any, res: express.Response) => {
+    if (!req.user) {
+      return res.status(500).json("Something went wrong!");
+    }
+    let json: JSON = <JSON>(<unknown>{ enabled: req.user.enabled });
+    return res.status(200).json(json);
+  }
+);
+
+/**
+ * @swagger
  * /auth/logout:
  *    post:
  *      description: Returns refreshed token
