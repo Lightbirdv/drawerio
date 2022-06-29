@@ -49,7 +49,7 @@ select {
   width: 6rem;
   height: 2rem;
   transition-duration: 0.4s;
-  background-color: #acdece;
+  background-color: #3CDDC0;
   color: white;
 }
 
@@ -109,11 +109,11 @@ select {
 }
 
 .thumbnail:hover {
-  box-shadow: 0 0 2px 1px #acdece !important;
+  box-shadow: 0 0 2px 1px #3CDDC0 !important;
 }
 
 .image_picker .responsive .selected {
-  background-color: #acdece !important;
+  background-color: #3CDDC0 !important;
 }
 
 .userpage-text--button-plus__design {
@@ -121,7 +121,7 @@ select {
   border: none;
   height: 2rem;
   width: 3rem;
-  background-color: #acdece;
+  background-color: #3CDDC0;
   color: white;
   border-radius: 10px;
 }

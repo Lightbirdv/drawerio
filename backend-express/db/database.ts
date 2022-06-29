@@ -36,6 +36,7 @@ export const tabledrawerentriesquery = `CREATE TABLE IF NOT EXISTS drawerentries
     comment VARCHAR,
     selText VARCHAR,
     imageURL TEXT[],
+    videoURL TEXT[],
     drawer_id INTEGER,
     CONSTRAINT fk_drawer
         FOREIGN KEY(drawer_id) 

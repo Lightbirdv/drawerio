@@ -36,17 +36,20 @@ function getSingleEntry(req, res, next) {
 function updateEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         let entry;
+        let result;
+        console.log(req.entry);
         if (req.entry) {
             entry = req.entry;
             req.params.id = req.entry.drawerentry_id;
         }
         else {
-            entry = yield getSingleEntry(req, res, next);
+            result = yield getSingleEntry(req, res, next);
+            if (!result.rows.length) {
+                return next(new HttpException_1.default(404, "Drawerentry not found"));
+            }
+            entry = result.rows[0];
         }
-        if (!entry) {
-            return next();
-        }
-        const newEntry = yield pool.query("UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3 WHERE drawerentry_id=$4", [
+        const newEntry = yield pool.query("UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3, videoURL=$4 WHERE drawerentry_id=$5", [
             req.body.selText != null && req.body.selText.length
                 ? req.body.selText
                 : entry.selText,
@@ -56,6 +59,9 @@ function updateEntry(req, res, next) {
             req.body.imageURL != null && req.body.imageURL.length
                 ? req.body.imageURL
                 : entry.imageURL,
+            req.body.videoURL != null && req.body.videoURL.length
+                ? req.body.videoURL
+                : entry.videoURL,
             req.params.id,
         ]);
         return newEntry;
@@ -74,10 +80,11 @@ function addEntry(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         var entry = req.body;
         entry.creationDate = new Date();
-        const newEntry = pool.query("INSERT INTO drawerentries(comment, creationDate, imageURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *", [
+        const newEntry = pool.query("INSERT INTO drawerentries(comment, creationDate, imageURL, videoURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *", [
             entry.comment,
             entry.creationDate,
             entry.imageURL,
+            entry.videoURL,
             entry.drawer_id,
             entry.originURL,
             entry.selText,

@@ -113,6 +113,13 @@ const UserPage = function () {
       .then((response) => {
         setSuccessSave(true);
         console.log(response);
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        setTimeout(() => {
+          window.close();
+        }, 2000);
       });
   };
 
