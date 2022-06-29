@@ -138,18 +138,22 @@ router.get(
  *            required: true
  *      requestBody:
  *          content:
- *             application/x-www-form-urlencoded:
+ *             application/json:
  *               schema:
  *                  type: object
  *                  properties:
  *                     comment:
  *                        type: string
- *                        required: false
  *                     imageURL:
- *                        type: string[]
- *                        required: false
+ *                        type: array
+ *                        items:
+ *                           type: string
+ *                     videoURL:
+ *                        type: array
+ *                        items:
+ *                           type: string
  *                     selText:
- *                        type: string[]
+ *                        type: string
  *                        required: false
  */
 router.patch(
@@ -167,7 +171,9 @@ router.patch(
         res,
         next
       );
-      res.status(201).json("successfully changed a drawer entry");
+      if(updatedEntry) {
+        res.status(201).json("successfully changed a drawer entry");
+      }
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }
@@ -235,6 +241,10 @@ router.delete(
  *                     comment:
  *                        type: string
  *                     imageURL:
+ *                        type: array
+ *                        items:
+ *                           type: string
+ *                     videoURL:
  *                        type: array
  *                        items:
  *                           type: string

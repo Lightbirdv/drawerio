@@ -129,7 +129,6 @@ async function authenticateToken(
         res,
         next
       );
-      console.log(result)
       if (!result.rows.length) {
         return next(new HttpException(404, "No user found"));
       }

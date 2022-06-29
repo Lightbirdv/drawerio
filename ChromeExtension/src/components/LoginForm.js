@@ -27,9 +27,13 @@ const LoginForm = function (props) {
 
   return (
     <div className="login-form-container">
+      <div className="fun-drawer">
+        <iframe src='https://my.spline.design/untitled-81eb2f21c45dd6cb1bc7432360ae7e69/' frameborder='0' width='100%' height='200px'></iframe>
+      </div>
       <div className="login-form--text">
         <p>Hello, please log in!</p>
       </div>
+      
       <form
         className="login-form__design"
         onSubmit={handleSubmit((data) => {

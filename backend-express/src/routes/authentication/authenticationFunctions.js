@@ -92,7 +92,6 @@ function authenticateToken(req, res, next) {
             if (err)
                 return res.sendStatus(403);
             let result = yield userFunctions.getUserByEmail(uncodedToken.user, res, next);
-            console.log(result);
             if (!result.rows.length) {
                 return next(new HttpException_1.default(404, "No user found"));
             }
