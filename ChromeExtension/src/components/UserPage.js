@@ -216,24 +216,24 @@ const UserPage = function () {
     const firstYouTubeID = tabURL.split("v=");
     if (firstYouTubeID[1].includes("&")) {
       const secondYouTubeID = firstYouTubeID[1].split("&");
-      setSendYoutube(`https://www.youtube.com/embed/${secondYouTubeID[0]}`);
+      setSendYoutube([`https://www.youtube.com/embed/${secondYouTubeID[0]}`]);
       setIsYoutube(true);
       setRunOnce(false);
       console.log(secondYouTubeID);
     } else if (firstYouTubeID[1].includes("?")) {
       const thirdYoutubeID = firstYouTubeID[1].split("?");
-      setSendYoutube(`https://www.youtube.com/embed/${thirdYoutubeID[0]}`);
+      setSendYoutube([`https://www.youtube.com/embed/${thirdYoutubeID[0]}`]);
       setIsYoutube(true);
       setRunOnce(false);
       console.log(thirdYoutubeID);
     } else {
-      setSendYoutube(`https://www.youtube.com/embed/${firstYouTubeID[1]}`);
+      setSendYoutube([`https://www.youtube.com/embed/${firstYouTubeID[1]}`]);
       setIsYoutube(true);
       setRunOnce(false);
     }
   }
 
-  console.log(sendYoutube);
+  console.log(sendYoutube[0]);
 
   const handleTextinput = function (event) {
     setTextfieldInput(event.target.value);
