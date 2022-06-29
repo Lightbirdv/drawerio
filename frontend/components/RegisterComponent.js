@@ -7,6 +7,7 @@ class RegComponent extends React.Component {
 
   state = {
     email: '',
+    confirmEmail: '',
     password: ''
   }
 
@@ -15,10 +16,10 @@ class RegComponent extends React.Component {
   }
 
   handleSubmit = event => {
-    const { email, password } = this.state;
+    const { email, confirmEmail, password } = this.state;
     console.log("Reg User " + this.state)
     event.preventDefault();
-    regUser(email, password);
+    regUser(email, confirmEmail, password);
   }
 
   render() {
@@ -34,10 +35,17 @@ class RegComponent extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                   {/* Email input */}
                   <div className="form-outline mb-4">
-                  <h1 >Please Register!</h1>
+                    {/* drawerio\frontend\public\assets\regxx.png */}
+                  <img src="assets/regxx.png" className="center"/>
                     <input type="email" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
                     <label className="form-label" htmlFor="form3Example3">Email address</label>
                   </div>
+
+                  <div className="form-outline mb-4">
+                    <input type="email" id="form3Example3" className="form-control form-control-lg" placeholder="Enter your email address again" name="confirmEmail" onChange={this.handleChange} />
+                    <label className="form-label" htmlFor="form3Example3">Confirm your Email address</label>
+                  </div>
+
                   {/* Password input */}
                   <div className="form-outline mb-3">
                     <input type="password" id="form3Example4" className="form-control form-control-lg" placeholder="Enter password" name="password" onChange={this.handleChange} />

@@ -15,6 +15,9 @@ import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { Col, Container, Row } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
+import {confirmEmail} from '../lib/confirmMail'
+
 
 
 
@@ -50,7 +53,7 @@ const AxiosPost = () => {
     console.log(event.target.name)
   }
 
-  
+
   const handleSubmit = event => {
     const { drawerName } = state;
     console.log(drawerName)
@@ -88,7 +91,6 @@ const AxiosPost = () => {
 
 
   const [get, setPosts] = useState({ blogs: [] });
-
   useEffect(() => {
     const fetchPostList = async () => {
       const { data } = await axios.get(
@@ -102,7 +104,7 @@ const AxiosPost = () => {
       console.log(data);
     };
     fetchPostList();
-     
+
   }, [reducerValue]);
 
   /* Searchinput */
@@ -120,12 +122,46 @@ const AxiosPost = () => {
     localStorage.setItem("drawerName", _name);
   }
 
+  const confE = (e) => {
+    e.preventDefault();
+    const enteredName = prompt('Please enter your Email');
+    confirmEmail(enteredName);
+  }
+
+
+
+  function AlertDismissible() {
+    const [show, setShow] = useState(true);
+  
+    return (
+      <>
+        <Alert style={{width:"100%", height:"40%"}} show={show} variant="success">
+          <Alert.Heading>Please Confirm your Email
+          <Button style={{marginLeft:"10px"}} onClick={(e) => confE(e)} variant="outline-success">
+            click here to Confirm
+            </Button>
+          <Button className ="btn float-right" onClick={() => setShow(false)} variant="outline-success">
+          <MdClose />
+            </Button>
+
+          </Alert.Heading>
+        </Alert>
+  
+       {/*  {!show && <Button onClick={() => setShow(true)}>Show Alert</Button>} */}
+      </>
+    );
+  }
+  
+
+
   return (
+    
     <div style={{ marginTop: "20px" }}>
+      <AlertDismissible />
       <Row style={{ margin: "30px" }}>
         <Col>
-          <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "30px", marginRight:"10px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
-        {/* </Col>
+          <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "30px", marginRight: "10px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
+          {/* </Col>
         <Col style={{ marginLeft: "-500px" }}> */}
           <span><button type="button" class="btn btn-secondary" onClick={handleShow} style={{ borderRadius: '15px' }}><MdAdd /></button>
             {/*  <span><button type="button" className="btn btn-secondary" onClick={goToUserManagement}style={{backgroundColor: "purple", borderRadius: '15px'}}><MdSupervisorAccount/></button></span>*/}
@@ -163,9 +199,9 @@ const AxiosPost = () => {
         }
         ).map((item) => (
           <Container key={item.id}>
-            <Row style={{ marginTop: "20px" }} >
-            <Col xs="1" onClick={(e) => { { goNext(e, item.drawer_id) } }}>
-              <div style={{width:"30px", height:"30px", backgroundColor: "white", borderRadius: "50%"}}></div>
+            <Row className="aaa" style={{ marginTop: "20px" }} >
+              <Col xs="1" onClick={(e) => { { goNext(e, item.drawer_id) } }}>
+                <div style={{ width: "30px", height: "30px", backgroundColor: "white", borderRadius: "50%" }}></div>
               </Col>
 
               <Col xs="4" style={{ marginRight: "100px" }} onClick={(e) => { { goNext(e, item.drawer_id) } }}>
@@ -213,7 +249,7 @@ const AxiosPost = () => {
                         <MdClose />
                       </Button>
                       <Button variant="primary"
-                        onClick={(e) => { deleteDrawer(e, localStorage.getItem("drawer_id")); handleCloseDelete()}} style={{ borderRadius: '15px' }}>
+                        onClick={(e) => { deleteDrawer(e, localStorage.getItem("drawer_id")); handleCloseDelete() }} style={{ borderRadius: '15px' }}>
                         <MdCheck />
                       </Button>
                     </Modal.Footer>

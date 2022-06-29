@@ -10,7 +10,7 @@ export const loginUser = (email, password) => {
     console.log(response);
     if (response.status === 200 && email !== "" && password !== "") {
       const token = localStorage.setItem("token", response.data);
-     /*  const user = localStorage.setItem("user", email); */
+      const x = localStorage.setItem("emailx", email);
       const user = getname(email);
 
       const headers = {
