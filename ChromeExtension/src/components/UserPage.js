@@ -68,7 +68,14 @@ const UserPage = function () {
           videos.forEach(function (video) {
             if (
               video.src.startsWith("https://www.youtube.com/embed") ||
-              video.src.startsWith("https://www.youtube-nocookie.com/embed")
+              video.src.startsWith("https://www.youtube-nocookie.com/embed") ||
+              video.src.startsWith("https://youtube.com/embed") ||
+              video.src.startsWith("http://www.youtube-nocookie.com/embed") ||
+              video.src.startsWith("http://www.youtube.com/embed") ||
+              video.src.startsWith("http://youtube.com/embed") ||
+              video.src.startsWith("//www.youtube-nocookie.com/embed") ||
+              video.src.startsWith("//www.youtube.com/embed") ||
+              video.src.startsWith("//youtube.com/embed")
             ) {
               videosResult.push(video.src);
             }
