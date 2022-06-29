@@ -109,6 +109,10 @@ select {
   height: 320px;
 }
 
+.userpage-tooltip {
+  margin-left: 330px;
+}
+
 .thumbnail:hover {
   box-shadow: 0 0 2px 1px #3cddc0 !important;
 }

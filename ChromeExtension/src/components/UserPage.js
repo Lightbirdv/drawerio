@@ -9,6 +9,8 @@ import jwtDecode from "jwt-decode";
 import ImagePicker from "react-image-picker";
 import "react-image-picker/dist/index.css";
 import logoutImage from "../imagesProject/logout.svg";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 
 const UserPage = function () {
   const [allImages, setAllImages] = useState([]);
@@ -283,6 +285,9 @@ const UserPage = function () {
         </div>
         <p className="comment-text__design">Your selected Text:</p>
         <div className="userpage-textarea">
+          <Tippy content="If you highlight a section of text on a website, it will appear here in the text box.">
+            <p className="userpage-tooltip">{"[?]"}</p>
+          </Tippy>
           <textarea
             className="userpage-textareaSelect__design"
             placeholder={selectedText}
