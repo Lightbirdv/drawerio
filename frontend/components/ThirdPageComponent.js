@@ -121,6 +121,7 @@ const ThirdPage = () => {
           if (searchTerm == "") {
             return item
           } else if (item.comment.toLowerCase().includes(searchTerm.toLowerCase())) {
+            console.log(item.videourl[0]);
             return item
           }
         }
@@ -170,22 +171,37 @@ const ThirdPage = () => {
                         </div>
                       ))}
                   </div></p>
-                  <div>
-                  {(item.originurl).split("v=")[0] === "https://www.youtube.com/watch?" ? <iframe
-                  width="600"
-                  height="400"
-                  src={`https://www.youtube.com/embed/${(item.originurl).split("v=")[1]}`}
+                  </Col>
+                  </Row>
+
+
+                  <Row>
+                  <Col>
+                  <p><div className="grid grid-cols-3 gap-2" >
+                    {item.videourl &&
+                      item.videourl.map((y) => (
+                        <div className="relative" >
+                          {/* <div className="absolute inset-0 z-10 flex transition duration-300 ease-in hover:opacity-0">
+                            <div className="absolute inset-0 bg-black opacity-30"> </div> */}
+
+                  <iframe style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }}
+                  /* width="300"
+                  height="200" */
+                  /* src={`https://www.youtube.com/embed/${(y).split("v=")[1]}`} */
+                  src={y}
                   title="YouTube video player"
                   frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                ></iframe> : <p></p>}
-                  
-                  
+                ></iframe>
                   </div>
-                  {/*   <td> */}
-                </Col>
-              </Row>
+                 /*  </div> */   
+                         
+                      ))}
+                  </div></p>
+                  </Col>
+                  </Row>
+              
 
               <Row style={{ margin: "10px", padding: "10px", textAlign: "right" }}>
                 <Col>
