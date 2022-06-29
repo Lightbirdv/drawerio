@@ -24,10 +24,9 @@ const UserPage = function () {
   const [tabURL, setTabURL] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [selectImgArr, setSelectImgArr] = useState([]);
-  const [youtubeID, setYoutubeID] = useState([]);
   const [isYoutube, setIsYoutube] = useState(false);
   const [runOnce, setRunOnce] = useState(true);
-  const [sendYoutbe, setSendYoutube] = useState([]);
+  const [sendYoutube, setSendYoutube] = useState([]);
   const [checked, setChecked] = useState(false);
   const [currentValues, setCurrentValues] = useState([]);
 
@@ -101,14 +100,14 @@ const UserPage = function () {
   const handleCheck = function (youtubeURL, event) {
     if (event.target.checked) {
       setChecked(true);
-      if (sendYoutbe.includes(youtubeURL)) {
+      if (sendYoutube.includes(youtubeURL)) {
         console.log("already in");
       } else {
-        setSendYoutube([...sendYoutbe, youtubeURL]);
+        setSendYoutube([...sendYoutube, youtubeURL]);
         setCurrentValues([...currentValues, event.target.value]);
       }
     } else if (!event.target.checked) {
-      setSendYoutube([...sendYoutbe.filter((urls) => urls !== youtubeURL)]);
+      setSendYoutube([...sendYoutube.filter((urls) => urls !== youtubeURL)]);
       setCurrentValues([
         ...currentValues.filter(
           (currentValue) => currentValue !== event.target.value
@@ -117,7 +116,7 @@ const UserPage = function () {
       setChecked(false);
     }
   };
-  console.log(sendYoutbe);
+  console.log(sendYoutube);
   console.log(currentValues);
 
   const logOut = () => {
@@ -154,7 +153,7 @@ const UserPage = function () {
         {
           comment: textfieldInput,
           imageURL: imgArr,
-          videoURL: sendYoutbe,
+          videoURL: sendYoutube,
           drawer_id: optionValue,
           originURL: tabURL,
           selText: selectedText,
@@ -217,23 +216,24 @@ const UserPage = function () {
     const firstYouTubeID = tabURL.split("v=");
     if (firstYouTubeID[1].includes("&")) {
       const secondYouTubeID = firstYouTubeID[1].split("&");
-      setYoutubeID(secondYouTubeID[0]);
+      setSendYoutube(`https://www.youtube.com/embed/${secondYouTubeID[0]}`);
       setIsYoutube(true);
       setRunOnce(false);
       console.log(secondYouTubeID);
     } else if (firstYouTubeID[1].includes("?")) {
       const thirdYoutubeID = firstYouTubeID[1].split("?");
-      setYoutubeID(thirdYoutubeID[0]);
+      setSendYoutube(`https://www.youtube.com/embed/${thirdYoutubeID[0]}`);
       setIsYoutube(true);
       setRunOnce(false);
       console.log(thirdYoutubeID);
     } else {
-      setYoutubeID(firstYouTubeID[1]);
+      setSendYoutube(`https://www.youtube.com/embed/${firstYouTubeID[1]}`);
       setIsYoutube(true);
       setRunOnce(false);
     }
-    console.log(firstYouTubeID);
   }
+
+  console.log(sendYoutube);
 
   const handleTextinput = function (event) {
     setTextfieldInput(event.target.value);
@@ -318,7 +318,7 @@ const UserPage = function () {
             <iframe
               width="300"
               height="300"
-              src={`https://www.youtube.com/embed/${youtubeID}`}
+              src={sendYoutube}
               title="YouTube video player"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
