@@ -33,19 +33,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const pg = __importStar(require("pg"));
-require('dotenv').config();
+require("dotenv").config();
 let client = new pg.Client({
-    host: 'localhost',
+    host: "localhost",
     user: process.env.USER,
-    database: 'postgres',
+    database: "postgres",
     password: process.env.PASSWORD,
-    port: parseInt(process.env.PORT) || 5432
+    port: parseInt(process.env.PORT) || 5432,
 });
 const execute = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield client.connect();
         yield client.query(`DROP DATABASE ${process.env.DB}`);
-        console.log('Database deleted successfully');
+        console.log("Database deleted successfully");
         yield client.end();
         return true;
     }
@@ -56,8 +56,8 @@ const execute = () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.end();
     }
 });
-execute().then(result => {
+execute().then((result) => {
     if (result) {
-        console.log('Job successfully completed');
+        console.log("Job successfully completed");
     }
 });

@@ -37,18 +37,14 @@ const authenticationFunctions = require("../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for users
  */
-router.get(
-  "/all",
-  authenticationFunctions.isAdmin,
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const users = await userFunctions.getUsers();
-      res.json(users.rows);
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
-);
+router.get("/all", authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+	try {
+		const users = await userFunctions.getUsers();
+		res.json(users.rows);
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -72,22 +68,14 @@ router.get(
  *            description: id of the user
  *            required: true
  */
-router.get(
-  "/:id",
-  authenticationFunctions.isAdmin,
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    try {
-      const user = await userFunctions.getUser(req, res, next);
-      res.json(user);
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
-);
+router.get("/:id", authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	try {
+		const user = await userFunctions.getUser(req, res, next);
+		res.json(user);
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -125,22 +113,14 @@ router.get(
  *                        type: string
  *                        required: false
  */
-router.patch(
-  "/:id",
-  authenticationFunctions.isAdmin,
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    try {
-      const updateduser = await userFunctions.updateUser(req, res, next);
-      res.status(201).json("successfully changed a user");
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
-);
+router.patch("/:id", authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	try {
+		const updateduser = await userFunctions.updateUser(req, res, next);
+		res.status(201).json("successfully changed a user");
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -164,18 +144,14 @@ router.patch(
  *            description: id of the user
  *            required: true
  */
-router.delete(
-  "/:id",
-  authenticationFunctions.isAdmin,
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const deleteduser = await userFunctions.deleteUser(req);
-      res.status(201).json("successfully deleted a user");
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
-);
+router.delete("/:id", authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+	try {
+		const deleteduser = await userFunctions.deleteUser(req);
+		res.status(201).json("successfully deleted a user");
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -202,20 +178,17 @@ router.delete(
  *                     password:
  *                        type: string
  */
-router.post(
-  "/register",
-  async (req: express.Request, res: express.Response) => {
-    try {
-      var newUser = await userFunctions.registerUser(req);
-      if (!newUser) {
-        res.status(500).json({ message: "register not successful" });
-      }
-      res.status(201).json("successfully registered a new user");
-    } catch (err: any) {
-      res.status(400).json({ message: err.message });
-    }
-  }
-);
+router.post("/register", async (req: express.Request, res: express.Response) => {
+	try {
+		var newUser = await userFunctions.registerUser(req);
+		if (!newUser) {
+			res.status(500).json({ message: "register not successful" });
+		}
+		res.status(201).json("successfully registered a new user");
+	} catch (err: any) {
+		res.status(400).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -242,22 +215,17 @@ router.post(
  *                     email:
  *                        type: string
  */
-router.post(
-  "/promotetoadmin",
-  authenticationFunctions.isAdmin,
-  async (req: express.Request, res: express.Response) => {
-    try {
-      var updatedUser = await userFunctions.promoteToAdmin(req);
-      if (!updatedUser) {
-        res.status(500).json({ message: "promotion not successful" });
-      }
-      res.status(201).json(updatedUser);
-    } catch (err: any) {
-      res.status(400).json({ message: err.message });
-    }
-  }
-);
-
+router.post("/promotetoadmin", authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
+	try {
+		var updatedUser = await userFunctions.promoteToAdmin(req);
+		if (!updatedUser) {
+			res.status(500).json({ message: "promotion not successful" });
+		}
+		res.status(201).json(updatedUser);
+	} catch (err: any) {
+		res.status(400).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -281,17 +249,16 @@ router.post(
  *                        type: string
  */
 
-router.post('/forgot', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  try {
-      let sendmail = await userFunctions.forgotPassword(req, res ,next)
-      if(sendmail) {
-        res.json({ message: 'Email successfully send' })
-      }
-  } catch (err: any) {
-      res.status(400).json({ message: err.message })
-  }
-})
-
+router.post("/forgot", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	try {
+		let sendmail = await userFunctions.forgotPassword(req, res, next);
+		if (sendmail) {
+			res.json({ message: "Email successfully send" });
+		}
+	} catch (err: any) {
+		res.status(400).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -315,17 +282,16 @@ router.post('/forgot', async (req: express.Request, res: express.Response, next:
  *                        type: string
  */
 
- router.post('/confirm', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  try {
-      let sendmail = await userFunctions.confirmEmail(req, res ,next)
-      if(sendmail) {
-        res.json({ message: 'Email successfully send' })
-      }
-  } catch (err: any) {
-      res.status(400).json({ message: err.message })
-  }
-})
-
+router.post("/confirm", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	try {
+		let sendmail = await userFunctions.confirmEmail(req, res, next);
+		if (sendmail) {
+			res.json({ message: "Email successfully send" });
+		}
+	} catch (err: any) {
+		res.status(400).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -355,16 +321,16 @@ router.post('/forgot', async (req: express.Request, res: express.Response, next:
  *                     password:
  *                        type: string
  */
-router.post('/passwordReset/:hash', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  try {
-    let changeduser = await userFunctions.changePassword(req, res, next)
-    if(changeduser) {
-      res.status(200).json({message: "Password successfully changed"});
-    }
-  } catch (err: any) {
-    res.status(400).json({ message: err.message })
-  }
-})
+router.post("/passwordReset/:hash", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	try {
+		let changeduser = await userFunctions.changePassword(req, res, next);
+		if (changeduser) {
+			res.status(200).json({ message: "Password successfully changed" });
+		}
+	} catch (err: any) {
+		res.status(400).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -386,15 +352,15 @@ router.post('/passwordReset/:hash', async (req: express.Request, res: express.Re
  *            description: hash of user for activation
  *            required: true
  */
- router.post('/confirmation/:hash', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  try {
-    let sendmail = await userFunctions.activateAccount(req, res, next)
-    if(sendmail) {
-      res.json({ message: 'Successfully activated account' })
-    }
-  } catch (err: any) {
-      res.status(400).json({ message: err.message })
-  }
-})
+router.post("/confirmation/:hash", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	try {
+		let sendmail = await userFunctions.activateAccount(req, res, next);
+		if (sendmail) {
+			res.json({ message: "Successfully activated account" });
+		}
+	} catch (err: any) {
+		res.status(400).json({ message: err.message });
+	}
+});
 
 module.exports = router;
