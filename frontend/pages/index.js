@@ -34,7 +34,7 @@ export default function Home() {
         {/* <LoginComponent/> */}
 
       </main>
-      <footer className="footer">
+      <footer className="footer bg-blue-800">
         <h5>Drawer.io - Impressum &copy; Vico, Abdullah, Timothy</h5>
         <script
           src="https://unpkg.com/react/umd/react.production.min.js"
