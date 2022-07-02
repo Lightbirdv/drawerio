@@ -15,6 +15,12 @@ async function getEntriesByDrawer(req: express.Request, res: express.Response) {
 	return entries.rows;
 }
 
+
+async function getDrawerentriesByUser(req: any, res: express.Response) {
+	const drawerentries = await pool.query("SELECT * FROM drawerentries INNER JOIN drawer ON drawerentries.drawer_id=drawer.drawer_id WHERE drawer.users_id=$1 ORDER BY drawerentry_id ASC", [req.user.users_id]);
+	return drawerentries.rows;
+}
+
 async function getSingleEntry(req: express.Request, res: express.Response, next: express.NextFunction) {
 	const result = await pool.query("SELECT * FROM drawerentries WHERE drawerentry_id=$1", [req.params.id]);
 
@@ -101,6 +107,7 @@ async function isAuthorOrAdmin(req: any, res: express.Response, next: express.Ne
 module.exports = {
 	getEntries,
 	getEntriesByDrawer,
+	getDrawerentriesByUser,
 	getSingleEntry,
 	updateEntry,
 	deleteEntry,

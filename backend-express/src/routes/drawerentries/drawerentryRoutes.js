@@ -76,6 +76,33 @@ router.get("/all/:drawerid", authenticationFunctions.authenticateToken, draweren
 }));
 /**
  * @swagger
+ * /drawerentry/from/user:
+ *    get:
+ *      description: Returns all drawerentries for specific user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawerentry endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned drawerentries
+ *        '500':
+ *          description: Failed to query for drawerentries
+ */
+router.get("/from/user", authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const drawerentries = yield drawerentryFunctions.getDrawerentriesByUser(req);
+        if (!drawerentries) {
+            res.status(500).json({ message: "retrieval of drawerentries failed" });
+        }
+        res.status(200).json(drawerentries);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
  * /drawerentry/{id}:
  *    get:
  *      description: Returns specific entry

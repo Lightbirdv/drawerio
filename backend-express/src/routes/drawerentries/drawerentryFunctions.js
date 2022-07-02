@@ -27,6 +27,12 @@ function getEntriesByDrawer(req, res) {
         return entries.rows;
     });
 }
+function getDrawerentriesByUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const drawerentries = yield pool.query("SELECT * FROM drawerentries INNER JOIN drawer ON drawerentries.drawer_id=drawer.drawer_id WHERE drawer.users_id=$1 ORDER BY drawerentry_id ASC", [req.user.users_id]);
+        return drawerentries.rows;
+    });
+}
 function getSingleEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield pool.query("SELECT * FROM drawerentries WHERE drawerentry_id=$1", [req.params.id]);
@@ -117,6 +123,7 @@ function isAuthorOrAdmin(req, res, next) {
 module.exports = {
     getEntries,
     getEntriesByDrawer,
+    getDrawerentriesByUser,
     getSingleEntry,
     updateEntry,
     deleteEntry,
