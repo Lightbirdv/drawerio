@@ -43,6 +43,7 @@ router.post("/login", (req, res, next) => __awaiter(void 0, void 0, void 0, func
     try {
         const { accessToken, refreshToken, user } = yield authenticationFunctions.login(req, res, next);
         console.log(user);
+        delete user.password;
         res.status(200).json({
             token: accessToken,
             refreshToken: refreshToken,

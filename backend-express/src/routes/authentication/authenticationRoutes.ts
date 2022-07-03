@@ -30,6 +30,7 @@ router.post("/login", async (req: express.Request, res: express.Response, next: 
 	try {
 		const { accessToken, refreshToken, user } = await authenticationFunctions.login(req, res, next);
 		console.log(user);
+		delete user.password;
 		res.status(200).json({
 			token: accessToken,
 			refreshToken: refreshToken,

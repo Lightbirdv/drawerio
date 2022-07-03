@@ -240,10 +240,18 @@ function sendForgotEmail(link, email) {
         sender,
         to: receivers,
         subject: "You forgot your password",
-        textContent: "Hello,\nYou are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
-            "Please click on the following link, or paste this into your browser to complete the process:\n\n" +
-            link +
-            "\nIf you did not request this, please ignore this email and your password will remain unchanged.\n",
+        htmlContent: `<html>
+				<head></head>
+				<body>
+					<p>
+						Hello,<br>
+						You are receiving this because you (or someone else) have requested the reset of the password for your account.<br>
+						Please click on the following link, or paste this into your browser to complete the process:<br>
+						<a href="${link}">${link}</a><br>
+						If you did not request this, please ignore this email and your password will remain unchanged.
+					</p>
+				</body>
+			</html>`
     })
         .then(console.log)
         .catch(console.log);
@@ -267,7 +275,16 @@ function sendConfirmEmail(link, email) {
         sender,
         to: receivers,
         subject: "Please confirm your email",
-        textContent: "Hello,\nPlease click the provided link to activate your account.\n\n" + link,
+        htmlContent: `<html>
+				<head></head>
+				<body>
+					<p>
+						Hello,<br>
+						Please click the link provided to confirm your email:<br>
+						<a href="${link}">${link}</a><br>
+					</p>
+				</body>
+			</html>`
     })
         .then(console.log)
         .catch(console.log);
