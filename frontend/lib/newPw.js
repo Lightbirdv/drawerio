@@ -8,10 +8,10 @@ export const newPw = (email) => {
     if (response !== null) {
       
       console.log(response.data);
-      const enteredName = prompt('Please enter the Code');
-      const enteredPw = prompt('Please enter your new PW');
-      forgettHash(enteredName,enteredPw);
-     /*  Router.push("/") */
+      /* const enteredName = prompt('Please enter the Code');
+      const enteredPw = prompt('Please enter your new PW'); */
+     /*  forgettHash(enteredName,enteredPw); */
+      Router.push("/forgettPassword")
     } else {
       alert("Please confirm your Email adress again")
     }

@@ -130,7 +130,7 @@ const AxiosPost = () => {
 
 
 
-  function AlertDismissible() {
+  /* function AlertDismissible() {
     const [show, setShow] = useState(true);
   
     return (
@@ -146,18 +146,18 @@ const AxiosPost = () => {
 
           </Alert.Heading>
         </Alert>
-  
+   */
        {/*  {!show && <Button onClick={() => setShow(true)}>Show Alert</Button>} */}
-      </>
+    /*   </>
     );
-  }
+  } */
   
 
 
   return (
     
     <div style={{ marginTop: "20px" }}>
-      <AlertDismissible />
+      {/* <AlertDismissible /> */}
       <Row style={{ margin: "30px" }}>
         <Col>
           <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "30px", marginRight: "10px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
@@ -191,9 +191,10 @@ const AxiosPost = () => {
       </Row>
       {get.blogs &&
         get.blogs.filter((item) => {
+          
           if (searchTerm == "") {
             return item
-          } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase())) {
+          } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
             return item
           }
         }

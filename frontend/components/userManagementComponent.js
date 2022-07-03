@@ -109,7 +109,7 @@ const UserManagement = () => {
                 posts.blogs.filter((item) => {
                     if (searchTerm == "") {
                         return item
-                    } else if (item.email.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    } else if (item.email.toLowerCase().includes(searchTerm.toLowerCase()) || item.isadmin.toString().includes(searchTerm) || item.users_id.toString().toLowerCase().includes(searchTerm)) {
                         return item
                     }
                 }

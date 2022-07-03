@@ -8,9 +8,9 @@ export const confirmEmail = (email) => {
     if (response !== null) {
       
       console.log(response.data);
-      const enteredName = prompt('Please enter the Code');
-      confirmHash(enteredName);
-     /*  Router.push("/") */
+/*       const enteredName = prompt('Please enter the Code');
+ */      /* confirmHash(enteredName); */
+      Router.push("confirmPage")
     } else {
       alert("Please confirm your Email adress again")
     }

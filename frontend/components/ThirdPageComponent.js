@@ -17,7 +17,7 @@ import { Col, Container, Row } from "react-bootstrap";
 
 
 
-const ThirdPage = () => {
+const ThirdPageComponent = () => {
   const [state, setState] = useState({
     drawerName: '',
     newName: '',
@@ -118,9 +118,10 @@ const ThirdPage = () => {
 
       {posts.blogs &&
         posts.blogs.filter((item) => {
+          const keys = ["comment", "originurl", "seltext"]
           if (searchTerm == "") {
             return item
-          } else if (item.comment.toLowerCase().includes(searchTerm.toLowerCase())) {
+          } else if (keys.some((key) => item[key].toLowerCase().includes(searchTerm.toLowerCase())) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
             console.log(item.videourl[0]);
             return item
           }
@@ -234,4 +235,4 @@ const ThirdPage = () => {
   );
 };
 
-export default ThirdPage;
+export default ThirdPageComponent;

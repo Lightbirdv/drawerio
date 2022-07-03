@@ -1,16 +1,17 @@
 import axios from 'axios';
 import Router from 'next/router';
-/* import {confirmEmail} from '../lib/confirmMail' */
+import {confirmEmail} from '../lib/confirmMail'
 
 export const regUser = (email, confirm, password) => {
   console.log(email, confirm, password);
  
   const { data } = axios.post('http://localhost:5000/user/register', { email: email, password: password }).then((response) => {
     console.log(response.message);
-    if (response.status === 200, email !== "" && password !== "" && email === confirm) {
+    if (response.status === 200, email !== "" && password !== "" && password === confirm) {
       /* confirmEmail(confirm); */
       console.log(response.data);
-      Router.push("/")
+      confirmEmail(email);
+      Router.push("/confirmPage")
     } else {
       alert("Unfortunately the creation of the user failed")
     }

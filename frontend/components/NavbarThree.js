@@ -8,7 +8,7 @@ import { newName } from '../lib/getname';
 
 
 const welcome = () => {
-const a = newName();
+    const a = newName();
     if (a !== "") {
         return "Welcome " + a + "!"
     }
@@ -56,11 +56,11 @@ export default function Navbar() {
         <nav className="flex filter drop-shadow-md bg-white px-4 py-4 h-20 items-center">
             {/* <MobileNav open={open} setOpen={setOpen} /> */}
             <div className="w-3/12 flex items-center">
-                <a className="text-2xl font-semibold" href="/"><img src="assets/logo.jpg" className="img-logo" style={{ marginRight: "15px", maxHeight: "130px" }} /></a>
-                <a className="text-2xl font-semibold" href="/">Drawer.io</a>
+                <a className="text-2xl font-semibold" href="/"><img src="assets/logo.jpg" className="img-logo" style={{ marginRight: "15px", maxHeight: "130px", borderRadius: "50%" }} /></a>
+                <a className="text-blue-800 text-2xl hover:no-underline" href="/">Drawer.io</a>
             </div>
 
-           {/*  <div className="w-9/12 flex justify-end items-center">
+            {/*  <div className="w-9/12 flex justify-end items-center">
 
                 <div className="z-50 flex relative w-8 h-8 flex-col justify-between items-center md:hidden" onClick={() => {
                     setOpen(!open)
