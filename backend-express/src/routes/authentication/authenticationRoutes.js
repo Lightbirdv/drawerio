@@ -42,7 +42,9 @@ const authenticationFunctions = require("./authenticationFunctions");
 router.post("/login", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { accessToken, refreshToken, user } = yield authenticationFunctions.login(req, res, next);
-        console.log(user);
+        if (!accessToken || !refreshToken || !user) {
+            return next();
+        }
         delete user.password;
         res.status(200).json({
             token: accessToken,
