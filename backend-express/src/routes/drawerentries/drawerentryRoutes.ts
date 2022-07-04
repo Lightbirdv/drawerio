@@ -8,17 +8,17 @@ const authenticationFunctions = require("../authentication/authenticationFunctio
 /**
  * @swagger
  * /drawerentry/all:
- *    get:
- *      description: Returns all drawerentries
- *      security:
- *          - bearerAuth: []
- *      tags:
- *          - drawerentry endpoints
- *      responses:
- *        '200':
- *          description: Successfully returned all drawerentries
- *        '500':
- *          description: Failed to query for drawerentries
+ *   get:
+ *     description: Returns all drawerentries
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - drawerentry endpoints
+ *     responses:
+ *       '200':
+ *         description: Successfully returned all drawerentries
+ *       '500':
+ *         description: Failed to query for drawerentries
  */
 router.get("/all", authenticationFunctions.isAdmin, async (req: express.Request, res: express.Response) => {
 	try {
@@ -83,7 +83,7 @@ router.get(
  *        '500':
  *          description: Failed to query for drawerentries
  */
- router.get("/from/user", authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) => {
+router.get("/from/user", authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) => {
 	try {
 		const drawerentries = await drawerentryFunctions.getDrawerentriesByUser(req);
 		if (!drawerentries) {
@@ -170,6 +170,9 @@ router.get("/:id", authenticationFunctions.authenticateToken, drawerentryFunctio
  *                        type: array
  *                        items:
  *                           type: string
+ *                     websiteContent:
+ *                        type: string
+ *                        required: false
  *                     selText:
  *                        type: string
  *                        required: false
@@ -258,6 +261,8 @@ router.delete(
  *                        type: array
  *                        items:
  *                           type: string
+ *                     websiteContent:
+ *                        type: string
  *                     drawer_id:
  *                        type: number
  *                     originURL:

@@ -3,6 +3,7 @@ export interface Drawerentry {
     comment: string;
     imageURL: string[];
     videoURL: string[];
+    websiteContent: string;
     drawer_id: number;
     creationDate: Date;
     originURL: string;

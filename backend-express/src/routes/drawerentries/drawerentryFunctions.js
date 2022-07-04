@@ -55,11 +55,12 @@ function updateEntry(req, res, next) {
             }
             entry = result.rows[0];
         }
-        const newEntry = yield pool.query("UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3, videoURL=$4 WHERE drawerentry_id=$5", [
+        const newEntry = yield pool.query("UPDATE drawerentries SET selText=$1, comment=$2, imageURL=$3, videoURL=$4, websiteContent=$5 WHERE drawerentry_id=$6", [
             req.body.selText != null && req.body.selText.length ? req.body.selText : entry.selText,
             req.body.comment != null && req.body.comment.length ? req.body.comment : entry.comment,
             req.body.imageURL != null && req.body.imageURL.length ? req.body.imageURL : entry.imageURL,
             req.body.videoURL != null && req.body.videoURL.length ? req.body.videoURL : entry.videoURL,
+            req.body.websiteContent != null && req.body.websiteContent.length ? req.body.websiteContent : entry.websiteContent,
             req.params.id,
         ]);
         return newEntry;
@@ -78,7 +79,7 @@ function addEntry(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         var entry = req.body;
         entry.creationDate = new Date();
-        const newEntry = pool.query("INSERT INTO drawerentries(comment, creationDate, imageURL, videoURL, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *", [entry.comment, entry.creationDate, entry.imageURL, entry.videoURL, entry.drawer_id, entry.originURL, entry.selText]);
+        const newEntry = pool.query("INSERT INTO drawerentries(comment, creationDate, imageURL, videoURL, websiteContent, drawer_id, originURL, selText) VALUES ($1,$2,$3,$4,$5,$6,$7, $8) RETURNING *", [entry.comment, entry.creationDate, entry.imageURL, entry.videoURL, entry.websiteContent, entry.drawer_id, entry.originURL, entry.selText]);
         return newEntry;
     });
 }
