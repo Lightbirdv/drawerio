@@ -16,7 +16,7 @@ const pool = require("../../queries").pool;
 const drawerFunctions = require("../drawer/drawerFunctions");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const Sib = require('sib-api-v3-sdk');
+const Sib = require("sib-api-v3-sdk");
 const HttpException_1 = __importDefault(require("../../exceptions/HttpException"));
 function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -26,9 +26,7 @@ function getUsers(req, res) {
 }
 function getUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield pool.query("SELECT * FROM users WHERE users_id=$1", [
-            req.params.id,
-        ]);
+        const result = yield pool.query("SELECT * FROM users WHERE users_id=$1", [req.params.id]);
         if (result.rowCount == 0) {
             return next(new HttpException_1.default(404, "User not found"));
         }
@@ -71,12 +69,8 @@ function updateUser(req, res, next) {
             return next();
         }
         const newUser = pool.query("UPDATE users SET email=$1, password=$2 WHERE users_id=$3", [
-            req.body.email != null && req.body.email.length
-                ? req.body.email
-                : user.email,
-            req.body.password != null && req.body.password.length
-                ? yield hashPassword(req.body.password)
-                : user.password,
+            req.body.email != null && req.body.email.length ? req.body.email : user.email,
+            req.body.password != null && req.body.password.length ? yield hashPassword(req.body.password) : user.password,
             req.params.id,
         ]);
         return newUser;
@@ -84,7 +78,12 @@ function updateUser(req, res, next) {
 }
 function updateForgotUser(req, forgotToken, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield pool.query("UPDATE users SET forgotToken=$1, forgotExpires=$2, password=$3 WHERE forgotToken=$4", ["", null, yield hashPassword(password), forgotToken]);
+        const result = yield pool.query("UPDATE users SET forgotToken=$1, forgotExpires=$2, password=$3 WHERE forgotToken=$4", [
+            "",
+            null,
+            yield hashPassword(password),
+            forgotToken,
+        ]);
         return result;
     });
 }
@@ -114,9 +113,7 @@ function insertConfirmToken(email, confirmToken) {
 }
 function deleteUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = pool.query("DELETE FROM users WHERE users_id=$1", [
-            req.params.id,
-        ]);
+        const user = pool.query("DELETE FROM users WHERE users_id=$1", [req.params.id]);
         return user;
     });
 }
@@ -138,15 +135,16 @@ function registerUser(req, res) {
 }
 function registerAdmin() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield pool.query("INSERT INTO users (email,password,isAdmin) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING", ["admin", yield hashPassword("admin"), "true"]);
+        yield pool.query("INSERT INTO users (email,password,isAdmin) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING", [
+            "admin",
+            yield hashPassword("admin"),
+            "true",
+        ]);
     });
 }
 function promoteToAdmin(req) {
     return __awaiter(this, void 0, void 0, function* () {
-        let updatedUser = pool.query("UPDATE users SET isAdmin=$1 WHERE email=$2", [
-            true,
-            req.body.email,
-        ]);
+        let updatedUser = pool.query("UPDATE users SET isAdmin=$1 WHERE email=$2", [true, req.body.email]);
         return updatedUser;
     });
 }
@@ -169,7 +167,7 @@ function forgotPassword(req, res, next) {
         datecopy.setDate(datecopy.getDate() + 1);
         let forgotExpires = datecopy;
         insertForgotToken(user.email, forgotToken, forgotExpires);
-        const link = process.env.BASEURL + '/user/passwordReset/' + resetToken;
+        const link = process.env.BASEURL + "/user/passwordReset/" + resetToken;
         sendForgotEmail(link, user.email);
         return true;
     });
@@ -184,7 +182,7 @@ function confirmEmail(req, res, next) {
         let user = result.rows[0];
         let confirmToken = crypto.randomBytes(20).toString("hex");
         insertConfirmToken(user.email, confirmToken);
-        const link = process.env.BASEURL + '/user/confirmation/' + confirmToken;
+        const link = process.env.BASEURL + "/user/confirmation/" + confirmToken;
         sendConfirmEmail(link, user.email);
         return true;
     });
@@ -217,7 +215,7 @@ function activateAccount(req, res, next) {
         let user = result.rows[0];
         let activateduser = yield activateUserAccount(user);
         console.log(activateduser);
-        if (activateduser.rowCount = 0) {
+        if ((activateduser.rowCount = 0)) {
             return next(new HttpException_1.default(500, "Activating user failed"));
         }
         return activateduser;
@@ -225,12 +223,12 @@ function activateAccount(req, res, next) {
 }
 function sendForgotEmail(link, email) {
     const client = Sib.ApiClient.instance;
-    const apiKey = client.authentications['api-key'];
+    const apiKey = client.authentications["api-key"];
     apiKey.apiKey = process.env.EMAIL_API_KEY;
     const tranEmailApi = new Sib.TransactionalEmailsApi();
     const sender = {
         email: process.env.EMAIL,
-        name: 'drawerio',
+        name: "drawerio",
     };
     const receivers = [
         {
@@ -241,22 +239,31 @@ function sendForgotEmail(link, email) {
         .sendTransacEmail({
         sender,
         to: receivers,
-        subject: 'You forgot your password',
-        textContent: 'Hello,\nYou are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-            'Please click on the following link, or paste this into your browser to complete the process:\n\n' + link +
-            '\nIf you did not request this, please ignore this email and your password will remain unchanged.\n'
+        subject: "You forgot your password",
+        htmlContent: `<html>
+				<head></head>
+				<body>
+					<p>
+						Hello,<br>
+						You are receiving this because you (or someone else) have requested the reset of the password for your account.<br>
+						Please click on the following link, or paste this into your browser to complete the process:<br>
+						<a href="${link}">${link}</a><br>
+						If you did not request this, please ignore this email and your password will remain unchanged.
+					</p>
+				</body>
+			</html>`
     })
         .then(console.log)
         .catch(console.log);
 }
 function sendConfirmEmail(link, email) {
     const client = Sib.ApiClient.instance;
-    const apiKey = client.authentications['api-key'];
+    const apiKey = client.authentications["api-key"];
     apiKey.apiKey = process.env.EMAIL_API_KEY;
     const tranEmailApi = new Sib.TransactionalEmailsApi();
     const sender = {
         email: process.env.EMAIL,
-        name: 'drawerio',
+        name: "drawerio",
     };
     const receivers = [
         {
@@ -267,9 +274,17 @@ function sendConfirmEmail(link, email) {
         .sendTransacEmail({
         sender,
         to: receivers,
-        subject: 'Please confirm your email',
-        textContent: 'Hello,\nPlease click the provided link to activate your account.\n\n' +
-            link
+        subject: "Please confirm your email",
+        htmlContent: `<html>
+				<head></head>
+				<body>
+					<p>
+						Hello,<br>
+						Please click the link provided to confirm your email:<br>
+						<a href="${link}">${link}</a><br>
+					</p>
+				</body>
+			</html>`
     })
         .then(console.log)
         .catch(console.log);

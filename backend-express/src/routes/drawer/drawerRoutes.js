@@ -96,9 +96,7 @@ router.get("/:id", authenticationFunctions.authenticateToken, drawerFunctions.is
             res.json(drawer);
         }
         else {
-            res
-                .status(500)
-                .json({ message: "there was a problem in the middle ware function" });
+            res.status(500).json({ message: "there was a problem in the middle ware function" });
         }
     }
     catch (err) {

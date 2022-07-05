@@ -19,17 +19,17 @@ const authenticationFunctions = require("../authentication/authenticationFunctio
 /**
  * @swagger
  * /drawerentry/all:
- *    get:
- *      description: Returns all drawerentries
- *      security:
- *          - bearerAuth: []
- *      tags:
- *          - drawerentry endpoints
- *      responses:
- *        '200':
- *          description: Successfully returned all drawerentries
- *        '500':
- *          description: Failed to query for drawerentries
+ *   get:
+ *     description: Returns all drawerentries
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - drawerentry endpoints
+ *     responses:
+ *       '200':
+ *         description: Successfully returned all drawerentries
+ *       '500':
+ *         description: Failed to query for drawerentries
  */
 router.get("/all", authenticationFunctions.isAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -69,6 +69,33 @@ router.get("/all/:drawerid", authenticationFunctions.authenticateToken, draweren
             res.status(500).json({ message: "retrieval of drawerentries failed" });
         }
         res.status(201).json(drawerentries);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /drawerentry/from/user:
+ *    get:
+ *      description: Returns all drawerentries for specific user
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawerentry endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned drawerentries
+ *        '500':
+ *          description: Failed to query for drawerentries
+ */
+router.get("/from/user", authenticationFunctions.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const drawerentries = yield drawerentryFunctions.getDrawerentriesByUser(req);
+        if (!drawerentries) {
+            res.status(500).json({ message: "retrieval of drawerentries failed" });
+        }
+        res.status(200).json(drawerentries);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -150,6 +177,9 @@ router.get("/:id", authenticationFunctions.authenticateToken, drawerentryFunctio
  *                        type: array
  *                        items:
  *                           type: string
+ *                     websiteContent:
+ *                        type: string
+ *                        required: false
  *                     selText:
  *                        type: string
  *                        required: false
@@ -228,6 +258,8 @@ router.delete("/:id", authenticationFunctions.authenticateToken, drawerentryFunc
  *                        type: array
  *                        items:
  *                           type: string
+ *                     websiteContent:
+ *                        type: string
  *                     drawer_id:
  *                        type: number
  *                     originURL:

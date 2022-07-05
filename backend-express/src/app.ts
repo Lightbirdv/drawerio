@@ -1,5 +1,5 @@
 import express from "express";
-const request = require('supertest');
+const request = require("supertest");
 const app = express();
 
 require("dotenv").config();
@@ -16,47 +16,47 @@ var cors = require("cors");
 import errorMiddleware from "./middleware/error.middleware";
 
 const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: "3.0.1",
-    info: {
-      title: "Drawerio",
-      version: "1.0.0",
-      description: "This API is used to provide the functionality of the Drawerio application",
-    },
-    basePath: "/",
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
-    //   security: [{
-    //     bearerAuth: []
-    //   }]
-  },
-  apis: ["src/app.ts", "src/routes/*/*.ts"],
+	swaggerDefinition: {
+		openapi: "3.0.1",
+		info: {
+			title: "Drawerio",
+			version: "1.0.0",
+			description: "This API is used to provide the functionality of the Drawerio application",
+		},
+		basePath: "/",
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "JWT",
+				},
+			},
+		},
+		//   security: [{
+		//     bearerAuth: []
+		//   }]
+	},
+	apis: ["src/app.ts", "src/routes/*/*.ts"],
 };
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(cors());
 app.use(fileupload());
 app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
+	bodyParser.urlencoded({
+		extended: true,
+	})
 );
 app.use(bodyParser.json());
 
 userFunctions.registerAdmin();
 app.get("/", (req, res) => {
-  return res.redirect("/api-docs");
+	return res.redirect("/api-docs");
 });
 
 app.get("/test", (req, res) => {
-  return res.sendStatus(200);
+	return res.sendStatus(200);
 });
 app.use("/auth", authRouter);
 app.use("/user", userRouter);

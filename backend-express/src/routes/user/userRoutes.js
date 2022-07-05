@@ -259,11 +259,11 @@ router.post("/promotetoadmin", authenticationFunctions.isAdmin, (req, res) => __
  *                     email:
  *                        type: string
  */
-router.post('/forgot', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/forgot", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let sendmail = yield userFunctions.forgotPassword(req, res, next);
         if (sendmail) {
-            res.json({ message: 'Email successfully send' });
+            res.json({ message: "Email successfully send" });
         }
     }
     catch (err) {
@@ -291,11 +291,11 @@ router.post('/forgot', (req, res, next) => __awaiter(void 0, void 0, void 0, fun
  *                     email:
  *                        type: string
  */
-router.post('/confirm', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/confirm", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let sendmail = yield userFunctions.confirmEmail(req, res, next);
         if (sendmail) {
-            res.json({ message: 'Email successfully send' });
+            res.json({ message: "Email successfully send" });
         }
     }
     catch (err) {
@@ -330,7 +330,7 @@ router.post('/confirm', (req, res, next) => __awaiter(void 0, void 0, void 0, fu
  *                     password:
  *                        type: string
  */
-router.post('/passwordReset/:hash', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/passwordReset/:hash", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let changeduser = yield userFunctions.changePassword(req, res, next);
         if (changeduser) {
@@ -361,11 +361,11 @@ router.post('/passwordReset/:hash', (req, res, next) => __awaiter(void 0, void 0
  *            description: hash of user for activation
  *            required: true
  */
-router.post('/confirmation/:hash', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/confirmation/:hash", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let sendmail = yield userFunctions.activateAccount(req, res, next);
         if (sendmail) {
-            res.json({ message: 'Successfully activated account' });
+            res.json({ message: "Successfully activated account" });
         }
     }
     catch (err) {

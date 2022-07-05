@@ -33,35 +33,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const pg = __importStar(require("pg"));
-require('dotenv').config();
-const { databasequery, tableuserquery, tabledrawerquery, tabledrawerentriesquery } = require('./database-jest.ts');
+require("dotenv").config();
+const { databasequery, tableuserquery, tabledrawerquery, tabledrawerentriesquery } = require("./database-jest.ts");
 let masterclient = new pg.Client({
-    host: 'localhost',
-    database: 'postgres',
+    host: "localhost",
+    database: "postgres",
     user: process.env.USER,
     password: process.env.PASSWORD,
-    port: parseInt(process.env.PORT) || 5432
+    port: parseInt(process.env.PORT) || 5432,
 });
 let client = new pg.Client({
-    host: 'localhost',
+    host: "localhost",
     database: process.env.DBTEST,
     user: process.env.USER,
     password: process.env.PASSWORD,
-    port: parseInt(process.env.PORT) || 5432
+    port: parseInt(process.env.PORT) || 5432,
 });
 const execute = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield masterclient.connect();
         yield masterclient.query(databasequery);
-        console.log('Database created successfully');
+        console.log("Database created successfully");
         yield masterclient.end();
         yield client.connect();
         yield client.query(tableuserquery);
-        console.log('Table user created successfully');
+        console.log("Table user created successfully");
         yield client.query(tabledrawerquery);
-        console.log('Table drawer created successfully');
+        console.log("Table drawer created successfully");
         yield client.query(tabledrawerentriesquery);
-        console.log('Table drawerentry created successfully');
+        console.log("Table drawerentry created successfully");
         yield client.end();
         return true;
     }
@@ -72,8 +72,8 @@ const execute = () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.end();
     }
 });
-execute().then(result => {
+execute().then((result) => {
     if (result) {
-        console.log('Job successfully completed');
+        console.log("Job successfully completed");
     }
 });

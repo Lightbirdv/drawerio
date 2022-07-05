@@ -33,16 +33,12 @@ function login(req, res, next) {
             let refreshToken = jwt.sign({ user: user.email }, process.env.REFRESH_TOKEN_SECRET);
             let updatedUser = yield userFunctions.insertRefreshToken(user, refreshToken);
             if (!updatedUser) {
-                return res
-                    .status(401)
-                    .json({ message: "Login: Could not create login tokens" });
+                return res.status(401).json({ message: "Login: Could not create login tokens" });
             }
-            return { accessToken, refreshToken };
+            return { accessToken, refreshToken, user };
         }
         else {
-            return res
-                .status(401)
-                .json({ message: "Login: Could not create login tokens" });
+            return res.status(401).json({ message: "Login: Could not create login tokens" });
         }
     });
 }

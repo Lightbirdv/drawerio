@@ -29,9 +29,7 @@ function getDrawersByUser(req, res) {
 }
 function getSingleDrawer(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield pool.query("SELECT * FROM drawer WHERE drawer_id=$1", [
-            req.params.id,
-        ]);
+        const result = yield pool.query("SELECT * FROM drawer WHERE drawer_id=$1", [req.params.id]);
         return result;
     });
 }
@@ -42,18 +40,10 @@ function updateDrawer(req, res, next) {
         }
         console.log(req.drawer);
         const newDrawer = pool.query("UPDATE drawer SET drawer_id=$1, drawerTitle=$2, creationDate=$3, users_id=$4  WHERE drawer_id=$5", [
-            req.body.drawer_id != null && req.body.drawer_id.length
-                ? req.body.drawer_id
-                : req.drawer.drawer_id,
-            req.body.drawerTitle != null && req.body.drawerTitle.length
-                ? req.body.drawerTitle
-                : req.drawer.drawertitle,
-            req.body.creationDate != null && req.body.creationDate.length
-                ? req.body.creationDate
-                : req.drawer.creationdate,
-            req.body.users_id != null && req.body.users_id.length
-                ? req.body.users_id
-                : req.drawer.users_id,
+            req.body.drawer_id != null && req.body.drawer_id.length ? req.body.drawer_id : req.drawer.drawer_id,
+            req.body.drawerTitle != null && req.body.drawerTitle.length ? req.body.drawerTitle : req.drawer.drawertitle,
+            req.body.creationDate != null && req.body.creationDate.length ? req.body.creationDate : req.drawer.creationdate,
+            req.body.users_id != null && req.body.users_id.length ? req.body.users_id : req.drawer.users_id,
             req.params.id,
         ]);
         return newDrawer;
@@ -61,9 +51,7 @@ function updateDrawer(req, res, next) {
 }
 function deleteDrawer(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const drawer = pool.query("DELETE FROM drawer WHERE drawer_id=$1", [
-            req.params.id,
-        ]);
+        const drawer = pool.query("DELETE FROM drawer WHERE drawer_id=$1", [req.params.id]);
         return drawer;
     });
 }
@@ -72,13 +60,21 @@ function addDrawer(req, res) {
         var drawer = req.body;
         drawer.users_id = req.user.users_id;
         drawer.creationDate = new Date();
-        let newDrawer = pool.query("INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3)   RETURNING *", [drawer.drawerTitle, drawer.creationDate, drawer.users_id]);
+        let newDrawer = pool.query("INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3)   RETURNING *", [
+            drawer.drawerTitle,
+            drawer.creationDate,
+            drawer.users_id,
+        ]);
         return newDrawer;
     });
 }
 function addDefaultDrawer(users_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const newDrawer = pool.query("INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *", ["My first Drawer!", new Date(), users_id]);
+        const newDrawer = pool.query("INSERT INTO drawer (drawerTitle,creationDate, users_id) VALUES ($1,$2,$3) RETURNING *", [
+            "My first Drawer!",
+            new Date(),
+            users_id,
+        ]);
         return newDrawer;
     });
 }
@@ -98,9 +94,7 @@ function isAuthorOrAdmin(req, res, next) {
             next();
         }
         else {
-            return res
-                .status(500)
-                .send({
+            return res.status(500).send({
                 message: "This function is only available for admins or the user of the drawer",
             });
         }

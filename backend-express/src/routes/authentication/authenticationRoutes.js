@@ -41,8 +41,16 @@ const authenticationFunctions = require("./authenticationFunctions");
  */
 router.post("/login", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { accessToken, refreshToken } = yield authenticationFunctions.login(req, res, next);
-        res.status(200).json(accessToken);
+        const { accessToken, refreshToken, user } = yield authenticationFunctions.login(req, res, next);
+        if (!accessToken || !refreshToken || !user) {
+            return next();
+        }
+        delete user.password;
+        res.status(200).json({
+            token: accessToken,
+            refreshToken: refreshToken,
+            user: user,
+        });
     }
     catch (err) {
         res.status(500).json({ message: err.message });
