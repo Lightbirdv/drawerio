@@ -1,6 +1,6 @@
 {
   "name": "Drawer.io",
-  "description": "test",
+  "description": "Chrome Extension for grabbing Content on Websites.",
   "version": "1.0",
   "manifest_version": 3,
   "icons": {

@@ -29,6 +29,7 @@ const UserPage = function () {
   const [sendYoutube, setSendYoutube] = useState([]);
   const [checked, setChecked] = useState(false);
   const [currentValues, setCurrentValues] = useState([]);
+  const [innerTextContent, setInnerTextContent] = useState("");
 
   var imgArr = [];
   var date = new Date();
@@ -40,6 +41,7 @@ const UserPage = function () {
     let result;
     let resultTwo;
     let resultThree;
+    let resultFour;
 
     try {
       [{ result }] = await chrome.scripting.executeScript({
@@ -82,6 +84,13 @@ const UserPage = function () {
           return videosResult;
         },
       });
+      resultFour = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: () => {
+          const innerText = document.documentElement.innerText;
+          return innerText;
+        },
+      });
     } catch (e) {
       console.log(e);
       return;
@@ -90,6 +99,7 @@ const UserPage = function () {
     setSelectedText(result);
     setAllImages([...resultTwo[0].result]);
     setAllVideos([...resultThree[0].result]);
+    setInnerTextContent(resultFour[0].result);
     return tab;
   }, []);
 
@@ -101,7 +111,7 @@ const UserPage = function () {
     if (event.target.checked) {
       setChecked(true);
       if (sendYoutube.includes(youtubeURL)) {
-        console.log("already in");
+        console.log("");
       } else {
         setSendYoutube([...sendYoutube, youtubeURL]);
         setCurrentValues([...currentValues, event.target.value]);
@@ -116,11 +126,10 @@ const UserPage = function () {
       setChecked(false);
     }
   };
-  console.log(sendYoutube);
-  console.log(currentValues);
 
   const logOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     setDeleted(true);
   };
 
@@ -138,7 +147,6 @@ const UserPage = function () {
       .then((response) => {
         setDrawer(response.data);
         setOptionValue(parseInt(response.data[0].drawer_id));
-        console.log(response.data[0].drawer_id);
       });
   }, []);
 
@@ -154,6 +162,7 @@ const UserPage = function () {
           comment: textfieldInput,
           imageURL: imgArr,
           videoURL: sendYoutube,
+          websiteContent: innerTextContent,
           drawer_id: optionValue,
           originURL: tabURL,
           selText: selectedText,
@@ -200,15 +209,18 @@ const UserPage = function () {
     ) {
       axios
         .post(
-          "http://localhost:5000/auth/token",
+          "http://localhost:5000/auth/tokenRefresh",
           {},
           {
             headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
+              Authorization: "Bearer " + localStorage.getItem("refreshToken"),
             },
           }
         )
-        .then((response) => localStorage.setItem("token", response.data));
+        .then((response) => {
+          localStorage.setItem("token", response.data);
+        })
+        .catch((error) => console.log(error));
     }
   }
 
@@ -219,21 +231,17 @@ const UserPage = function () {
       setSendYoutube([`https://www.youtube.com/embed/${secondYouTubeID[0]}`]);
       setIsYoutube(true);
       setRunOnce(false);
-      console.log(secondYouTubeID);
     } else if (firstYouTubeID[1].includes("?")) {
       const thirdYoutubeID = firstYouTubeID[1].split("?");
       setSendYoutube([`https://www.youtube.com/embed/${thirdYoutubeID[0]}`]);
       setIsYoutube(true);
       setRunOnce(false);
-      console.log(thirdYoutubeID);
     } else {
       setSendYoutube([`https://www.youtube.com/embed/${firstYouTubeID[1]}`]);
       setIsYoutube(true);
       setRunOnce(false);
     }
   }
-
-  console.log(sendYoutube[0]);
 
   const handleTextinput = function (event) {
     setTextfieldInput(event.target.value);
@@ -297,9 +305,21 @@ const UserPage = function () {
           </Tippy>
           <textarea
             className="userpage-textareaSelect__design"
-            placeholder={selectedText}
+            value={selectedText}
             readOnly={true}
             rows={20}
+            cols={50}
+          ></textarea>
+        </div>
+        <p className="comment-text__design">Page Content:</p>
+        <div className="userpage-textarea">
+          <Tippy content="Every Text Content on current Webpage will be displayed here.">
+            <p className="userpage-tooltip">{"[?]"}</p>
+          </Tippy>
+          <textarea
+            className="userpage-textareaSelect__design"
+            value={innerTextContent}
+            rows={1000}
             cols={50}
           ></textarea>
         </div>
