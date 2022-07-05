@@ -3,7 +3,6 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import Navbar from "../components/NavbarThree";
 import { Button } from 'react-bootstrap';
-import {} from '../lib/newPw';
 import { newPw } from '../lib/newPw';
 import Router from 'next/router';
 
@@ -52,13 +51,14 @@ class LoginComponent extends React.Component {
           <div className="container-fluid h-custom" style={{ backgroundColor: 'rgb(239, 236, 236)' }}>
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-md-9 col-lg-6 col-xl-5">
-              <h1 className="text-blue-800 text-5xl" style={{textAlign:"center"}}>Login here!</h1>
+              {/* <h1 className="text-blue-800 text-5xl" style={{textAlign:"center"}}>Login here!</h1> */}
                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample image" />
               </div>
               <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form onSubmit={this.handleSubmit}>
                   {/* Email input */}
                   <div className="form-outline mb-4">
+                  <h3 className="text-gray-600 mb-8">Login</h3>
                     <input type="test" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
                     <label className="form-label" htmlFor="form3Example3">Email address</label>
 

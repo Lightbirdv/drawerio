@@ -3,7 +3,6 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import Navbar from "../components/NavbarThree";
 import { Button } from 'react-bootstrap';
-import { } from '../lib/newPw';
 import { newPw } from '../lib/newPw';
 import Router from 'next/router';
 

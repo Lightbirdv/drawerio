@@ -29,14 +29,14 @@ class RegComponent extends React.Component {
           <div className="container-fluid h-custom" style={{ backgroundColor: 'rgb(239, 236, 236)' }}>
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-md-9 col-lg-6 col-xl-5">
-              <h1 className="text-blue-800 text-5xl" style={{textAlign:"center", marginBottom:"20px"}}>Sign Up now!</h1>
+              {/* <h1 className="text-blue-800 text-5xl" style={{textAlign:"center", marginBottom:"20px"}}>Sign Up now!</h1> */}
                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" className="img-fluid" alt="Sample image" />
               </div>
               <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form onSubmit={this.handleSubmit}>
                   {/* Email input */}
                   <div className="form-outline mb-4">
-                  
+                  <h3 className="text-gray-600 mb-8">Registration</h3>
                     <input type="email" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
                     <label className="form-label" htmlFor="form3Example3">Email address</label>
                   </div>
