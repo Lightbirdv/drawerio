@@ -5,7 +5,7 @@
   margin: auto;
   margin-top: 6rem;
   width: 80%;
-  color: #4F4F4F;
+  color: #4f4f4f;
 }
 
 .login-form__design {
@@ -15,7 +15,7 @@
 
 .fun-drawer {
   display: flex;
-  width:100%;
+  width: 100%;
 }
 
 iframe {
@@ -42,8 +42,6 @@ iframe {
   outline: none;
 }
 
-
-
 .login-form--button-login__design {
   width: 100%;
   height: 2.3rem;
@@ -51,7 +49,7 @@ iframe {
   border-radius: 10px;
   margin: 0 auto;
   margin-top: 2rem;
-  background-color: #3CDDC0;
+  background-color: #3cddc0;
   color: white;
 }
 
@@ -62,13 +60,13 @@ iframe {
 .login-form--button-register__design {
   width: 100%;
   height: 2.3rem;
-  border: 1px solid #3CDDC0;
+  border: 1px solid #3cddc0;
   border-radius: 10px;
   margin: 0 auto;
   margin-top: 1rem;
   margin-bottom: 2rem;
   background-color: white;
-  color: #3CDDC0;
+  color: #3cddc0;
 }
 
 .login-form--button-register__design:hover {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./RegisterForm.css";
 import { set, useForm } from "react-hook-form";
@@ -8,6 +8,11 @@ const RegisterForm = function (props) {
   const [goLoginPage, setGoLoginPage] = useState(false);
   const [sameUser, setSameUser] = useState(false);
   const [successReg, setSuccessReg] = useState(false);
+  const [passwordOne, setPasswordOne] = useState("");
+  const [passwordTwo, setPasswordTwo] = useState("");
+  const [notSame, setNotSame] = useState(false);
+  const [notLong, setNotLong] = useState(false);
+  const [notSamePW, setNotSamePW] = useState(false);
 
   const {
     register,
@@ -15,9 +20,38 @@ const RegisterForm = function (props) {
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    if (
+      (passwordOne !== passwordTwo && notSame === false) ||
+      passwordOne.length === 0 ||
+      passwordTwo.length === 0
+    ) {
+      setNotSame(true);
+    } else if (passwordOne === passwordTwo && notSame !== false) {
+      setNotSame(false);
+    }
+
+    if (
+      (passwordOne.length < 4 && passwordOne.length !== 0) ||
+      (passwordTwo.length < 4 && passwordTwo.length !== 0)
+    ) {
+      setNotLong(true);
+    } else if (passwordOne.length >= 4 || passwordTwo.length >= 4) {
+      setNotLong(false);
+    }
+  }, [passwordOne, passwordTwo]);
+
   if (goLoginPage) {
     return <LoginForm />;
   }
+
+  const handlePasswordOneOnChange = (event) => {
+    setPasswordOne(event.target.value);
+  };
+
+  const handlePasswordTwoOnChange = (event) => {
+    setPasswordTwo(event.target.value);
+  };
 
   return (
     <div className="register-form-container">
@@ -27,23 +61,34 @@ const RegisterForm = function (props) {
       <form
         className="register-form__design"
         onSubmit={handleSubmit((data) => {
-          console.log(data);
-          axios
-            .post("http://localhost:5000/user/register", {
-              email: data.email,
-              password: data.password,
-            })
-            .then((response) => {
-              console.log(response);
-              setSameUser(false);
-              setSuccessReg(true);
-              setTimeout(() => {
-                setGoLoginPage(true);
-              }, 1000);
-            })
-            .catch((error) => {
-              setSameUser(true);
-            });
+          if (notSamePW === false && notLong === false && notSame === false) {
+            if (passwordOne.length !== 0 || passwordTwo.length !== 0) {
+              axios
+                .post("http://localhost:5000/user/register", {
+                  email: data.email,
+                  password: passwordOne,
+                })
+                .then((response) => {
+                  setSameUser(false);
+                  setNotSamePW(false);
+                  setNotSame(false);
+                  setNotLong(false);
+                  setSuccessReg(true);
+                  axios
+                    .post("http://localhost:5000/user/confirm", {
+                      email: data.email,
+                    })
+                    .then((response) => console.log("Successfully send Email."))
+                    .catch((error) => console.log(error));
+                  setTimeout(() => {
+                    setGoLoginPage(true);
+                  }, 1000);
+                })
+                .catch((error) => {
+                  setSameUser(true);
+                });
+            }
+          }
         })}
       >
         <div className="register-form--email">
@@ -67,19 +112,24 @@ const RegisterForm = function (props) {
         <div className="register-form--password">
           <input
             type="password"
-            {...register("password", {
-              required: "This is required.",
-              minLength: { value: 4, message: "The minimum length is 4." },
-              maxLength: { value: 45, message: "The maximum length is 45" },
-            })}
+            onChange={handlePasswordOneOnChange}
             placeholder="Password"
             className="register-form--password__design"
             size="45"
+            style={{ borderColor: notSame ? "red" : "" }}
+          />
+          <input
+            type="password"
+            onChange={handlePasswordTwoOnChange}
+            placeholder="Password"
+            className="register-form--password__design"
+            size="45"
+            style={{ borderColor: notSame ? "red" : "" }}
           />
           <p className="error-message">
-            {errors.password?.message ? (
+            {notLong ? (
               <p className="error-message">
-                <b>{errors.password?.message}</b>
+                <b>The min. length for the password is 4.</b>
               </p>
             ) : (
               sameUser && (

@@ -3,12 +3,14 @@ import "./DrawerForm.css";
 import axios from "axios";
 import UserPage from "./UserPage";
 import backImage from "../imagesProject/back.svg";
+import jwtDecode from "jwt-decode";
 
 const DrawerForm = function (props) {
   const [drawerName, setDrawerName] = useState("");
   const [goBack, setGoBack] = useState(false);
   const [missingName, setMissingName] = useState(false);
   const [successCreated, setSuccessCreated] = useState(false);
+  var date = new Date();
 
   const textareaHandler = function (event) {
     setDrawerName(event.target.value);
@@ -35,7 +37,6 @@ const DrawerForm = function (props) {
           }
         )
         .then((response) => {
-          console.log(response)
           setGoBack(true);
         });
     } else {
@@ -43,6 +44,31 @@ const DrawerForm = function (props) {
       setSuccessCreated(false);
     }
   };
+
+  if (localStorage.getItem("token") !== null) {
+    let token = localStorage.getItem("token");
+    let decodedToken = jwtDecode(token);
+
+    if (
+      decodedToken.exp * 1000 < date.getTime() &&
+      localStorage.getItem("token") !== null
+    ) {
+      axios
+        .post(
+          "http://localhost:5000/auth/tokenRefresh",
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("refreshToken"),
+            },
+          }
+        )
+        .then((response) => {
+          localStorage.setItem("token", response.data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }
 
   if (goBack) {
     return <UserPage />;
@@ -84,4 +110,3 @@ const DrawerForm = function (props) {
   );
 };
 export default DrawerForm;
-
