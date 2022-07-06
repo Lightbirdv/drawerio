@@ -11,7 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@hookform/resolvers": "^2.9.3",
     "@mui/lab": "^5.0.0-alpha.88",
     "@mui/material": "^5.8.6",
     "axios": "^0.27.2",
@@ -24,6 +24,7 @@
     "react": "18.0.0",
     "react-bootstrap": "^2.3.0",
     "react-dom": "18.0.0",
+    "react-hook-form": "^7.33.1",
     "react-icons": "^4.3.1"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.5",
     "postcss": "^8.4.13",
-    "tailwindcss": "^3.0.24"
+    "tailwindcss": "^3.0.24",
+    "yup": "^0.32.11"
   }
 }

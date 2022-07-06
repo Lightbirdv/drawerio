@@ -1,6 +1,6 @@
-import { loginUser } from '../lib/auth';
+import { loginUser } from "../lib/auth";
 import React from "react";
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 import Navbar from "../components/NavbarThree";
 import { Button } from 'react-bootstrap';
 import { newPw } from '../lib/newPw';
@@ -13,10 +13,10 @@ const forgettPw = (e) =>{
   Router.push("/newPassword");
 }
 
-const goToReg = (e) =>{
-e.preventDefault();
-Router.push("/registration");
-}
+const goToReg = (e) => {
+	e.preventDefault();
+	Router.push("/registration");
+};
 
 const goToConfirm = (e) =>{
   e.preventDefault();
@@ -24,24 +24,21 @@ const goToConfirm = (e) =>{
   }
 
 class LoginComponent extends React.Component {
+	state = {
+		email: "",
+		password: "",
+	};
 
-  state = {
-    email: '',
-    password: ''
-  };
+	handleChange = (event) => {
+		this.setState({ [event.target.name]: event.target.value });
+	};
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  handleSubmit = event => {
-    const { email, password } = this.state;
-    event.preventDefault();
-    console.log(email, password)
-    loginUser(email, password)
-  }
-
-
+	handleSubmit = (event) => {
+		const { email, password } = this.state;
+		event.preventDefault();
+		console.log(email, password);
+		loginUser(email, password);
+	};
 
   render() {
     return (
@@ -109,8 +106,5 @@ class LoginComponent extends React.Component {
     );
   }
 }
-
-
-
 
 export default LoginComponent;
