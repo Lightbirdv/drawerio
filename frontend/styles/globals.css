@@ -142,6 +142,7 @@ a {
 .service-container-bg {
   background-color: rgb(255, 255, 255);
   padding-top: 100px;
+  margin-bottom: -100px;
 }
 /* About Component  */
 .about-container-bg {
@@ -182,7 +183,6 @@ a {
 }
 /* Footer  */
 .footer {
-  background-color: darkmagenta;
   color: rgb(243, 243, 244);
   min-height: 5vh;
   display: flex;

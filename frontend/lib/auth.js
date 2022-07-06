@@ -5,11 +5,10 @@ import { getname } from '../lib/getname';
 
 export const loginUser = (email, password) => {
   console.log(email, password)
-   
   const { data } = axios.post('http://localhost:5000/auth/login', { email: email, password: password }).then((response) => {
-    console.log(response);
+    console.log(response.data.user.isadmin + ", " + response.data.user.enabled);
     if (response.status === 200 && email !== "" && password !== "") {
-      const token = localStorage.setItem("token", response.data);
+      const token = localStorage.setItem("token", response.data.token);
       const x = localStorage.setItem("emailx", email);
       const user = getname(email);
 
@@ -18,26 +17,21 @@ export const loginUser = (email, password) => {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
 
-
-      const { adm } = axios.get(`http://localhost:5000/auth/isAdmin`, {
-        headers: headers
+      if (response.data.user.isadmin === true /* && response.data.user.enabled === true */) { 
+        Router.push("/adminpage")
+      } else if (response.data.user.isadmin === false/*  && response.data.user.enabled === true */) {
+        getname(email);
+        Router.push("/privatepage")
       }
-      ).then((response) => {
-
-        if (response.data.isadmin === true) {
-          
-          Router.push("/adminpage")
-        } else if (response.data.isadmin === false) {
-         /*  getname(email); */
-          Router.push("/privatepage")
-        }
-      })
-
-    }
+      else {
+        alert("Unfortunately you could not logx in")
+      }
+    } 
     else {
-      alert("Unfortunately you could not log in")
+      alert("Unfortunately you could not logy in")
     }
   }).catch(e => {
-    alert("Unfortunately you could not log in")
-  });
-}
+    alert("Unfortunately you could not logz in")
+  }); 
+};
+

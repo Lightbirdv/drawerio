@@ -95,44 +95,30 @@ const UserManagement = () => {
     /* Searchinput */
     const [searchTerm, setSearchTerm] = useState('');
 
-    return (
-        <div style={{ marginTop: "20px" }}>
-            {/* Searchfield */}
-            
-            <Row style={{ margin: "30px" }}>
-        <Col>
-          <span><input type="text" placeholder="Search..." onChange={event => { setSearchTerm(event.target.value) }} style={{ /* marginTop: "15px", */ marginLeft: "45px", width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: '15px' }} /></span>
-        </Col>
-        </Row>
-            
-               {posts.blogs &&
-                posts.blogs.filter((item) => {
-                    if (searchTerm == "") {
-                        return item
-                    } else if (item.email.toLowerCase().includes(searchTerm.toLowerCase())) {
-                        return item
-                    }
-                }
-                ).map((item) => (
-                    <Container key={item.users_id}>
-
-                        <Row style={{ marginTop: "20px" }}>
-                            <Col xs="1">
-                                <div style={{ width: "30px", height: "30px", backgroundColor: "white", borderRadius: "50%" }}></div>
-                            </Col>
-
-                            <Col>
-                                <span>{item.users_id}</span>
-                            </Col>
-                            <Col xs="4" style={{ marginRight: "100px" }}>
-                                <span>{item.email}</span>
-                            </Col>
-                            <Col>
-                                <span>{item.isadmin.toString()}</span>
-                            </Col>
-                            <Col>
-                                <span><button type="button" class="btn btn-warning" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={handleShowUpd}><MdOutlineModeEdit /></button>
-                                    <Modal show={showUpd} onHide={handleCloseUpd}>
+   return (
+		<div>
+			<div className="flex flex-column m-auto w-4/6">
+				<div className="flex flex-row items-center mb-12 mt-12">
+					<input
+						className="mr-2"
+						type="text"
+						placeholder="Search..."
+						onChange={(event) => {
+							setSearchTerm(event.target.value);
+						}}
+						style={{
+							width: "300px",
+							height: "35px",
+							paddingLeft: "10px",
+							fontSize: "15px",
+							borderRadius: "10px",
+						}}
+					/>
+					{/* <button type="button" class="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px" }}>
+						+
+					</button> */}
+				</div>
+                <Modal show={showUpd} onHide={handleCloseUpd}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>Update User</Modal.Title>
                                         </Modal.Header>
@@ -158,7 +144,73 @@ const UserManagement = () => {
                                             </Button>
                                         </Modal.Footer>
                                     </Modal>
-                                    <button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => handleAdmin(e, item.email)}><MdAdminPanelSettings /></button>
+
+				{posts.blogs &&
+                posts.blogs.filter((item) => {
+                    if (searchTerm == "") {
+                        return item
+                    } else if (item.email.toLowerCase().includes(searchTerm.toLowerCase()) || item.isadmin.toString().includes(searchTerm) || item.users_id.toString().toLowerCase().includes(searchTerm)) {
+                        return item
+                    }
+                }
+                ).map((item) => (
+							<div className="flex flex-row justify-between my-2 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.users_id}>
+                                
+								<div
+									className="ml-4"
+									style={{ width: "40px", height: "40px", border: "1px solid rgb(0,0,0, .2)", backgroundColor: "white", borderRadius: "50%" }}
+								></div>
+
+								{/* <div
+									className="ml-8 w-3/6"	
+								>
+									<a className="m-auto cursor-pointer hover:no-underline text-xl text-text hover:text-gray-400">{item.users_id}</a>
+								</div> */}
+
+								<div className="flex flex-row">
+                                <span className="mr-8">{item.users_id}</span>
+                                <span className="mr-8">{"adm: "+ item.isadmin.toString()}</span>
+                                <span className="mr-8">{"enb: "+item.enabled.toString()}</span>
+									<span className="mr-8">{item.email}</span>
+
+									<span>
+										<button
+											type="button"
+											className="btn mr-2"
+											style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white"}}
+											onClick={() => {
+												handleShowUpd();
+											}}
+										>
+											<MdOutlineModeEdit />
+										</button>
+										<Modal show={showUpd} onHide={handleCloseUpd}>
+										<Modal.Header closeButton>
+                                            <Modal.Title>Update User</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <Form>
+                                                <Form.Group className="mb-3" id="updateName">
+                                                    <Form.Label>Update your email</Form.Label>
+                                                    <Form.Control id="drawerNew" type="text" placeholder="email" name="email" onChange={handlemail} />
+                                                </Form.Group>
+                                                <Form.Group className="mb-3" id="updateDate">
+                                                    <Form.Label>Update your Password</Form.Label>
+                                                    <Form.Control id="drawerNew" type="text" placeholder="Password" name="password" onChange={handleChange} />
+                                                </Form.Group>
+                                            </Form>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={handleCloseUpd} style={{ borderRadius: '15px' }}>
+                                                <MdClose />
+                                            </Button>
+                                            <Button variant="primary"
+                                                onClick={(e) => { handleUpdate(e, item.users_id); handleCloseUpd() }} style={{ borderRadius: '15px' }}>
+                                                <MdCheck />
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
+									<button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => handleAdmin(e, item.email)} ><MdAdminPanelSettings /></button>
                                     <button type="button" class="btn btn-danger" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveID(e, item.users_id); handleDeleteShow() }} ><MdDeleteForever /></button>
                                     <Modal show={showDelete} onHide={handleCloseDelete}>
                                         <Modal.Header closeButton>
@@ -177,12 +229,11 @@ const UserManagement = () => {
                                             </Button>
                                         </Modal.Footer>
                                     </Modal></span>
-                            </Col>
-                        </Row>
-                    </Container>
-                ))}
-        </div>
-    );
+                                    </div>
+							</div>
+						))}
+			</div>
+		</div>
+	);
 };
-
 export default UserManagement;
