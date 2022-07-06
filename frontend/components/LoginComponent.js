@@ -48,7 +48,7 @@ class LoginComponent extends React.Component {
       <div>
         <Navbar />
         <section className="vh-100">
-          <div className="container-fluid h-custom" style={{ backgroundColor: 'rgb(239, 236, 236)' }}>
+          <div className="container-fluid h-custom" style={{ backgroundColor: "rgb(167 243 208)" }}>
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-md-9 col-lg-6 col-xl-5">
               {/* <h1 className="text-blue-800 text-5xl" style={{textAlign:"center"}}>Login here!</h1> */}
@@ -60,13 +60,12 @@ class LoginComponent extends React.Component {
                   <div className="form-outline mb-4">
                   <h3 className="text-gray-600 mb-8">Login</h3>
                     <input type="test" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
-                    <label className="form-label" htmlFor="form3Example3">Email address</label>
 
                   </div>
                   {/* Password input */}
                   <div className="form-outline mb-3">
                     <input type="password" id="form3Example4" className="form-control form-control-lg" placeholder="Enter password" name="password" onChange={this.handleChange} />
-                    <label className="form-label" htmlFor="form3Example4">Password</label>
+                    
 
                   </div>
                   <div className="text-center text-lg-start mt-4 pt-2">
@@ -76,9 +75,9 @@ class LoginComponent extends React.Component {
                 </form>
               </div>
               <div>
-                  <button style={{backgroundColor: 'rgb(239, 236, 236)', fontSize: "13px", color: "black"}} onClick={(e) => { { forgettPw(e) }}} >Forgot password?</button>
-                  <button style={{backgroundColor: 'rgb(239, 236, 236);', fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToConfirm(e) }}} >Confirm your email here</button>
-                  <button style={{backgroundColor: 'rgb(239, 236, 236);', fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToReg(e) }}} >Don't have an account?</button> 
+                  <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black"}} onClick={(e) => { { forgettPw(e) }}} >Forgot password?</button>
+                  <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToConfirm(e) }}} >Confirm your email here</button>
+                  <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToReg(e) }}} >Don't have an account?</button> 
                   </div>
             </div>
           </div>

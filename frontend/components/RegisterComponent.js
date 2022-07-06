@@ -26,7 +26,7 @@ class RegComponent extends React.Component {
     return (
       <div> <Navbar />
         <section className="vh-100">
-          <div className="container-fluid h-custom" style={{ backgroundColor: 'rgb(239, 236, 236)' }}>
+          <div className="container-fluid h-custom" style={{ backgroundColor: "rgb(167 243 208)" }}>
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-md-9 col-lg-6 col-xl-5">
               {/* <h1 className="text-blue-800 text-5xl" style={{textAlign:"center", marginBottom:"20px"}}>Sign Up now!</h1> */}
@@ -38,16 +38,16 @@ class RegComponent extends React.Component {
                   <div className="form-outline mb-4">
                   <h3 className="text-gray-600 mb-8">Registration</h3>
                     <input type="email" id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" name="email" onChange={this.handleChange} />
-                    <label className="form-label" htmlFor="form3Example3">Email address</label>
+                   
                   </div>
                   {/* Password input */}
                   <div className="form-outline mb-3">
                     <input type="password" id="form3Example4" className="form-control form-control-lg" placeholder="Enter password" name="password" onChange={this.handleChange} />
-                    <label className="form-label" htmlFor="form3Example4">Password</label>
+                    
                   </div>
                   <div className="form-outline mb-4">
                   <input type="password" id="form3Example4" className="form-control form-control-lg" placeholder="Enter your password" name="confirmEmail" onChange={this.handleChange} />
-                    <label className="form-label" htmlFor="form3Example3">Password again</label>
+                  
                   </div>
 
                   <div className="text-center text-lg-start mt-4 pt-2">
