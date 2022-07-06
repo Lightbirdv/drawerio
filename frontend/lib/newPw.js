@@ -11,7 +11,7 @@ export const newPw = (email) => {
       /* const enteredName = prompt('Please enter the Code');
       const enteredPw = prompt('Please enter your new PW'); */
      /*  forgettHash(enteredName,enteredPw); */
-      Router.push("/forgettPassword")
+      Router.push("/")
     } else {
       alert("Please confirm your Email adress again")
     }
