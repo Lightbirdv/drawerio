@@ -10,8 +10,9 @@ export const regUser = (email, confirm, password) => {
     if (response.status === 200, email !== "" && password !== "" && password === confirm) {
       /* confirmEmail(confirm); */
       console.log(response.data);
-      confirmEmail(email);
-      Router.push("/confirmPage")
+      /* confirmEmail(email); */
+      /* Router.push("/confirmPage") */
+      Router.push("/");
     } else {
       alert("Unfortunately the creation of the user failed")
     }
