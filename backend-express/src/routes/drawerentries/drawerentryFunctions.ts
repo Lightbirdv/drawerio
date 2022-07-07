@@ -10,7 +10,7 @@ async function getEntries(req: express.Request, res: express.Response) {
 	return entries.rows;
 }
 
-async function getEntriesByDrawer(req: express.Request, res: express.Response) {
+async function getEntriesByDrawer(req: any, res: express.Response) {
 	const entries = await pool.query("SELECT * FROM drawerentries where drawer_id=$1 ORDER BY drawerentry_id ASC", [req.params.drawerid]);
 	return entries.rows;
 }
@@ -19,6 +19,15 @@ async function getEntriesByDrawer(req: express.Request, res: express.Response) {
 async function getDrawerentriesByUser(req: any, res: express.Response) {
 	const drawerentries = await pool.query("SELECT * FROM drawerentries INNER JOIN drawer ON drawerentries.drawer_id=drawer.drawer_id WHERE drawer.users_id=$1 ORDER BY drawerentry_id ASC", [req.user.users_id]);
 	return drawerentries.rows;
+}
+
+async function searchDrawerentriesByUser(req: any, res: express.Response) {
+	let search = req.query.searchTerm;
+	if(!search) {
+		return getDrawerentriesByUser(req, res);
+	}
+	const entries = await pool.query("SELECT * FROM drawerentries INNER JOIN drawer ON drawerentries.drawer_id=drawer.drawer_id WHERE drawer.users_id=$1 AND (drawerentries.comment ILIKE $2 OR drawerentries.selText ILIKE $2 OR drawerentries.originURL ILIKE $2) ORDER BY drawerentry_id ASC", [req.user.users_id, "%" + search + "%"]);
+	return entries.rows;
 }
 
 async function getSingleEntry(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -71,6 +80,26 @@ async function addEntry(req: express.Request, res: express.Response) {
 	return newEntry;
 }
 
+async function searchDrawerentries(req: any, res: express.Response, next: express.NextFunction) {
+	let { drawer, searchTerm } = req.query;
+	const searchedDrawer = await pool.query("SELECT users_id FROM drawer WHERE drawer_id=$1", [drawer]); 
+	console.log(searchedDrawer)
+	console.log(req.user.users_id)
+	if (!searchedDrawer.rows.length) {
+		return next(new HttpException(404, "Drawer not found"));
+	}
+	if (searchedDrawer.rows[0].users_id != req.user.users_id) {
+		return next(new HttpException(403, "You are not the author of this drawer"));
+	}
+	if (!searchTerm) {
+		req.params.drawerid = drawer;
+		
+		return await getEntriesByDrawer(req, res);
+	}
+	const searchResult = await pool.query("SELECT * FROM drawerentries WHERE drawer_id=$1 AND (comment ILIKE $2 OR selText ILIKE $2 OR originURL ILIKE $2)", [drawer, "%" + searchTerm + "%"]);
+	return searchResult.rows;
+}
+
 // middleware
 
 async function isAuthorOrAdmin(req: any, res: express.Response, next: express.NextFunction) {
@@ -113,5 +142,7 @@ module.exports = {
 	updateEntry,
 	deleteEntry,
 	addEntry,
+	searchDrawerentries,
+	searchDrawerentriesByUser,
 	isAuthorOrAdmin,
 };

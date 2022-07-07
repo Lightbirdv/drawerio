@@ -70,9 +70,9 @@ router.get(
 
 /**
  * @swagger
- * /drawerentry/from/user:
+ * /drawerentry/from/user/search/findBy?searchTerm:
  *    get:
- *      description: Returns all drawerentries for specific user
+ *      description: Returns searched drawerentries for specific user
  *      security:
  *          - bearerAuth: []
  *      tags:
@@ -82,10 +82,16 @@ router.get(
  *          description: Successfully returned drawerentries
  *        '500':
  *          description: Failed to query for drawerentries
+ *      parameters:
+ *          - in: query
+ *            name: searchTerm
+ *            schema:
+ *                type: string
+ *            description: search term to search for entries
  */
-router.get("/from/user", authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) => {
+router.get("/from/user/search/findBy", authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) => {
 	try {
-		const drawerentries = await drawerentryFunctions.getDrawerentriesByUser(req);
+		const drawerentries = await drawerentryFunctions.searchDrawerentriesByUser(req, res);
 		if (!drawerentries) {
 			res.status(500).json({ message: "retrieval of drawerentries failed" });
 		}
@@ -283,5 +289,45 @@ router.post(
 		}
 	}
 );
+
+/**
+ * @swagger
+ * /drawerentry/search/findBy?drawer&searchTerm:
+ *    get:
+ *      description: search for entries using a search term
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawerentry endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned entries
+ *        '500':
+ *          description: Failed to query for entries
+ *      parameters:
+ *          - in: query
+ *            name: drawer
+ *            required: true
+ *            schema:
+ *                type: number
+ *            description: id of drawer
+ *          - in: query
+ *            name: searchTerm
+ *            schema:
+ *                type: string
+ *            description: search term to search for entries
+ */
+router.get("/search/findBy", authenticationFunctions.authenticateToken, async (req: any, res: express.Response, next: express.NextFunction) => {
+	try {
+		const entries = await drawerentryFunctions.searchDrawerentries(req, res, next);
+		if (!entries) {
+			next();
+		} else {
+			res.status(200).json(entries);
+		}
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 module.exports = router;

@@ -60,6 +60,15 @@ async function addDefaultDrawer(users_id: number) {
 	return newDrawer;
 }
 
+async function searchDrawers(req: any, res: express.Response, next: express.NextFunction) {
+	let search = req.query.searchTerm;
+	if(!search) {
+		return getDrawersByUser(req, res);
+	}
+	const drawers = await pool.query("SELECT * FROM drawer WHERE LOWER(drawerTitle) LIKE $1 AND users_id=$2 ORDER BY drawer_id ASC", ["%" + search + "%", req.user.users_id]);
+	return drawers.rows;
+}
+
 // middleware
 
 async function isAuthorOrAdmin(req: any, res: express.Response, next: express.NextFunction) {
@@ -90,6 +99,7 @@ module.exports = {
 	updateDrawer,
 	deleteDrawer,
 	addDrawer,
+	searchDrawers,
 	addDefaultDrawer,
 	isAuthorOrAdmin,
 };

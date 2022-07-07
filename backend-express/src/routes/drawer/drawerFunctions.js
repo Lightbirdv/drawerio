@@ -78,6 +78,16 @@ function addDefaultDrawer(users_id) {
         return newDrawer;
     });
 }
+function searchDrawers(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let search = req.query.searchTerm;
+        if (!search) {
+            return getDrawersByUser(req, res);
+        }
+        const drawers = yield pool.query("SELECT * FROM drawer WHERE LOWER(drawerTitle) LIKE $1 AND users_id=$2 ORDER BY drawer_id ASC", ["%" + search + "%", req.user.users_id]);
+        return drawers.rows;
+    });
+}
 // middleware
 function isAuthorOrAdmin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -107,6 +117,7 @@ module.exports = {
     updateDrawer,
     deleteDrawer,
     addDrawer,
+    searchDrawers,
     addDefaultDrawer,
     isAuthorOrAdmin,
 };

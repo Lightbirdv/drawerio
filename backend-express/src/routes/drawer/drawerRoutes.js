@@ -216,4 +216,39 @@ router.post("/add", authenticationFunctions.authenticateToken, (req, res) => __a
         res.status(400).json({ message: err.message });
     }
 }));
+/**
+ * @swagger
+ * /drawer/search/findBy?searchTerm:
+ *    get:
+ *      description: search for drawers using a search term
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawer endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned drawers
+ *        '500':
+ *          description: Failed to query for drawers
+ *      parameters:
+ *          - in: query
+ *            name: searchTerm
+ *            schema:
+ *                type: string
+ *            description: search term to search for drawer
+ */
+router.get("/search/findBy", authenticationFunctions.authenticateToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const drawers = yield drawerFunctions.searchDrawers(req, res, next);
+        if (!drawers) {
+            res.status(500).json({ message: "there was a problem in the middle ware function" });
+        }
+        else {
+            res.status(200).json(drawers);
+        }
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}));
 module.exports = router;

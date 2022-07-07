@@ -217,4 +217,38 @@ router.post("/add", authenticationFunctions.authenticateToken, async (req: expre
 	}
 });
 
+/**
+ * @swagger
+ * /drawer/search/findBy?searchTerm:
+ *    get:
+ *      description: search for drawers using a search term
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawer endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned drawers
+ *        '500':
+ *          description: Failed to query for drawers
+ *      parameters:
+ *          - in: query
+ *            name: searchTerm
+ *            schema:
+ *                type: string
+ *            description: search term to search for drawer
+ */
+router.get("/search/findBy", authenticationFunctions.authenticateToken, async (req: any, res: express.Response, next: express.NextFunction) => {
+	try {
+		const drawers = await drawerFunctions.searchDrawers(req, res, next);
+		if (!drawers) {
+			res.status(500).json({ message: "there was a problem in the middle ware function" });
+		} else {
+			res.status(200).json(drawers);
+		}
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
+
 module.exports = router;
