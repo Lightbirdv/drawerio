@@ -15,6 +15,14 @@ const fileupload = require("express-fileupload");
 var cors = require("cors");
 import errorMiddleware from "./middleware/error.middleware";
 
+// if(process.env.NODE_ENV === "development") {
+// 	var apis = ["./src/app.ts", "./src/routes/*/*.ts"]
+// }
+
+// if(process.env.NODE_ENV === "production") {
+// 	var apis = ["./src/app.js", "./src/routes/*/*.js"]
+// }
+
 const swaggerOptions = {
 	swaggerDefinition: {
 		openapi: "3.0.1",
@@ -33,12 +41,10 @@ const swaggerOptions = {
 				},
 			},
 		},
-		//   security: [{
-		//     bearerAuth: []
-		//   }]
 	},
-	apis: ["src/app.ts", "src/routes/*/*.ts"],
+	apis: ["./src/app.js", "./src/routes/*/*.js"],
 };
+
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(cors());
