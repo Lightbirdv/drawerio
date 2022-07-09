@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: drawerio-api
     depends_on:
       - postgres
     environment: 
