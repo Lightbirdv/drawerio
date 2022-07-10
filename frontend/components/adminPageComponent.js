@@ -176,7 +176,7 @@ const adminPageComponent = () => {
 				borderRadius: "10px",
 			  }}
 			/>
-			<button type="button" class="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}>
+			<button type="button" className="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}>
 			  +
 			</button>
 			<button 	type="button"
@@ -292,7 +292,7 @@ const adminPageComponent = () => {
 					</Modal>
 					<button
 					  type="button"
-					  class="btn btn-danger mr-4"
+					  className="btn btn-danger mr-4"
 					  style={{ borderRadius: "10px" }}
 					  onClick={(e) => {
 						saveDrawerName(e, item.drawertitle);
@@ -409,7 +409,7 @@ const adminPageComponent = () => {
 					  </Modal>
 					  <button
 						type="button"
-						class="btn btn-danger mr-4"
+						className="btn btn-danger mr-4"
 						style={{ borderRadius: "10px" }}
 						onClick={(e) => {
 						  saveDrawerName(e, item.drawertitle);

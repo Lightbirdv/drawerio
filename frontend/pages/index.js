@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { Container } from "react-bootstrap";
 import TopComponent from '../components/TopComponent';
@@ -17,7 +16,7 @@ export default function Home() {
         
         <link
           rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          /* href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" */
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
           crossOrigin="anonymous"
         />
@@ -37,18 +36,18 @@ export default function Home() {
       <footer className="footer bg-blue-800">
         <h5>Drawer.io - Impressum &copy; Vico, Abdullah, Timothy</h5>
         <script
-          src="https://unpkg.com/react/umd/react.production.min.js"
-          crossOrigin
+          /* src="https://unpkg.com/react/umd/react.production.min.js"
+          crossOrigin */
         ></script>
 
         <script
-          src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"
-          crossOrigin
+          /* src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"
+          crossOrigin */
         ></script>
 
         <script
-          src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js"
-          crossOrigin
+          /* src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js"
+          crossOrigin */
         ></script>
       </footer>
     </div>

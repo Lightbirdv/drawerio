@@ -23,7 +23,7 @@ a {
 
 /* TopComponent Background pexels-Johanes */
 .background {
-  background-color:rgb(239, 236, 236);
+  background-color:rgb(167 243 208);
   height: 100vh;
   width: 100vw;
   position: fixed;
@@ -66,7 +66,7 @@ a {
 }
 .section-top-right {
   background-color: rgba(241, 241, 234, 0.815);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
   padding: 20px;
   border-radius: 10px;
 }

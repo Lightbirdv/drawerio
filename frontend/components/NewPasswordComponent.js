@@ -30,11 +30,13 @@ class NewPasswordComponent extends React.Component {
             <div >
                 {/* Password input */}
                 <form onSubmit={this.handleSubmit}>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "20px" }}>
-                        <input type="email" id="form3Example4" className="form-control form-control-lg" placeholder="Enter your email" name="email" onChange={this.handleChange} />
+                    <h1 style={{textAlign:"center", margin:"20px"}}>Have You forgotten your Password?</h1>
+                    <p style={{textAlign:"center", margin:"20px"}}>please enter your email, we will send you a Link, please klick the Link an change Your Password there.</p>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "60px" }}>
+                        <input style={{textAlign:"center"}} type="email" id="form3Example4" className="form-control form-control-lg" placeholder="Enter your email" name="email" onChange={this.handleChange} />
                     </div>
-                    <div className="text-center text-lg-start mt-4 pt-2">
-                        <button type="submit" className="btn btn-primary btn-lg" style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>Confirm your email</button>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "60px" }} className="text-center text-lg-start mt-4 pt-2">
+                        <button type="submit" className="btn btn-primary btn-lg" style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem'}}>Send to this email</button>
                     </div>
                 </form>
             </div>

@@ -17,8 +17,13 @@ import { MdClose } from "react-icons/md";
 import { Col, Container, Row } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 import { confirmEmail } from "../lib/confirmMail";
+import { searchForEntry } from "../lib/searchForEntry";
 
 const AxiosPost = () => {
+
+
+let s;
+
   const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const [state, setState] = useState({ drawerName: "" });
@@ -40,17 +45,17 @@ const AxiosPost = () => {
 
   const handleChange = (event) => {
     setState({ [event.target.name]: event.target.value });
-    console.log(event.target.name);
+    /* console.log(event.target.name); */
   };
 
   const handleName = (event) => {
     setName({ newName: event.target.value });
-    console.log(event.target.name);
+    /* console.log(event.target.name); */
   };
 
   const handleSubmit = (event) => {
     const { drawerName } = state;
-    console.log(drawerName);
+    /* console.log(drawerName); */
     addDrawer(localStorage.getItem("token"), drawerName);
     forceUpdate();
   };
@@ -60,7 +65,7 @@ const AxiosPost = () => {
     const { dime } = newDime;
     const { userID } = newUid;
     e.preventDefault();
-    console.log(newName, dime, userID, _id);
+   /*  console.log(newName, dime, userID, _id); */
     updateDrawer(newName, dime, userID, _id);
     forceUpdate();
   };
@@ -92,29 +97,31 @@ const AxiosPost = () => {
         },
       });
       setPosts({ blogs: data });
-      console.log(data);
+      /* console.log("data"); */
+     /* console .log(data); */
     };
     fetchPostList();
   }, [reducerValue]);
 
 
   const [x, y] = useState({ blogs2: [] });
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchPostList = async () => {
-      const { data } = await axios.get('http://localhost:5000/drawerentry/from/user', {
+      const { data } = await axios.get(`http://localhost:5000/drawerentry/from/user/search/findBy?searchTerm=${searchTermEntrys}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       y({ blogs2: data });
-      console.log(data);
+      console.log("xxxx");
+      console.log(data.data);
     };
     fetchPostList();
-  }, [reducerValue]);
+  }, [reducerValue]); */
 
 
-  const arr3 = [...x.blogs2, ...get.blogs];
-  console.log(arr3);
+  /* const arr3 = [...x.blogs2, ...get.blogs];
+  console.log(arr3); */
 
   /* Searchinput */
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,15 +129,42 @@ const AxiosPost = () => {
 
   const saveDrawer = (e, _id) => {
     e.preventDefault();
-    console.log(_id);
+/*     console.log(_id); */
     localStorage.setItem("drawer_id", _id);
   };
 
   const saveDrawerName = (e, _name) => {
     e.preventDefault();
-    console.log(_name);
+/*     console.log(_name); */
     localStorage.setItem("drawerName", _name);
   };
+
+  /* const searchEntry = (drawerID, term) => { */
+    /* e.preventDefault(); */
+  /* const searchTerminator = (searchTermEntrys) =>{
+    let a = searchTermEntrys;
+    /* console.log(a); */
+    /* localStorage.setItem("search", searchTermEntrys);
+  } */ 
+
+    useEffect(() => {
+      const drawerID = localStorage.getItem("drawer_id");
+      console.log(drawerID);
+      console.log(searchTermEntrys);
+      const fetchPostList = async () => {
+          const { data } = await axios.get(`http://localhost:5000/drawerentry/search/findBy?searchTerm=${searchTermEntrys}&drawer=${drawerID}`, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          });
+          y({ blogs2: data });
+          /* console.log(drawerID);
+          console.log(drawerID); */
+          /* console.log(s); */
+        };
+        fetchPostList();
+      }, [reducerValue]);
+  
 
 
   return (
@@ -153,7 +187,7 @@ const AxiosPost = () => {
             }}
           />
 
-<input
+          <input
             className="mr-2"
             type="text"
             placeholder="Search in entrys"
@@ -168,10 +202,10 @@ const AxiosPost = () => {
               borderRadius: "10px",
             }}
           />
-          <button type="button" class="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}>
+          <button type="button" className="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}>
             +
           </button>
-          {/* <button type="button" class="bg-main text-white w-12 h-8 text-xl text-center" onClick={goToUserManagement} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white"  }}><MdSupervisorAccount/></button> */}
+          {/* <button type="button" className="bg-main text-white w-12 h-8 text-xl text-center" onClick={goToUserManagement} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white"  }}><MdSupervisorAccount/></button> */}
         </div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -202,135 +236,143 @@ const AxiosPost = () => {
           </Modal.Footer>
         </Modal>
 
+{/* searchTerminator */}
 
-        {x.blogs2 &&
-          x.blogs2.filter((item) => {
-            const keys = ["comment", "originurl", "seltext"]
-            if (searchTermEntrys == "") {
-              return null
-            } else if (keys.some((key) => item[key].toLowerCase().includes(searchTermEntrys.toLowerCase())) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTermEntrys.toLowerCase())) {
-              return item
-            }
-          })
-            .map((item) => (
-              <div className="flex flex-row justify-between my-1 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.id}>
-              <div
-                className="ml-4"
-                style={{ width: "40px", height: "40px", border: "1px solid rgb(0,0,0, .2)", backgroundColor: "white", borderRadius: "50%" }}
-              ></div>
-
-              <div
-                className="ml-8 w-3/6"
-                onClick={(e) => {
-                  {
-                    goNext(e, item.drawer_id);
-                  }
-                }}
-              >
-                <a style={{ color: "black" }} className="m-auto cursor-pointer hover:no-underline text-xl text-text hover:text-gray-400">{item.comment}</a>
-              </div>
-
-              <div className="flex flex-row">
-                <span className="mr-8">{dayjs(item.creationdate).format("MMM, DD, YYYY")}</span>
-
-                <span>
-                  <button
-                    type="button"
-                    className="btn mr-2"
-                    style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}
-                    onClick={(e) => {
-                      saveDrawerName(e, item.drawertitle);
-                      saveDrawer(e, item.drawer_id);
-                      handleShowUpd();
-                    }}
-                  >
-                    <MdOutlineModeEdit />
-                  </button>
-                  <Modal show={showUpd} onHide={handleCloseUpd}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Update Drawer</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <Form>
-                        <Form.Group className="mb-3" id="updateName">
-                          <Form.Label>New Name</Form.Label>
-                          <Form.Control
-                            id="drawerNew"
-                            type="text"
-                            placeholder={localStorage.getItem("drawerName")}
-                            name="newName"
-                            onChange={handleName}
-                          />
-                        </Form.Group>
-                      </Form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseUpd} style={{ borderRadius: "15px" }}>
-                        <MdClose />
-                      </Button>
-                      <Button
-                        variant="primary"
-                        onClick={(e) => {
-                          handleUpdate(e, localStorage.getItem("drawer_id"));
-                          handleCloseUpd();
-                        }}
-                        style={{ borderRadius: "15px" }}
-                      >
-                        <MdCheck />
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
-                  <button
-                    type="button"
-                    class="btn btn-danger mr-4"
-                    style={{ borderRadius: "10px" }}
-                    onClick={(e) => {
-                      saveDrawerName(e, item.drawertitle);
-                      saveDrawer(e, item.drawer_id);
-                      handleDeleteShow();
-                    }}
-                  >
-                    <MdDeleteForever />
-                  </button>
-                  <Modal show={showDelete} onHide={handleCloseDelete}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Delete Drawer</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to permanently delete {localStorage.getItem("drawerName")} ?</Modal.Body>
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseDelete} style={{ borderRadius: "15px" }}>
-                        <MdClose />
-                      </Button>
-                      <Button
-                        variant="primary"
-                        onClick={(e) => {
-                          deleteDrawer(e, localStorage.getItem("drawer_id"));
-                          handleCloseDelete();
-                        }}
-                        style={{ borderRadius: "15px" }}
-                      >
-                        <MdCheck />
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
-                </span>
-              </div>
-            </div>
-          ))}
-      
-        {get.blogs &&
-          get.blogs.filter((item) => {
+{/* .filter((item) => {
             if (searchTerm == "" && searchTermEntrys == "") {
               return item
             }
-           else if (searchTermEntrys !== "" &&  searchTerm == "") {
+            else if (searchTermEntrys !== "" && searchTerm == "") {
               return null
             } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
               return item
             }
           })
+ */}
+        {x.blogs2 &&
+          x.blogs2
+          
             .map((item) => (
               <div className="flex flex-row justify-between my-1 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.id}>
+                <div
+                  className="ml-4"
+                  style={{ width: "40px", height: "40px", border: "1px solid rgb(0,0,0, .2)", backgroundColor: "white", borderRadius: "50%" }}
+                ></div>
+
+                <div
+                  className="ml-8 w-3/6"
+                  onClick={(e) => {
+                    {
+                      goNext(e, item.drawer_id);
+                    }
+                  }}
+                >
+                  <a style={{ color: "black" }} className="m-auto cursor-pointer hover:no-underline text-xl text-text hover:text-gray-400">{item.comment}</a>
+                </div>
+
+                <div className="flex flex-row">
+                  <span className="mr-8">{dayjs(item.creationdate).format("MMM, DD, YYYY")}</span>
+
+                  <span>
+                    <button
+                      type="button"
+                      className="btn mr-2"
+                      style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}
+                      onClick={(e) => {
+                        saveDrawerName(e, item.drawertitle);
+                        saveDrawer(e, item.drawer_id);
+                        handleShowUpd();
+                      }}
+                    >
+                      <MdOutlineModeEdit />
+                    </button>
+                    <Modal show={showUpd} onHide={handleCloseUpd}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Update Drawer</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <Form>
+                          <Form.Group className="mb-3" id="updateName">
+                            <Form.Label>New Name</Form.Label>
+                            <Form.Control
+                              id="drawerNew"
+                              type="text"
+                              placeholder={localStorage.getItem("drawerName")}
+                              name="newName"
+                              onChange={handleName}
+                            />
+                          </Form.Group>
+                        </Form>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseUpd} style={{ borderRadius: "15px" }}>
+                          <MdClose />
+                        </Button>
+                        <Button
+                          variant="primary"
+                          onClick={(e) => {
+                            handleUpdate(e, localStorage.getItem("drawer_id"));
+                            handleCloseUpd();
+                          }}
+                          style={{ borderRadius: "15px" }}
+                        >
+                          <MdCheck />
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                    <button
+                      type="button"
+                      className="btn btn-danger mr-4"
+                      style={{ borderRadius: "10px" }}
+                      onClick={(e) => {
+                        saveDrawerName(e, item.drawertitle);
+                        saveDrawer(e, item.drawer_id);
+                        handleDeleteShow();
+                      }}
+                    >
+                      <MdDeleteForever />
+                    </button>
+                    <Modal show={showDelete} onHide={handleCloseDelete}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Delete Drawer</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>Are you sure you want to permanently delete {localStorage.getItem("drawerName")} ?</Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseDelete} style={{ borderRadius: "15px" }}>
+                          <MdClose />
+                        </Button>
+                        <Button
+                          variant="primary"
+                          onClick={(e) => {
+                            deleteDrawer(e, localStorage.getItem("drawer_id"));
+                            handleCloseDelete();
+                          }}
+                          style={{ borderRadius: "15px" }}
+                        >
+                          <MdCheck />
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </span>
+                </div>
+              </div>
+            ))}
+
+        {get.blogs &&
+          get.blogs.filter((x) => {
+            <div key={x.drawer_id}></div>
+            if (searchTerm == "" && searchTermEntrys == "") {
+              return x
+            }
+            else if (searchTermEntrys !== "" && searchTerm == "") {
+              return null
+            } else if (x.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(x.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
+              return x
+            }
+          })
+
+            .map((item) => (
+              <div className="flex flex-row justify-between my-1 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.drawer_id}>
                 <div
                   className="ml-4"
                   style={{ width: "40px", height: "40px", border: "1px solid rgb(0,0,0, .2)", backgroundColor: "white", borderRadius: "50%" }}
@@ -399,7 +441,7 @@ const AxiosPost = () => {
                     </Modal>
                     <button
                       type="button"
-                      class="btn btn-danger mr-4"
+                      className="btn btn-danger mr-4"
                       style={{ borderRadius: "10px" }}
                       onClick={(e) => {
                         saveDrawerName(e, item.drawertitle);

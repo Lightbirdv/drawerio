@@ -210,8 +210,8 @@ const UserManagement = () => {
                                             </Button>
                                         </Modal.Footer>
                                     </Modal>
-									<button type="button" class="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => handleAdmin(e, item.email)} ><MdAdminPanelSettings /></button>
-                                    <button type="button" class="btn btn-danger" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveID(e, item.users_id); handleDeleteShow() }} ><MdDeleteForever /></button>
+									<button type="button" className="btn btn-success" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => handleAdmin(e, item.email)} ><MdAdminPanelSettings /></button>
+                                    <button type="button" className="btn btn-danger" style={{ marginRight: "10px", borderRadius: '15px' }} onClick={(e) => { saveID(e, item.users_id); handleDeleteShow() }} ><MdDeleteForever /></button>
                                     <Modal show={showDelete} onHide={handleCloseDelete}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>Delete User</Modal.Title>
