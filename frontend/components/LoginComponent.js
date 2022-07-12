@@ -5,6 +5,10 @@ import Navbar from "../components/NavbarThree";
 import { Button } from 'react-bootstrap';
 import { newPw } from '../lib/newPw';
 import Router from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+export const logify = (message) => toast(message);
 
 const forgettPw = (e) =>{
   e.preventDefault();
@@ -74,12 +78,13 @@ class LoginComponent extends React.Component {
  */}                </div>
                 </form>
               </div>
-              <div>
+              <div style={{textAlign:"center"}}>
                   <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black"}} onClick={(e) => { { forgettPw(e) }}} >Forgot password?</button>
                   <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToConfirm(e) }}} >Confirm your email here</button>
                   <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToReg(e) }}} >Don't have an account?</button> 
                   </div>
             </div>
+            <ToastContainer />
           </div>
           <div className="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5" style={{backgroundColor:"rgb(30 64 175)"}}>
             {/* Copyright */}

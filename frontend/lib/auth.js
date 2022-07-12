@@ -1,7 +1,11 @@
 import axios from 'axios';
 import Router from 'next/router';
 import { Component } from 'react';
+import { logify } from '../components/LoginComponent';
 import { getname } from '../lib/getname';
+
+
+
 
 export const loginUser = (email, password) => {
   console.log(email, password)
@@ -24,14 +28,14 @@ export const loginUser = (email, password) => {
         Router.push("/privatepage")
       }
       else {
-        alert("Unfortunately you could not logx in")
+        logify("Unfortunately you could not log in");
       }
     } 
     else {
-      alert("Unfortunately you could not logy in")
+      logify("Unfortunately you could not log in");
     }
   }).catch(e => {
-    alert("Unfortunately you could not logz in")
+    logify("Unfortunately you could not log in");
   }); 
 };
 

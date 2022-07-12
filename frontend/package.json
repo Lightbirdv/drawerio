@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@hookform/resolvers": "^2.9.5",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@mui/lab": "^5.0.0-alpha.88",
     "@mui/material": "^5.8.6",
@@ -24,7 +25,10 @@
     "react": "18.0.0",
     "react-bootstrap": "^2.3.0",
     "react-dom": "18.0.0",
-    "react-icons": "^4.3.1"
+    "react-hook-form": "^7.33.1",
+    "react-icons": "^4.3.1",
+    "react-toastify": "^9.0.5",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "autoprefixer": "10.4.5",

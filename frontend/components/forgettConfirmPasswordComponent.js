@@ -8,6 +8,8 @@ import { newPw } from '../lib/newPw';
 import Router from 'next/router';
 import { forgettHash } from '../lib/forgettHash';
 
+export const notify = (message) => toast(message);
+
 class ForgettConfirmPasswordComponent extends React.Component {
 
     state = {
@@ -40,6 +42,9 @@ class ForgettConfirmPasswordComponent extends React.Component {
                     <button type="submit" className="btn btn-primary btn-lg" style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>Confirm Password</button>
                 </div>
                 </form>
+                <div>
+                    <ToastContainer />
+                </div>
             </div>
         )
     }

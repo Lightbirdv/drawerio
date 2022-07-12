@@ -15,7 +15,15 @@ const welcome = () => {
 };
 
 function clearx() {
-	localStorage.clear();
+	/* localStorage.clear(); */
+	localStorage.removeItem('Key');
+	localStorage.removeItem('src');
+	localStorage.removeItem('emailx');
+	localStorage.removeItem('token');
+	localStorage.removeItem('drawer_id');
+	localStorage.removeItem('_id');
+	localStorage.removeItem('drawerName');
+
 }
 
 function NavLink({ to, children }) {
@@ -68,7 +76,7 @@ export default function Navbar() {
 							type="button"
 							className="flex flex-row text-text py-2.5 px-2.5 w-max-content items-center justify-center gap-2 hover:no-underline"
 							onClick={clearx}
-							style={{ color:"black", padding: "10px", borderRadius: "15px"}}
+							style={{ color: "black", padding: "10px", borderRadius: "15px" }}
 						>
 							Logout<MdLogout />
 						</button>{" "}

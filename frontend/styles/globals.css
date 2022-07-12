@@ -23,7 +23,7 @@ a {
 
 /* TopComponent Background pexels-Johanes */
 .background {
-  background-color:rgb(167 243 208);
+  background-color:rgb(216, 220, 219);
   height: 100vh;
   width: 100vw;
   position: fixed;
@@ -266,5 +266,9 @@ height: 100%;
   margin-right: auto;
   width: 50%;
 }
+
+a.one:link {color:#000000;}
+a.one:visited {color:#2f3ab4;}
+a.one:hover {color:#3a3735;}
 
 

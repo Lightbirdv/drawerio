@@ -22,7 +22,7 @@ import { searchForEntry } from "../lib/searchForEntry";
 const AxiosPost = () => {
 
 
-let s;
+let searchF = "";
 
   const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -105,19 +105,20 @@ let s;
 
 
   const [x, y] = useState({ blogs2: [] });
-  /* useEffect(() => {
+  useEffect(() => {
+    
     const fetchPostList = async () => {
-      const { data } = await axios.get(`http://localhost:5000/drawerentry/from/user/search/findBy?searchTerm=${searchTermEntrys}`, {
+      const { data } = await axios.get(`http://localhost:5000/drawerentry/from/user/search/findBy?searchTerm=${searchF}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       y({ blogs2: data });
       console.log("xxxx");
-      console.log(data.data);
+      console.log(data);
     };
     fetchPostList();
-  }, [reducerValue]); */
+  }, [reducerValue]);
 
 
   /* const arr3 = [...x.blogs2, ...get.blogs];
@@ -147,7 +148,7 @@ let s;
     /* localStorage.setItem("search", searchTermEntrys);
   } */ 
 
-    useEffect(() => {
+    /* useEffect(() => {
       const drawerID = localStorage.getItem("drawer_id");
       console.log(drawerID);
       console.log(searchTermEntrys);
@@ -158,12 +159,9 @@ let s;
             },
           });
           y({ blogs2: data });
-          /* console.log(drawerID);
-          console.log(drawerID); */
-          /* console.log(s); */
         };
         fetchPostList();
-      }, [reducerValue]);
+      }, [reducerValue]); */
   
 
 
@@ -193,6 +191,7 @@ let s;
             placeholder="Search in entrys"
             onChange={(event) => {
               setSearchTermEntrys(event.target.value);
+              searchF = searchTermEntrys;
             }}
             style={{
               width: "300px",
@@ -205,7 +204,9 @@ let s;
           <button type="button" className="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}>
             +
           </button>
-          {/* <button type="button" className="bg-main text-white w-12 h-8 text-xl text-center" onClick={goToUserManagement} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white"  }}><MdSupervisorAccount/></button> */}
+          {/* <button 	type="button"
+											className="bg-main flex justify-center items-center text-white w-12 h-8 text-xl text-center"
+											 onClick={goToUserManagement} style={{ marginLeft: "5px", borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}><MdSupervisorAccount/></button> */}
         </div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -249,9 +250,15 @@ let s;
             }
           })
  */}
-        {x.blogs2 &&
-          x.blogs2
-          
+         {x.blogs2 &&
+          x.blogs2.filter((item) => {
+            const keys = ["comment", "originurl", "seltext"]
+            if (searchTermEntrys == "") {
+              return null
+            } else if (keys.some((key) => item[key].toLowerCase().includes(searchTermEntrys.toLowerCase())) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTermEntrys.toLowerCase())) {
+              return item
+            }
+          })
             .map((item) => (
               <div className="flex flex-row justify-between my-1 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.id}>
                 <div

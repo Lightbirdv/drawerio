@@ -1,5 +1,24 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { goImpressum } from "../lib/goImpressum";
+import { goDS } from "../lib/goDatenschutz";
+import { goAgb } from "../lib/goAGB";
+
+const imp = (e) => {
+  e.preventDefault();
+  goImpressum()
+}
+
+const dS = (e) => {
+  e.preventDefault();
+  goDS()
+}
+
+const a = (e) => {
+  e.preventDefault();
+  goAgb()
+}
+
 
 function ContactComponent() {
   return (
@@ -11,7 +30,7 @@ function ContactComponent() {
             <br />
             <br />
             <p>
-            Your feedback can help us a lot. Gladly via the Google Webstore or gladly directly by email or by phone.
+              Your feedback can help us a lot. Gladly via the Google Webstore or gladly directly by email or by phone.
             </p>
             <div>
               <span className="fa fa-facebook-square"></span>
@@ -31,9 +50,19 @@ function ContactComponent() {
             <b>Company</b>
             <br />
             <br />
-            <h6>Overview</h6>
-            <h6>Social Media</h6>
-            <h6>Contact</h6>
+            <h6>
+              <a href="" className="one" onClick={(e) => {
+                { imp(e) }
+              }}>Impressum</a></h6>
+            <h6>
+              <a href="" className="one" onClick={(e) => {
+                { a(e) }
+              }}>AGB</a></h6>
+            <h6>
+              <a href="" className="one" onClick={(e) => {
+                { dS(e) }
+              }}>Datenschutz</a>
+            </h6>
           </Col>
         </Row>
       </Container>
