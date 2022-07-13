@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Navbar from "../components/NavbarThree";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Image } from "react-bootstrap";
 
 export const notifyReg = (message) => toast(message);
 
@@ -36,7 +37,7 @@ class RegComponent extends React.Component {
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-md-9 col-lg-6 col-xl-5">
                 {/* <h1 className="text-blue-800 text-5xl" style={{textAlign:"center", marginBottom:"20px"}}>Sign Up now!</h1> */}
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" className="img-fluid" alt="Sample image" />
+                <Image src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" className="img-fluid" alt="Sample image" />
               </div>
               <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form onSubmit={this.handleSubmit}>

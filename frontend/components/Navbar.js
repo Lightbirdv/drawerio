@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
+import { Image } from "react-bootstrap";
 
 
 
@@ -34,8 +35,8 @@ export default function Navbar() {
         <nav className="flex filter drop-shadow-md bg-white px-4 py-4 h-20 items-center">
             {/* <MobileNav open={open} setOpen={setOpen}/> */}
             <div className="w-3/12 flex items-center ml-28">
-                <a className="text-2xl font-semibold" href="/"><img src="assets/logo.jpg" className="img-logo" style={{marginRight: "15px", maxHeight: "130px"}}/></a>
-                <a className="text-2xl font-semibold text-blue-800 hover:no-underline" href="/">Drawer.io</a>
+                <NavLink className="text-2xl font-semibold" href="/"><Image alt="asd" src="assets/logo.jpg" className="img-logo" style={{marginRight: "15px", maxHeight: "130px"}}/></NavLink>
+                <NavLink className="text-2xl font-semibold text-blue-800 hover:no-underline" href="/">Drawer.io</NavLink>
             </div>
 
             <div className="w-9/12 flex justify-end items-center">
