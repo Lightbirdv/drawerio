@@ -21,13 +21,17 @@ import { MdClose } from "react-icons/md";
 import { MdSupervisorAccount } from "react-icons/md";
 import { Col, Container, Row } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
-import {confirmEmail} from '../lib/confirmMail'
+import { confirmEmail } from '../lib/confirmMail'
+import { search } from "../lib/search";
+import { searchDrawer } from "../lib/searchDrawer";
 
 
 
 const adminPageComponent = () => {
 
-	let searchF = "";
+
+
+  let searchF = "";
 
   const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -70,7 +74,7 @@ const adminPageComponent = () => {
     const { dime } = newDime;
     const { userID } = newUid;
     e.preventDefault();
-   /*  console.log(newName, dime, userID, _id); */
+    /*  console.log(newName, dime, userID, _id); */
     updateDrawer(newName, dime, userID, _id);
     forceUpdate();
   };
@@ -89,8 +93,8 @@ const adminPageComponent = () => {
   };
 
   const goToUserManagement = (e) => {
-  e.preventDefault();
-  Router.push("/userpage")
+    e.preventDefault();
+    Router.push("/userpage")
   }
 
   const [get, setPosts] = useState({ blogs: [] });
@@ -102,72 +106,36 @@ const adminPageComponent = () => {
         },
       });
       setPosts({ blogs: data });
-      /* console.log("data"); */
-     /* console .log(data); */
     };
     fetchPostList();
   }, [reducerValue]);
-
-
-  const [x, y] = useState({ blogs2: [] });
-  useEffect(() => {
-    
-    const fetchPostList = async () => {
-      const { data } = await axios.get(`http://localhost:5000/drawerentry/from/user/search/findBy?searchTerm=${searchF}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      y({ blogs2: data });
-      console.log("xxxx");
-      console.log(data);
-    };
-    fetchPostList();
-  }, [reducerValue]);
-
-
-  /* const arr3 = [...x.blogs2, ...get.blogs];
-  console.log(arr3); */
 
   /* Searchinput */
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermEntrys, setSearchTermEntrys] = useState("");
 
+  const [x, y] = useState({ blogs2: [] });
+
+
   const saveDrawer = (e, _id) => {
     e.preventDefault();
-/*     console.log(_id); */
     localStorage.setItem("drawer_id", _id);
   };
 
   const saveDrawerName = (e, _name) => {
     e.preventDefault();
-/*     console.log(_name); */
     localStorage.setItem("drawerName", _name);
   };
 
-  /* const searchEntry = (drawerID, term) => { */
-    /* e.preventDefault(); */
-  /* const searchTerminator = (searchTermEntrys) =>{
-    let a = searchTermEntrys;
-    /* console.log(a); */
-    /* localStorage.setItem("search", searchTermEntrys);
-  } */ 
 
-    /* useEffect(() => {
-      const drawerID = localStorage.getItem("drawer_id");
-      console.log(drawerID);
-      console.log(searchTermEntrys);
-      const fetchPostList = async () => {
-          const { data } = await axios.get(`http://localhost:5000/drawerentry/search/findBy?searchTerm=${searchTermEntrys}&drawer=${drawerID}`, {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          });
-          y({ blogs2: data });
-        };
-        fetchPostList();
-      }, [reducerValue]); */
-  
+
+  const handleKeyDown = event => {
+    console.log('User pressed: ', event.key);
+    if (event.key === 'Backspace') {
+      console.log('Backspace key pressed ✅');
+    }
+  };
+
 
 
   return (
@@ -180,6 +148,21 @@ const adminPageComponent = () => {
             placeholder="Search..."
             onChange={(event) => {
               setSearchTerm(event.target.value);
+              const b = searchDrawer(event.target.value);
+              get.blogs = b;
+            }}
+            onKeyDown={(event) => {
+              handleKeyDown
+              let b;
+              if (searchTerm == "") {
+                b = searchDrawer("");
+                forceUpdate();
+                get.blogs = b;
+              } else {
+                b = searchDrawer(event.target.value);
+                get.blogs = b;
+              }
+              get.blogs = b;
             }}
             style={{
               width: "300px",
@@ -193,11 +176,13 @@ const adminPageComponent = () => {
           <input
             className="mr-2"
             type="text"
-            placeholder="Search in entrys"
+            placeholder="Search in entrys..."
             onChange={(event) => {
               setSearchTermEntrys(event.target.value);
-              searchF = searchTermEntrys;
+              const a = search(event.target.value);
+              x.blogs2 = a;
             }}
+            onKeyDown={handleKeyDown}
             style={{
               width: "300px",
               height: "35px",
@@ -209,9 +194,9 @@ const adminPageComponent = () => {
           <button type="button" className="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}>
             +
           </button>
-          <button 	type="button"
-											className="bg-main flex justify-center items-center text-white w-12 h-8 text-xl text-center"
-											 onClick={goToUserManagement} style={{ marginLeft: "5px", borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}><MdSupervisorAccount/></button>
+          <button type="button"
+            className="bg-main flex justify-center items-center text-white w-12 h-8 text-xl text-center"
+            onClick={goToUserManagement} style={{ marginLeft: "5px", borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}><MdSupervisorAccount /></button>
         </div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -242,25 +227,13 @@ const adminPageComponent = () => {
           </Modal.Footer>
         </Modal>
 
-{/* searchTerminator */}
 
-{/* .filter((item) => {
-            if (searchTerm == "" && searchTermEntrys == "") {
-              return item
-            }
-            else if (searchTermEntrys !== "" && searchTerm == "") {
-              return null
-            } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
-              return item
-            }
-          })
- */}
-         {x.blogs2 &&
+        {x.blogs2 &&
           x.blogs2.filter((item) => {
-            const keys = ["comment", "originurl", "seltext"]
+
             if (searchTermEntrys == "") {
               return null
-            } else if (keys.some((key) => item[key].toLowerCase().includes(searchTermEntrys.toLowerCase())) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTermEntrys.toLowerCase())) {
+            } else {
               return item
             }
           })
@@ -378,10 +351,22 @@ const adminPageComponent = () => {
             }
             else if (searchTermEntrys !== "" && searchTerm == "") {
               return null
-            } else if (x.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(x.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
+            } else {
               return x
             }
           })
+
+            /* .filter((x) => {
+              if (searchTerm == "" && searchTermEntrys == "") {
+                return x
+              } else if () {  
+
+              }
+              else {
+                return null
+              }
+            }) */
+
 
             .map((item) => (
               <div className="flex flex-row justify-between my-1 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.drawer_id}>

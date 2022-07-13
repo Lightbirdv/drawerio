@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
-import{MdArrowCircleDown} from "react-icons/md";
+import { MdArrowCircleDown } from "react-icons/md";
 import FullPic from "./fullPic";
 import { Col, Container, Row } from "react-bootstrap";
 import Timeline from "@mui/lab/Timeline";
@@ -135,20 +135,29 @@ const ThirdPage = () => {
 
 	return (
 		<div className="flex flex-column m-auto w-4/6">
-			<Row className="my-8">
+			{/* <Row className="my-8">
 				<Col>
-					<span>
-						<input
-							type="text"
-							placeholder="Search..."
-							onChange={(event) => {
-								setSearchTerm(event.target.value);
-							}}
-							style={{ width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: "15px" }}
-						/>
-					</span>
+					<span> */}
+			<div className="flex flex-row items-center mb-12 mt-12">
+				<input
+					className="mr-2"
+					type="text"
+					placeholder="Search..."
+					onChange={(event) => {
+						setSearchTerm(event.target.value);
+					}}
+					style={{
+						width: "300px",
+						height: "35px",
+						paddingLeft: "10px",
+						fontSize: "15px",
+						borderRadius: "10px",
+					}}
+				/>
+			</div>
+			{/* </span>
 				</Col>
-			</Row>
+			</Row> */}
 			<React.Fragment>
 				<Timeline position="alternate" style={{ padding: 0 }}>
 					{posts.blogs &&
@@ -246,10 +255,11 @@ const ThirdPage = () => {
 
 														<button type="button"
 															className="btn btn-success"
-															style={{marginRight:"10px", borderRadius: "15px" }} onClick={(e) => {
-																 downloadTxtFile(item.websitecontent) }}
-																 >
-																	<MdArrowCircleDown/></button>
+															style={{ marginRight: "10px", borderRadius: "15px" }} onClick={(e) => {
+																downloadTxtFile(item.websitecontent)
+															}}
+														>
+															<MdArrowCircleDown /></button>
 														<button
 															type="button"
 															className="btn btn-danger"

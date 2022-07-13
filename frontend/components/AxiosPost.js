@@ -18,11 +18,13 @@ import { Col, Container, Row } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 import { confirmEmail } from "../lib/confirmMail";
 import { searchForEntry } from "../lib/searchForEntry";
+import { search } from "../lib/search";
+import { searchDrawer } from "../lib/searchDrawer";
 
 const AxiosPost = () => {
 
 
-let searchF = "";
+  let searchF = "";
 
   const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -65,7 +67,7 @@ let searchF = "";
     const { dime } = newDime;
     const { userID } = newUid;
     e.preventDefault();
-   /*  console.log(newName, dime, userID, _id); */
+    /*  console.log(newName, dime, userID, _id); */
     updateDrawer(newName, dime, userID, _id);
     forceUpdate();
   };
@@ -97,72 +99,36 @@ let searchF = "";
         },
       });
       setPosts({ blogs: data });
-      /* console.log("data"); */
-     /* console .log(data); */
     };
     fetchPostList();
   }, [reducerValue]);
-
-
-  const [x, y] = useState({ blogs2: [] });
-  useEffect(() => {
-    
-    const fetchPostList = async () => {
-      const { data } = await axios.get(`http://localhost:5000/drawerentry/from/user/search/findBy?searchTerm=${searchF}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      y({ blogs2: data });
-      console.log("xxxx");
-      console.log(data);
-    };
-    fetchPostList();
-  }, [reducerValue]);
-
-
-  /* const arr3 = [...x.blogs2, ...get.blogs];
-  console.log(arr3); */
 
   /* Searchinput */
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermEntrys, setSearchTermEntrys] = useState("");
 
+  const [x, y] = useState({ blogs2: [] });
+
+
   const saveDrawer = (e, _id) => {
     e.preventDefault();
-/*     console.log(_id); */
     localStorage.setItem("drawer_id", _id);
   };
 
   const saveDrawerName = (e, _name) => {
     e.preventDefault();
-/*     console.log(_name); */
     localStorage.setItem("drawerName", _name);
   };
 
-  /* const searchEntry = (drawerID, term) => { */
-    /* e.preventDefault(); */
-  /* const searchTerminator = (searchTermEntrys) =>{
-    let a = searchTermEntrys;
-    /* console.log(a); */
-    /* localStorage.setItem("search", searchTermEntrys);
-  } */ 
 
-    /* useEffect(() => {
-      const drawerID = localStorage.getItem("drawer_id");
-      console.log(drawerID);
-      console.log(searchTermEntrys);
-      const fetchPostList = async () => {
-          const { data } = await axios.get(`http://localhost:5000/drawerentry/search/findBy?searchTerm=${searchTermEntrys}&drawer=${drawerID}`, {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          });
-          y({ blogs2: data });
-        };
-        fetchPostList();
-      }, [reducerValue]); */
-  
+
+  const handleKeyDown = event => {
+    console.log('User pressed: ', event.key);
+    if (event.key === 'Backspace') {
+      console.log('Backspace key pressed ✅');
+    }
+  };
+
 
 
   return (
@@ -175,6 +141,22 @@ let searchF = "";
             placeholder="Search..."
             onChange={(event) => {
               setSearchTerm(event.target.value);
+              const b = searchDrawer(event.target.value);
+              get.blogs = b;
+            }}
+            onKeyDown={(event) => {
+              handleKeyDown
+              let b;
+              if (searchTerm.slice(1) == "") {
+                console.log("hallo");
+                b = searchDrawer("");
+                forceUpdate();
+                get.blogs = b;
+              } else {
+                b = searchDrawer(event.target.value);
+                get.blogs = b;
+              }
+              get.blogs = b;
             }}
             style={{
               width: "300px",
@@ -188,11 +170,13 @@ let searchF = "";
           <input
             className="mr-2"
             type="text"
-            placeholder="Search in entrys"
+            placeholder="Search in entrys..."
             onChange={(event) => {
               setSearchTermEntrys(event.target.value);
-              searchF = searchTermEntrys;
+              const a = search(event.target.value);
+              x.blogs2 = a;
             }}
+            onKeyDown={handleKeyDown}
             style={{
               width: "300px",
               height: "35px",
@@ -237,25 +221,13 @@ let searchF = "";
           </Modal.Footer>
         </Modal>
 
-{/* searchTerminator */}
 
-{/* .filter((item) => {
-            if (searchTerm == "" && searchTermEntrys == "") {
-              return item
-            }
-            else if (searchTermEntrys !== "" && searchTerm == "") {
-              return null
-            } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
-              return item
-            }
-          })
- */}
-         {x.blogs2 &&
+        {x.blogs2 &&
           x.blogs2.filter((item) => {
-            const keys = ["comment", "originurl", "seltext"]
+
             if (searchTermEntrys == "") {
               return null
-            } else if (keys.some((key) => item[key].toLowerCase().includes(searchTermEntrys.toLowerCase())) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTermEntrys.toLowerCase())) {
+            } else {
               return item
             }
           })
@@ -373,10 +345,22 @@ let searchF = "";
             }
             else if (searchTermEntrys !== "" && searchTerm == "") {
               return null
-            } else if (x.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(x.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
+            } else {
               return x
             }
           })
+
+            /* .filter((x) => {
+              if (searchTerm == "" && searchTermEntrys == "") {
+                return x
+              } else if () {  
+
+              }
+              else {
+                return null
+              }
+            }) */
+
 
             .map((item) => (
               <div className="flex flex-row justify-between my-1 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.drawer_id}>

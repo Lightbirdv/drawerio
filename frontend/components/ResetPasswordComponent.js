@@ -5,6 +5,10 @@ import { changePassword } from "../lib/changePassword";
 import { useForm, withForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+export const notifNewPW = (message) => toast(message);
 
 class ResetPasswordComponent extends Component {
 	constructor(props) {
@@ -31,21 +35,24 @@ class ResetPasswordComponent extends Component {
 		console.log(confirmPassword)
 		if (newPassword !== confirmPassword) {
 			this.setState({ error: "Passwords do not match" });
+			/* notifNewPW("Passwords do not match"); */
 			console.log("Passwords do not match");
 			return;
 		}
 		if (newPassword === "" || confirmPassword === "") {
 			this.setState({ error: "Please fill in all fields" });
+			/* notifNewPW("Please fill in all fields"); */
 			console.log("Please fill in all fields");
 			return;
 		}
+		
 		changePassword(newPassword, hash);
 	}
 
 	render() {
 		return (
 			<div>
-				<Navbar />
+				<Navbar /> <ToastContainer />
 				<section className="vh-100">
 					<div className="container-fluid h-custom" style={{ backgroundColor: "rgb(167 243 208)" }}>
 						<div className="flex justify-content-center align-items-center h-100">
