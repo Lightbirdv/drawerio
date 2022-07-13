@@ -93,7 +93,7 @@ const ThirdPage = () => {
 		};
 
 		const fetchPostList = async () => {
-			const { data } = await axios("http://localhost:5000/drawerentry/all/" + localStorage.getItem("drawer_id"), {
+			const { data } = await axios(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"drawerentry/all/" + localStorage.getItem("drawer_id"), {
 				headers: headers,
 			});
 			setPosts({ blogs: data });

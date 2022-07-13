@@ -8,7 +8,7 @@ export const searchForEntry = (drawerID, term) => {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
     }
-    const { data } = axios.get(`http://localhost:5000/drawerentry/search/findBy?searchTerm=${term}&drawer=${drawerID}`,
+    const { data } = axios.get( process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+`drawerentry/search/findBy?searchTerm=${term}&drawer=${drawerID}`,
         {
             headers: headers
         }).then((response) => {

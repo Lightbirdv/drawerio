@@ -14,7 +14,7 @@ const xx = localStorage.getItem("searchTerm");
 /*     searchField = document.getElementById("finddrawer");
 
   console.log(searchField); */
-  const { data } = axios.get(`http://localhost:5000/drawerentry/from/user/search/findBy?searchTerm=${text}`, {
+  const { data } = axios.get(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+`drawerentry/from/user/search/findBy?searchTerm=${text}`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },

@@ -8,7 +8,7 @@ export const isAdmin = () => {
       'Authorization': 'Bearer ' +localStorage.getItem('token')
     }
 
-    const {data} = axios.get(`http://localhost:5000/auth/isAdmin`,{
+    const {data} = axios.get(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+`auth/isAdmin`,{
       headers: headers
     }
      ).then((response) => {

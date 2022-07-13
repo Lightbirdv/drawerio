@@ -4,7 +4,7 @@ import { confirmHash } from '../lib/confirmHash'
 import { notifyReg } from '../components/RegisterComponent';
 
 export const confirmEmail = (email) => {
-  const { data } = axios.post('http://localhost:5000/user/confirm', { email: email }).then((response) => {
+  const { data } = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"user/confirm", { email: email }).then((response) => {
     console.log(response.status);
     if (response !== null) {
 

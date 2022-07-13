@@ -9,7 +9,7 @@ export const addDrawer = (token, drawerName) => {
         'Authorization': 'Bearer ' +token
       }
 
-    const {data} = axios.post('http://localhost:5000/drawer/add', {drawerTitle: drawerName},{
+    const {data} = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+'drawer/add', {drawerTitle: drawerName},{
         headers: headers
       }).then((response) => {
         console.log(response);

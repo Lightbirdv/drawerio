@@ -10,7 +10,7 @@ export const updateUser = (email, password, id) => {
   }
 
 
-  const { data } = axios.patch('http://localhost:5000/user/' + id,
+  const { data } = axios.patch(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"user/" + id,
     {
       email: email,
       password: password

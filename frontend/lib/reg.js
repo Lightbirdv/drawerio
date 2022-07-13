@@ -9,7 +9,7 @@ const notifys = (message) => toast(message);
 export const regUser = (email, confirm, password) => {
   console.log(email, confirm, password);
  
-  const { data } = axios.post('http://localhost:5000/user/register', { email: email, password: password }).then((response) => {
+  const { data } = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"user/register", { email: email, password: password }).then((response) => {
     console.log(response.message);
     if (response.status === 200, email !== "" && password !== "" && password === confirm) {
       /* confirmEmail(confirm); */

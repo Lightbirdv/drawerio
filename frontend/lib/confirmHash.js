@@ -4,7 +4,7 @@ import { notify } from '../components/ConfirmComponent';
 
 export const confirmHash = (hash) => {
 
-  const { data } = axios.post('http://localhost:5000/user/confirmation/' + hash, { hash: hash }).then((response) => {
+  const { data } = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+'user/confirmation/' + hash, { hash: hash }).then((response) => {
     console.log(response.data);
     if (response !== null) {
       notify("Thanks, Your email has been confirmed");

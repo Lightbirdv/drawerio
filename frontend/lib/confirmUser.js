@@ -5,7 +5,7 @@ import { notify } from "../components/ConfirmComponent";
 export function confirmUser(hash) {
 	console.log(hash);
 	const { data } = axios
-		.post(`http://localhost:5000/user/confirmation/${hash}`)
+		.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+`user/confirmation/${hash}`)
 		.then((response) => {
 			console.log(response);
 			if (response.status === 200) {

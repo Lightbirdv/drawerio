@@ -6,7 +6,7 @@ export function changePassword(newPassword, hash) {
 
   console.log(hash)
   console.log(newPassword)
-  const { data } = axios.post(`http://localhost:5000/user/passwordReset/${hash}`, { password: newPassword }).then((response) => {
+  const { data } = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+`user/passwordReset/${hash}`, { password: newPassword }).then((response) => {
     console.log(response);
     if (response.status === 200) {
       notifNewPW("Your password has been successfully changed!");
