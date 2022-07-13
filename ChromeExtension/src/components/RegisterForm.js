@@ -21,11 +21,7 @@ const RegisterForm = function (props) {
   } = useForm();
 
   useEffect(() => {
-    if (
-      (passwordOne !== passwordTwo && notSame === false) ||
-      passwordOne.length === 0 ||
-      passwordTwo.length === 0
-    ) {
+    if (passwordOne !== passwordTwo && notSame === false) {
       setNotSame(true);
     } else if (passwordOne === passwordTwo && notSame !== false) {
       setNotSame(false);
@@ -87,6 +83,8 @@ const RegisterForm = function (props) {
                 .catch((error) => {
                   setSameUser(true);
                 });
+            } else {
+              setNotSame(true);
             }
           }
         })}
