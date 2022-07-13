@@ -1,6 +1,10 @@
 import axios from 'axios';
 import Router from 'next/router';
 import {confirmEmail} from '../lib/confirmMail'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const notifys = (message) => toast(message);
 
 export const regUser = (email, confirm, password) => {
   console.log(email, confirm, password);
@@ -10,13 +14,13 @@ export const regUser = (email, confirm, password) => {
     if (response.status === 200, email !== "" && password !== "" && password === confirm) {
       /* confirmEmail(confirm); */
       console.log(response.data);
-      /* confirmEmail(email); */
+      confirmEmail(email);
       /* Router.push("/confirmPage") */
-      Router.push("/");
+      /* Router.push("/"); */
     } else {
-      alert("Unfortunately the creation of the user failed")
+      notifys("Unfortunately the creation of the user failed")
     }
   }).catch(error => {
-    alert(error)
+    notifys("Unfortunately the creation of the user failed")
   })
 }

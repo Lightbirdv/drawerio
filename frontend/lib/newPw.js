@@ -1,19 +1,22 @@
 import axios from 'axios';
 import Router from 'next/router';
-import {forgettHash} from './forgettHash'
+import { notifyc } from '../components/NewPasswordComponent';
+import { forgettHash } from './forgettHash'
 
 export const newPw = (email) => {
-  const { data } = axios.post('http://localhost:5000/user/forgot', {email: email}).then((response) => {
+  const { data } = axios.post('http://localhost:5000/user/forgot', { email: email }).then((response) => {
     console.log(response.status);
     if (response !== null) {
-      
+      notifyc("An email has send to " + email);
       console.log(response.data);
-      /* const enteredName = prompt('Please enter the Code');
-      const enteredPw = prompt('Please enter your new PW'); */
-     /*  forgettHash(enteredName,enteredPw); */
-      Router.push("/")
+      setTimeout(() => {
+        Router.push("/")
+      }, 2000)
     } else {
-      alert("Please confirm your Email adress again")
+      notifyc("Your email couldnt send")
     }
-  })
+  }).catch((e) => {
+    notifyc("Your email couldnt send");
+  }
+  );
 }

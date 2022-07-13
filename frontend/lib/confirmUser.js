@@ -1,5 +1,6 @@
 import axios from "axios";
 import Router from "next/router";
+import { notify } from "../components/ConfirmComponent";
 
 export function confirmUser(hash) {
 	console.log(hash);
@@ -8,12 +9,10 @@ export function confirmUser(hash) {
 		.then((response) => {
 			console.log(response);
 			if (response.status === 200) {
+				notify("Thanks, Your email has been confirmed");
 				Router.push("/login");
 			} else {
-				alert("Unfortunately the Account could not be activated");
+				notify("Unfortunately the Account could not be activated");
 			}
-		})
-		.catch((e) => {
-			alert(e);
 		});
 }

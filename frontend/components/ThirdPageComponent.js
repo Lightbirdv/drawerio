@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { MdDeleteForever } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 import { MdClose } from "react-icons/md";
-import{MdArrowCircleDown} from "react-icons/md";
+import { MdArrowCircleDown } from "react-icons/md";
 import FullPic from "./fullPic";
 import { Col, Container, Row } from "react-bootstrap";
 import Timeline from "@mui/lab/Timeline";
@@ -135,35 +135,44 @@ const ThirdPage = () => {
 
 	return (
 		<div className="flex flex-column m-auto w-4/6">
-			<Row className="my-8">
+			{/* <Row className="my-8">
 				<Col>
-					<span>
-						<input
-							type="text"
-							placeholder="Search..."
-							onChange={(event) => {
-								setSearchTerm(event.target.value);
-							}}
-							style={{ width: "300px", height: "30px", paddingLeft: "10px", fontSize: "15px", borderRadius: "15px" }}
-						/>
-					</span>
+					<span> */}
+			<div className="flex flex-row items-center mb-12 mt-12">
+				<input
+					className="mr-2"
+					type="text"
+					placeholder="Search..."
+					onChange={(event) => {
+						setSearchTerm(event.target.value);
+					}}
+					style={{
+						width: "300px",
+						height: "35px",
+						paddingLeft: "10px",
+						fontSize: "15px",
+						borderRadius: "10px",
+					}}
+				/>
+			</div>
+			{/* </span>
 				</Col>
-			</Row>
+			</Row> */}
 			<React.Fragment>
 				<Timeline position="alternate" style={{ padding: 0 }}>
 					{posts.blogs &&
-						posts.blogs.filter((item) => {
+						posts.blogs.filter((w) => {
+							<div key={w.id}></div>
 							const keys = ["comment", "originurl", "seltext"]
 							if (searchTerm == "") {
-								return item
-							} else if (keys.some((key) => item[key].toLowerCase().includes(searchTerm.toLowerCase())) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
-								console.log(item.videourl[0]);
-								return item
+								return w
+							} else if (keys.some((key) => w[key].toLowerCase().includes(searchTerm.toLowerCase())) || dayjs(w.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
+								return w
 							}
 						}
 						)
 							.map((item) => (
-								<div>
+								<div /* key={item.id} */>
 									<TimelineItem>
 										<TimelineOppositeContent className="text-text" style={{ flex: 0.1, paddingLeft: 0 }}>
 											{dayjs(item.creationdate).format("MMM, D, YYYY")}
@@ -173,10 +182,10 @@ const ThirdPage = () => {
 											<TimelineConnector />
 										</TimelineSeparator>
 										<TimelineContent>
-											<p key={item.id}>
+											<span key={item.id}>
 												<Row>
 													<Col>
-														<p className="text-text text-2xl mb-4">{item.comment}</p>
+														<span className="text-text text-2xl mb-4">{item.comment}</span>
 													</Col>
 												</Row>
 
@@ -196,28 +205,29 @@ const ThirdPage = () => {
 
 												<Row>
 													<Col>
-														<p>
+														<span>
 															<div className="grid grid-cols-4 gap-2">
 																{item.imageurl &&
 																	item.imageurl.map((x) => (
-																		<div className="relative">
+																		<div /* id={x+"www"} key={x+"hallo"} */ className="relative">
+
 																			<img src={x} className="p-2 bg-white hover:shadow rounded-xl" style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} onClick={(e) => showPicture(e, x)} />
 
 																			{/* </div> */}
 																		</div>
 																	))}
 															</div>
-														</p>
+														</span>
 													</Col>
 												</Row>
 
 												<Row>
 													<Col>
-														<p>
+														<span>
 															<div className="grid grid-cols-3 gap-2">
 																{item.videourl &&
 																	item.videourl.map((y) => (
-																		<div className="relative">
+																		<div /* id={x+"wdsfdsf"} key={y+"hayxcyxc"} */ className="relative">
 																			{/* <div className="absolute inset-0 z-10 flex transition duration-300 ease-in hover:opacity-0">
                             <div className="absolute inset-0 bg-black opacity-30"> </div> */}
 
@@ -236,7 +246,7 @@ const ThirdPage = () => {
 																		/*  </div> */
 																	))}
 															</div>
-														</p>
+														</span>
 													</Col>
 												</Row>
 
@@ -244,14 +254,15 @@ const ThirdPage = () => {
 													<Col>
 
 														<button type="button"
-															class="btn btn-success"
-															style={{marginRight:"10px", borderRadius: "15px" }} onClick={(e) => {
-																 downloadTxtFile(item.websitecontent) }}
-																 >
-																	<MdArrowCircleDown/></button>
+															className="btn btn-success"
+															style={{ marginRight: "10px", borderRadius: "15px" }} onClick={(e) => {
+																downloadTxtFile(item.websitecontent)
+															}}
+														>
+															<MdArrowCircleDown /></button>
 														<button
 															type="button"
-															class="btn btn-danger"
+															className="btn btn-danger"
 															style={{ borderRadius: "15px" }}
 															onClick={(e) => {
 																saveDrawerEntry(e, item.drawerentry_id);
@@ -292,7 +303,7 @@ const ThirdPage = () => {
 														</span>
 													</Col>
 												</Row> */}
-											</p>
+											</span>
 										</TimelineContent>
 									</TimelineItem>
 								</div>

@@ -3,7 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 
 function ServiceComponent() {
   return (
-    <div className="service-container-bg">
+    <div style={{margin:"20px"}} className="service-container-bg">
       <Container className="service-container">
         <Row>
           <Col xs={12} md={4}>
