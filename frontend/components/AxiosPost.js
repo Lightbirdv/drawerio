@@ -21,7 +21,11 @@ import { searchForEntry } from "../lib/searchForEntry";
 import { search } from "../lib/search";
 import { searchDrawer } from "../lib/searchDrawer";
 
+console.log("xxxxxxxxxxxxxxxxxxxxxx");
+console.log(process.env.NEXT_PUBLIC_API_URL);
+
 const AxiosPost = () => {
+
 
 
   let searchF = "";
@@ -93,7 +97,8 @@ const AxiosPost = () => {
   const [get, setPosts] = useState({ blogs: [] });
   useEffect(() => {
     const fetchPostList = async () => {
-      const { data } = await axios.get("http://localhost:5000/drawer/all/user", {
+    
+      const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"drawer/all/user", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -473,3 +478,5 @@ const AxiosPost = () => {
 };
 
 export default AxiosPost;
+
+

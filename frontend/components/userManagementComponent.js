@@ -83,7 +83,7 @@ const UserManagement = () => {
 
         const fetchPostList = async () => {
             const { data } = await axios(
-                "http://localhost:5000/user/all", {
+                process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"user/all", {
                 headers: headers
             }
             );

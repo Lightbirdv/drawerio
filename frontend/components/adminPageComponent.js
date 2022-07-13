@@ -100,7 +100,7 @@ const AdminPageComponent = () => {
   const [get, setPosts] = useState({ blogs: [] });
   useEffect(() => {
     const fetchPostList = async () => {
-      const { data } = await axios.get("http://localhost:5000/drawer/all/user", {
+      const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"drawer/all/user", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

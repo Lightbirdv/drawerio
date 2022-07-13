@@ -4,7 +4,7 @@ import { notifyc } from '../components/NewPasswordComponent';
 import { forgettHash } from './forgettHash'
 
 export const newPw = (email) => {
-  const { data } = axios.post('http://localhost:5000/user/forgot', { email: email }).then((response) => {
+  const { data } = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"user/forgot", { email: email }).then((response) => {
     console.log(response.status);
     if (response !== null) {
       notifyc("An email has send to " + email);

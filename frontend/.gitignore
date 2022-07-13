@@ -6,6 +6,7 @@
 # Next build dir
 .next/
 
+.env.local
 ### Node ###
 # Logs
 logs

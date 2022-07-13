@@ -8,7 +8,7 @@ export const entryDelete = (id) => {
       'Authorization': 'Bearer ' +localStorage.getItem('token')
     }
 
-    const {data} = axios.delete(`http://localhost:5000/drawerentry/${id}`,{
+    const {data} = axios.delete(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+`drawerentry/${id}`,{
       headers: headers
     }
      ).then((response) => {

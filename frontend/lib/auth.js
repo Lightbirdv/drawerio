@@ -9,7 +9,7 @@ import { getname } from '../lib/getname';
 
 export const loginUser = (email, password) => {
   console.log(email, password)
-  const { data } = axios.post('http://localhost:5000/auth/login', { email: email, password: password }).then((response) => {
+  const { data } = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+'auth/login', { email: email, password: password }).then((response) => {
     console.log(response.data.user.isadmin + ", " + response.data.user.enabled);
     if (response.status === 200 && email !== "" && password !== "") {
       const token = localStorage.setItem("token", response.data.token);

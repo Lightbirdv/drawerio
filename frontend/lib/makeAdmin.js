@@ -9,7 +9,7 @@ export const makeAdmin = (_id) => {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
     }
 
-    const { data } = axios.post('http://localhost:5000/user/promotetoadmin',
+    const { data } = axios.post(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"user/promotetoadmin",
         {
             email: _id
         }, {

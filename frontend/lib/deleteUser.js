@@ -6,7 +6,7 @@ export const deleteUser = (id) => {
       'Authorization': 'Bearer ' +localStorage.getItem('token')
     }
 
-    const {data} = axios.delete('http://localhost:5000/user/'+id,{
+    const {data} = axios.delete(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"user/"+id,{
       headers: headers
     }
      ).then((response) => {
