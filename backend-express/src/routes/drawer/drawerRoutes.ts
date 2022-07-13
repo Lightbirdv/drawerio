@@ -19,18 +19,14 @@ const authenticationFunctions = require("../authentication/authenticationFunctio
  *        '500':
  *          description: Failed to query for drawers
  */
-router.get(
-  "/all",
-  authenticationFunctions.isAdmin,
-  async (res: express.Response) => {
-    try {
-      const drawers = await drawerFunctions.getDrawers();
-      res.json(drawers);
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
-);
+router.get("/all", authenticationFunctions.isAdmin, async (res: express.Response) => {
+	try {
+		const drawers = await drawerFunctions.getDrawers();
+		res.json(drawers);
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -47,21 +43,17 @@ router.get(
  *        '500':
  *          description: Failed to query for drawers
  */
-router.get(
-  "/all/user",
-  authenticationFunctions.authenticateToken,
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const drawers = await drawerFunctions.getDrawersByUser(req);
-      if (!drawers) {
-        res.status(500).json({ message: "retrieval of drawers failed" });
-      }
-      res.status(200).json(drawers);
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
-);
+router.get("/all/user", authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) => {
+	try {
+		const drawers = await drawerFunctions.getDrawersByUser(req);
+		if (!drawers) {
+			res.status(500).json({ message: "retrieval of drawers failed" });
+		}
+		res.status(200).json(drawers);
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 /**
  * @swagger
@@ -86,23 +78,21 @@ router.get(
  *            required: true
  */
 router.get(
-  "/:id",
-  authenticationFunctions.authenticateToken,
-  drawerFunctions.isAuthorOrAdmin,
-  async (req: any, res: express.Response, next: express.NextFunction) => {
-    try {
-      if (req.drawer) {
-        const drawer = req.drawer;
-        res.json(drawer);
-      } else {
-        res
-          .status(500)
-          .json({ message: "there was a problem in the middle ware function" });
-      }
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
+	"/:id",
+	authenticationFunctions.authenticateToken,
+	drawerFunctions.isAuthorOrAdmin,
+	async (req: any, res: express.Response, next: express.NextFunction) => {
+		try {
+			if (req.drawer) {
+				const drawer = req.drawer;
+				res.json(drawer);
+			} else {
+				res.status(500).json({ message: "there was a problem in the middle ware function" });
+			}
+		} catch (err: any) {
+			res.status(500).json({ message: err.message });
+		}
+	}
 );
 
 /**
@@ -139,21 +129,21 @@ router.get(
  *                        required: false
  */
 router.patch(
-  "/:id",
-  authenticationFunctions.authenticateToken,
-  drawerFunctions.isAuthorOrAdmin,
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const updatedDrawer = await drawerFunctions.updateDrawer(req);
-      if (!updatedDrawer) {
-        res.status(500).json({ message: "update of drawer failed" });
-      } else {
-        res.status(201).json("successfully changed a drawer");
-      }
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
+	"/:id",
+	authenticationFunctions.authenticateToken,
+	drawerFunctions.isAuthorOrAdmin,
+	async (req: express.Request, res: express.Response) => {
+		try {
+			const updatedDrawer = await drawerFunctions.updateDrawer(req);
+			if (!updatedDrawer) {
+				res.status(500).json({ message: "update of drawer failed" });
+			} else {
+				res.status(201).json("successfully changed a drawer");
+			}
+		} catch (err: any) {
+			res.status(500).json({ message: err.message });
+		}
+	}
 );
 
 /**
@@ -179,18 +169,18 @@ router.patch(
  *            required: true
  */
 router.delete(
-  "/:id",
-  authenticationFunctions.authenticateToken,
-  drawerFunctions.isAuthorOrAdmin,
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const deletedDrawer = await drawerFunctions.deleteDrawer(req);
-      console.log(deletedDrawer);
-      res.status(201).json("successfully deleted a drawer");
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
-    }
-  }
+	"/:id",
+	authenticationFunctions.authenticateToken,
+	drawerFunctions.isAuthorOrAdmin,
+	async (req: express.Request, res: express.Response) => {
+		try {
+			const deletedDrawer = await drawerFunctions.deleteDrawer(req);
+			console.log(deletedDrawer);
+			res.status(201).json("successfully deleted a drawer");
+		} catch (err: any) {
+			res.status(500).json({ message: err.message });
+		}
+	}
 );
 
 /**
@@ -218,17 +208,47 @@ router.delete(
  *                     drawerTitle:
  *                        type: string
  */
-router.post(
-  "/add",
-  authenticationFunctions.authenticateToken,
-  async (req: express.Request, res: express.Response) => {
-    try {
-      var newDrawer = await drawerFunctions.addDrawer(req);
-      res.status(201).json("successfully created new drawer");
-    } catch (err: any) {
-      res.status(400).json({ message: err.message });
-    }
-  }
-);
+router.post("/add", authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) => {
+	try {
+		var newDrawer = await drawerFunctions.addDrawer(req);
+		res.status(201).json("successfully created new drawer");
+	} catch (err: any) {
+		res.status(400).json({ message: err.message });
+	}
+});
+
+/**
+ * @swagger
+ * /drawer/search/findBy?searchTerm:
+ *    get:
+ *      description: search for drawers using a search term
+ *      security:
+ *          - bearerAuth: []
+ *      tags:
+ *          - drawer endpoints
+ *      responses:
+ *        '200':
+ *          description: Successfully returned drawers
+ *        '500':
+ *          description: Failed to query for drawers
+ *      parameters:
+ *          - in: query
+ *            name: searchTerm
+ *            schema:
+ *                type: string
+ *            description: search term to search for drawer
+ */
+router.get("/search/findBy", authenticationFunctions.authenticateToken, async (req: any, res: express.Response, next: express.NextFunction) => {
+	try {
+		const drawers = await drawerFunctions.searchDrawers(req, res, next);
+		if (!drawers) {
+			res.status(500).json({ message: "there was a problem in the middle ware function" });
+		} else {
+			res.status(200).json(drawers);
+		}
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 module.exports = router;

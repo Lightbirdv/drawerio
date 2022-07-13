@@ -36,6 +36,7 @@ export default function Navbar() {
     const [open, setOpen] = useState(false)
     return (
         <nav className="flex filter drop-shadow-md bg-white px-4 py-4 h-20 items-center">
+            {/* <MobileNav open={open} setOpen={setOpen} /> */}
             <div className="w-3/12 flex items-center ml-28">
                 <NavLink className="text-2xl font-semibold" href="/"><Image alt="asd" src="assets/logo.jpg" className="img-logo" style={{marginRight: "15px", maxHeight: "130px"}}/></NavLink>
                 <NavLink className="text-2xl font-semibold text-blue-800 hover:no-underline" href="/">Drawer.io</NavLink>

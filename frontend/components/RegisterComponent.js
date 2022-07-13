@@ -68,7 +68,7 @@ class RegComponent extends React.Component {
           <div className="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5" style={{ backgroundColor: "rgb(30 64 175)" }}>
             {/* Copyright */}
             <div className="text-white mb-3 mb-md-0">
-              Copyright © 2020. All rights reserved.
+              Copyright Â© 2020. All rights reserved.
             </div>
             {/* Copyright */}
             {/* Right */}
@@ -93,8 +93,4 @@ class RegComponent extends React.Component {
     );
   }
 }
-
-
-
-
 export default RegComponent;
