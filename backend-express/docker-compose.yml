@@ -1,0 +1,44 @@
+version: "1"
+services:
+  drawerio-app:
+    container_name: drawerio-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: drawerio-api
+    depends_on:
+      - postgres
+    environment: 
+      USER: ${USER}
+      PASSWORD: ${PASSWORD}
+      HOST: db
+      DB: drawerio
+      DBTEST: drawertest
+      PORT: 5432
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      BASEURL: ${BASEURL}
+      EMAIL: ${EMAIL}
+      EMAIL_API_KEY: ${EMAIL_API_KEY}
+      NODE_ENV: ${NODE_ENV}
+    ports:
+      - "5000:5000"
+    expose: 
+      - "5000"
+  db:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    restart: always
+    volumes: 
+      - db:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/create_tables.sql
+volumes:
+  db:
+    driver: local

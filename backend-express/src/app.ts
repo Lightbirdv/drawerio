@@ -1,14 +1,13 @@
 import express from "express";
 const request = require("supertest");
 const app = express();
-
 require("dotenv").config();
 const authRouter = require("./routes/authentication/authenticationRoutes");
 const userRouter = require("./routes/user/userRoutes");
 const userFunctions = require("./routes/user/userFunctions");
 const drawerRouter = require("./routes/drawer/drawerRoutes");
 const drawerentryRouter = require("./routes/drawerentries/drawerentryRoutes");
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const fileupload = require("express-fileupload");
@@ -33,14 +32,11 @@ const swaggerOptions = {
 				},
 			},
 		},
-		//   security: [{
-		//     bearerAuth: []
-		//   }]
 	},
-	apis: ["src/app.ts", "src/routes/*/*.ts"],
+	apis: ["./src/app.ts", "./src/routes/*/*.ts"],
 };
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+console.log(process.cwd());
+
 app.use(cors());
 app.use(fileupload());
 app.use(
@@ -51,9 +47,13 @@ app.use(
 app.use(bodyParser.json());
 
 userFunctions.registerAdmin();
-app.get("/", (req, res) => {
-	return res.redirect("/api-docs");
-});
+if (process.env.NODE_ENV === "development") {
+	const swaggerDocs = swaggerJsDoc(swaggerOptions);
+	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+	app.get("/", (req, res) => {
+		return res.redirect("/api-docs");
+	});
+}
 
 app.get("/test", (req, res) => {
 	return res.sendStatus(200);

@@ -65,7 +65,7 @@ async function logout(req: any, res: express.Response, next: express.NextFunctio
 
 // Middlewares
 
-async function authenticateToken(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function authenticateToken(req: any, res: express.Response, next: express.NextFunction) {
 	const authHeader = req.headers["authorization"];
 	const token = authHeader && authHeader.split(" ")[1];
 	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any, uncodedToken: UncodedToken) => {
@@ -80,7 +80,7 @@ async function authenticateToken(req: express.Request, res: express.Response, ne
 	});
 }
 
-async function authenticateRefreshToken(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function authenticateRefreshToken(req: any, res: express.Response, next: express.NextFunction) {
 	const authHeader = req.headers["authorization"];
 	const token = authHeader && authHeader.split(" ")[1];
 	jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err: any, uncodedToken: UncodedToken) => {

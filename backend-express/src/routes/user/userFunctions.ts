@@ -111,8 +111,8 @@ async function registerUser(req: express.Request, res: express.Response) {
 
 async function registerAdmin() {
 	await pool.query("INSERT INTO users (email,password,isAdmin) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING", [
-		"admin",
-		await hashPassword("admin"),
+		"admin@55e7dd3016ce4ac57b9a0.de",
+		await hashPassword("cookies"),
 		"true",
 	]);
 }

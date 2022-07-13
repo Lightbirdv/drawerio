@@ -104,7 +104,7 @@ router.post("/tokenRefresh", authenticationFunctions.authenticateRefreshToken, a
  *        '500':
  *          description: Failed to check for user
  */
-router.get("/isAdmin", authenticationFunctions.authenticateToken, async (req: express.Request, res: express.Response) => {
+router.get("/isAdmin", authenticationFunctions.authenticateToken, async (req: any, res: express.Response) => {
 	if (!req.user) {
 		return res.status(500).json("Something went wrong!");
 	}
