@@ -20,11 +20,11 @@ services:
       BASEURL: ${BASEURL}
       EMAIL: ${EMAIL}
       EMAIL_API_KEY: ${EMAIL_API_KEY}
-      NODE_ENV: production
+      NODE_ENV: ${NODE_ENV}
     ports:
-      - "3000:3000"
+      - "5000:5000"
     expose: 
-      - "3000"
+      - "5000"
   db:
     container_name: postgres
     image: postgres:latest

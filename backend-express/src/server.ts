@@ -1,6 +1,6 @@
-const app = require("./app.js");
+const app = require("./app");
 
-const port = process.env.APIPORT || 3000;
+const port = process.env.APIPORT || 5000;
 
 app.listen(port, () => {
 	console.log("started");

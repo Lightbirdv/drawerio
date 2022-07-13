@@ -2,9 +2,10 @@
   "name": "backend-express",
   "version": "1.0.0",
   "description": "creating nodejs application: \r npm init -y\r install Typescript and tslint:\r npm install typescript tslint --save-dev",
-  "main": "src/src/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
-    "start": "nodemon build/server.js",
+    "start:prod": "nodemon build/server.js",
+    "start:dev": "ts-node --prefer-ts-exts src/server.ts",
     "build": "tsc",
     "db:create": "ts-node --prefer-ts-exts ./db/createdb.ts",
     "db:delete": "ts-node --prefer-ts-exts ./db/deletedb.ts",

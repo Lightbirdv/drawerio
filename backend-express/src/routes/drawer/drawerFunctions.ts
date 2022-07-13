@@ -14,12 +14,12 @@ async function getDrawersByUser(req: any, res: express.Response) {
 	return drawers.rows;
 }
 
-async function getSingleDrawer(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function getSingleDrawer(req: any, res: express.Response, next: express.NextFunction) {
 	const result = await pool.query("SELECT * FROM drawer WHERE drawer_id=$1", [req.params.id]);
 	return result;
 }
 
-async function updateDrawer(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function updateDrawer(req: any, res: express.Response, next: express.NextFunction) {
 	if (!req.drawer) {
 		return next(new HttpException(404, "UpdateDrawer: Error in middle ware"));
 	}
@@ -34,7 +34,7 @@ async function updateDrawer(req: express.Request, res: express.Response, next: e
 	return newDrawer;
 }
 
-async function deleteDrawer(req: express.Request, res: express.Response) {
+async function deleteDrawer(req: any, res: express.Response) {
 	const drawer = pool.query("DELETE FROM drawer WHERE drawer_id=$1", [req.params.id]);
 	return drawer;
 }

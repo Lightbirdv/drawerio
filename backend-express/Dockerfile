@@ -7,11 +7,10 @@ WORKDIR /usr/src/app
 
 COPY package.json .
 COPY yarn.lock .
-COPY initdb.sql .
 
 RUN yarn install
 
-COPY ./dist .
+COPY ./dist ./dist
 
-EXPOSE 3000
-CMD yarn start
+EXPOSE 5000
+CMD yarn start:prod
