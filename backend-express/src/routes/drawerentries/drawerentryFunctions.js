@@ -33,6 +33,16 @@ function getDrawerentriesByUser(req, res) {
         return drawerentries.rows;
     });
 }
+function searchDrawerentriesByUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let search = req.query.searchTerm;
+        if (!search) {
+            return getDrawerentriesByUser(req, res);
+        }
+        const entries = yield pool.query("SELECT * FROM drawerentries INNER JOIN drawer ON drawerentries.drawer_id=drawer.drawer_id WHERE drawer.users_id=$1 AND (drawerentries.comment ILIKE $2 OR drawerentries.selText ILIKE $2 OR drawerentries.originURL ILIKE $2) ORDER BY drawerentry_id ASC", [req.user.users_id, "%" + search + "%"]);
+        return entries.rows;
+    });
+}
 function getSingleEntry(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield pool.query("SELECT * FROM drawerentries WHERE drawerentry_id=$1", [req.params.id]);
@@ -83,6 +93,26 @@ function addEntry(req, res) {
         return newEntry;
     });
 }
+function searchDrawerentries(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let { drawer, searchTerm } = req.query;
+        const searchedDrawer = yield pool.query("SELECT users_id FROM drawer WHERE drawer_id=$1", [drawer]);
+        console.log(searchedDrawer);
+        console.log(req.user.users_id);
+        if (!searchedDrawer.rows.length) {
+            return next(new HttpException_1.default(404, "Drawer not found"));
+        }
+        if (searchedDrawer.rows[0].users_id != req.user.users_id) {
+            return next(new HttpException_1.default(403, "You are not the author of this drawer"));
+        }
+        if (!searchTerm) {
+            req.params.drawerid = drawer;
+            return yield getEntriesByDrawer(req, res);
+        }
+        const searchResult = yield pool.query("SELECT * FROM drawerentries WHERE drawer_id=$1 AND (comment ILIKE $2 OR selText ILIKE $2 OR originURL ILIKE $2)", [drawer, "%" + searchTerm + "%"]);
+        return searchResult.rows;
+    });
+}
 // middleware
 function isAuthorOrAdmin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -129,5 +159,7 @@ module.exports = {
     updateEntry,
     deleteEntry,
     addEntry,
+    searchDrawerentries,
+    searchDrawerentriesByUser,
     isAuthorOrAdmin,
 };
