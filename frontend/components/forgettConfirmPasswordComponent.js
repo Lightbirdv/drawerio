@@ -7,6 +7,9 @@ import { } from '../lib/newPw';
 import { newPw } from '../lib/newPw';
 import Router from 'next/router';
 import { forgettHash } from '../lib/forgettHash';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const notify = (message) => toast(message);
 

@@ -2,6 +2,7 @@ import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Router from "next/router";
 import "bootstrap/dist/css/bootstrap.css";
+import {Image} from "react-bootstrap";
 
 function TopComponent() {
   const handleClick = (e, path) => {
@@ -30,7 +31,8 @@ function TopComponent() {
               Sign Up
             </button>
           </div>
-          <img
+          <Image
+          alt="img"
             className="TopComponent-Cta-Image w-2/3 pl-10 py-10"
             src="/assets/landingpage.svg"
           />

@@ -23,6 +23,7 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import { downloadText } from "../lib/downloadText";
+import { Image } from "react-bootstrap";
 
 
 
@@ -172,7 +173,7 @@ const ThirdPage = () => {
 						}
 						)
 							.map((item) => (
-								<div /* key={item.id} */>
+								<div key={item.id}>
 									<TimelineItem>
 										<TimelineOppositeContent className="text-text" style={{ flex: 0.1, paddingLeft: 0 }}>
 											{dayjs(item.creationdate).format("MMM, D, YYYY")}
@@ -209,9 +210,9 @@ const ThirdPage = () => {
 															<div className="grid grid-cols-4 gap-2">
 																{item.imageurl &&
 																	item.imageurl.map((x) => (
-																		<div /* id={x+"www"} key={x+"hallo"} */ className="relative">
+																		<div key={x+"hallo"} className="relative">
 
-																			<img src={x} className="p-2 bg-white hover:shadow rounded-xl" style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} onClick={(e) => showPicture(e, x)} />
+																			<Image alt="asdasdsd" src={x} className="p-2 bg-white hover:shadow rounded-xl" style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} onClick={(e) => showPicture(e, x)} />
 
 																			{/* </div> */}
 																		</div>
@@ -227,7 +228,7 @@ const ThirdPage = () => {
 															<div className="grid grid-cols-3 gap-2">
 																{item.videourl &&
 																	item.videourl.map((y) => (
-																		<div /* id={x+"wdsfdsf"} key={y+"hayxcyxc"} */ className="relative">
+																		<div key={y+"hayxcyxc"} className="relative">
 																			{/* <div className="absolute inset-0 z-10 flex transition duration-300 ease-in hover:opacity-0">
                             <div className="absolute inset-0 bg-black opacity-30"> </div> */}
 
@@ -238,7 +239,7 @@ const ThirdPage = () => {
 																				/* src={`https://www.youtube.com/embed/${(y).split("v=")[1]}`} */
 																				src={y}
 																				title="YouTube video player"
-																				frameborder="0"
+																				frameBorder="0"
 																				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 																				allowFullScreen
 																			></iframe>

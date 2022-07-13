@@ -27,7 +27,7 @@ import { searchDrawer } from "../lib/searchDrawer";
 
 
 
-const adminPageComponent = () => {
+const AdminPageComponent = () => {
 
 
 
@@ -479,4 +479,4 @@ const adminPageComponent = () => {
 };
 
 
-export default adminPageComponent;
+export default AdminPageComponent;

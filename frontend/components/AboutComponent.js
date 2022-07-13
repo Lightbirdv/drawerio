@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import {Image} from "react-bootstrap";
 
 /* const consentPropertyName = 'jdc_consent';
 
@@ -39,7 +40,7 @@ if (typeof window !== "undefined") {
 function AboutComponent() {
 	return (
 		<div  className="flex flex-row w-4/5 m-auto items-center gap-12">
-			<img src="assets/mockup.png" className="img-fluid stroke-1" width="700" />
+			<Image alt="hey" src="assets/mockup.png" className="img-fluid stroke-1" width="700" />
 
 			<div style={{margin:"20px"}} className="">
 				<h2>Google Chrome Extension</h2>

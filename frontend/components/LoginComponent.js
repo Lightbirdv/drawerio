@@ -7,6 +7,8 @@ import { newPw } from '../lib/newPw';
 import Router from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Image } from "react-bootstrap";
+
 
 export const logify = (message) => toast(message);
 
@@ -56,7 +58,7 @@ class LoginComponent extends React.Component {
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-md-9 col-lg-6 col-xl-5">
               {/* <h1 className="text-blue-800 text-5xl" style={{textAlign:"center"}}>Login here!</h1> */}
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample image" />
+                <Image src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample image" />
               </div>
               <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form onSubmit={this.handleSubmit}>
@@ -81,7 +83,7 @@ class LoginComponent extends React.Component {
               <div style={{textAlign:"center"}}>
                   <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black"}} onClick={(e) => { { forgettPw(e) }}} >Forgot password?</button>
                   <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToConfirm(e) }}} >Confirm your email here</button>
-                  <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToReg(e) }}} >Don't have an account?</button> 
+                  <button style={{backgroundColor: "rgb(167 243 208)", fontSize: "13px", color: "black", marginLeft:"10px"}} onClick={(e) => { { goToReg(e) }}} >Do not have an account?</button> 
                   </div>
             </div>
             <ToastContainer />
