@@ -3,9 +3,9 @@ require("dotenv").config();
 
 let client = new pg.Client({
 	host: "localhost",
-	user: process.env.USER,
+	user: process.env.POSTGRES_POSTGRES_USER,
 	database: "postgres",
-	password: process.env.PASSWORD,
+	password: process.env.POSTGRES_PASSWORD,
 	port: parseInt(process.env.PORT!) || 5432,
 });
 

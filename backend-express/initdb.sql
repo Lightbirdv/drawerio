@@ -1,7 +1,5 @@
 CREATE DATABASE drawerio;
-CREATE ROLE drawerservice WITH LOGIN PASSWORD 'password';
 \c drawerio;
-
 CREATE TABLE IF NOT EXISTS users(
     users_id SERIAL PRIMARY KEY,
     email VARCHAR(50) NOT NULL UNIQUE,

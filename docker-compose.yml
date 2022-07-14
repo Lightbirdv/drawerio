@@ -1,0 +1,42 @@
+version: "3"
+services:
+  drawerio-frontend:
+    container_name: drawerio-frontend
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+    image: drawerio-frontend
+    env_file:
+      - frontend/.env
+    depends_on:
+      - drawerio-app
+    ports:
+      - "80:3000"
+    expose: 
+      - "3000"
+  drawerio-app:
+    container_name: drawerio-api
+    build:
+      context: backend-express/
+      dockerfile: Dockerfile
+    image: drawerio-api
+    env_file:
+      - backend-express/.env
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+    expose: 
+      - "5000"
+  db:
+    container_name: postgres
+    image: postgres:latest
+    env_file:
+      - backend-express/.env
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    restart: always
+    volumes: 
+      - ./backend-express/initdb.sql:/docker-entrypoint-initdb.d/create_tables.sql

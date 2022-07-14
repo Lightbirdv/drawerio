@@ -6,16 +6,16 @@ const { databasequery, tableuserquery, tabledrawerquery, tabledrawerentriesquery
 let masterclient = new pg.Client({
 	host: "localhost",
 	database: "postgres",
-	user: process.env.USER,
-	password: process.env.PASSWORD,
+	user: process.env.POSTGRES_USER,
+	password: process.env.POSTGRES_PASSWORD,
 	port: parseInt(process.env.PORT!) || 5432,
 });
 
 let client = new pg.Client({
 	host: "localhost",
 	database: process.env.DBTEST,
-	user: process.env.USER,
-	password: process.env.PASSWORD,
+	user: process.env.POSTGRES_USER,
+	password: process.env.POSTGRES_PASSWORD,
 	port: parseInt(process.env.PORT!) || 5432,
 });
 
