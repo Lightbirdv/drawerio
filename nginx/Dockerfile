@@ -1,5 +1,5 @@
 FROM nginx:alpine
-COPY ./certs/ssl_passphrase.txt /etc/nginx/certs/ssl_passphrase.txt
-COPY ./certs/localhost.crt /etc/nginx/certs/localhost.crt
-COPY ./certs/localhost.key /etc/nginx/certs/localhost.key
+COPY ./certs/fullchain.pem /etc/letsencrypt/live/drawerio.com/fullchain.pem
+COPY ./certs/privkey.pem /etc/letsencrypt/live/drawerio.com/privkey.pem
+COPY ./certs/options-ssl-nginx.conf /etc/letsencrypt/options-ssl-nginx.conf
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf

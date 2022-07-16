@@ -6,12 +6,12 @@ services:
       context: nginx/
       dockerfile: Dockerfile
     image: nginx
+    depends_on:
+      - drawerio-api
+      - drawerio-frontend
     ports:
       - "80:80"
       - "443:443"
-    # expose: 
-    #   - "80"
-    #   - "443"
   drawerio-frontend:
     container_name: drawerio-frontend
     build:
@@ -21,11 +21,9 @@ services:
     env_file:
       - frontend/.env
     depends_on:
-      - drawerio-app
+      - drawerio-api
     ports:
       - "3000:3000"
-    # expose: 
-    #   - "3000"
   drawerio-api:
     container_name: drawerio-api
     build:
@@ -37,9 +35,7 @@ services:
     depends_on:
       - db
     ports:
-      - "5000:5000"
-    expose: 
-      - "5000"
+      - "8080:8080"
   db:
     container_name: postgres
     image: postgres:latest
@@ -47,10 +43,6 @@ services:
       - backend-express/.env
     ports:
       - "5432:5432"
-    depends_on:
-      - nginx
-    # expose:
-    #   - "5432"
     restart: always
     volumes: 
       - ./backend-express/initdb.sql:/docker-entrypoint-initdb.d/create_tables.sql

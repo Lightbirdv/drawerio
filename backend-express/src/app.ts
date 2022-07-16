@@ -12,6 +12,7 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const fileupload = require("express-fileupload");
 var cors = require("cors");
+var morgan = require('morgan')
 require("dotenv").config();
 
 
@@ -75,6 +76,7 @@ app.use(
 	})
 );
 app.use(bodyParser.json());
+app.use(morgan('combined'));
 
 userFunctions.registerAdmin();
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
