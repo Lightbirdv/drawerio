@@ -26,7 +26,7 @@ const DrawerForm = function (props) {
       setSuccessCreated(true);
       axios
         .post(
-          "http://localhost:5000/drawer/add",
+          process.env.REACT_APP_DRAWERIO_API_KEY + "/drawer/add",
           {
             drawerTitle: drawerName,
           },
@@ -55,7 +55,7 @@ const DrawerForm = function (props) {
     ) {
       axios
         .post(
-          "http://localhost:5000/auth/tokenRefresh",
+          process.env.REACT_APP_DRAWERIO_API_KEY + "/auth/tokenRefresh",
           {},
           {
             headers: {

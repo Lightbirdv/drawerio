@@ -139,7 +139,7 @@ const UserPage = function () {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/drawer/all/user", {
+      .get(process.env.REACT_APP_DRAWERIO_API_KEY + "/drawer/all/user", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -157,7 +157,7 @@ const UserPage = function () {
     }
     axios
       .post(
-        "http://localhost:5000/drawerentry/add",
+        process.env.REACT_APP_DRAWERIO_API_KEY + "/drawerentry/add",
         {
           comment: textfieldInput,
           imageURL: imgArr,
@@ -209,7 +209,7 @@ const UserPage = function () {
     ) {
       axios
         .post(
-          "http://localhost:5000/auth/tokenRefresh",
+          process.env.REACT_APP_DRAWERIO_API_KEY + "/auth/tokenRefresh",
           {},
           {
             headers: {
