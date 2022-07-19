@@ -22,10 +22,10 @@ export const loginUser = (email, password) => {
       }
 
       if (response.data.user.isadmin === true /* && response.data.user.enabled === true */) { 
-        Router.push("/adminpage")
+        Router.push(`/adminpage?title=${"drawers"}`)
       } else if (response.data.user.isadmin === false/*  && response.data.user.enabled === true */) {
         getname(email);
-        Router.push("/privatepage")
+        Router.push("/drawers")
       }
       else {
         logify("Unfortunately you could not log in");

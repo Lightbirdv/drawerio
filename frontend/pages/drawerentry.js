@@ -1,7 +1,7 @@
 import PrivateComponent from "../components/PrivateComponent"
 import Navbar from "../components/NavbarTwo";
 import ThirdPageComponent from "../components/ThirdPageComponent";
-export default function ThirdPage() {
+export default function Drawerentry() {
   return <div>
     <main>
 
