@@ -60,10 +60,13 @@ const RegisterForm = function (props) {
           if (notSamePW === false && notLong === false && notSame === false) {
             if (passwordOne.length !== 0 || passwordTwo.length !== 0) {
               axios
-                .post("http://localhost:5000/user/register", {
-                  email: data.email,
-                  password: passwordOne,
-                })
+                .post(
+                  process.env.REACT_APP_DRAWERIO_API_KEY + "/user/register",
+                  {
+                    email: data.email,
+                    password: passwordOne,
+                  }
+                )
                 .then((response) => {
                   setSameUser(false);
                   setNotSamePW(false);
@@ -71,9 +74,12 @@ const RegisterForm = function (props) {
                   setNotLong(false);
                   setSuccessReg(true);
                   axios
-                    .post("http://localhost:5000/user/confirm", {
-                      email: data.email,
-                    })
+                    .post(
+                      process.env.REACT_APP_DRAWERIO_API_KEY + "/user/confirm",
+                      {
+                        email: data.email,
+                      }
+                    )
                     .then((response) => console.log("Successfully send Email."))
                     .catch((error) => console.log(error));
                   setTimeout(() => {
