@@ -212,7 +212,7 @@ const ThirdPage = () => {
 																	item.imageurl.map((x) => (
 																		<div key={x+"hallo"} className="relative">
 
-																			<Image alt="asdasdsd" src={x} className="p-2 bg-white hover:shadow rounded-xl" style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} onClick={(e) => showPicture(e, x)} />
+																			<Image alt="drawerLogo" src={x} className="p-2 bg-white hover:shadow rounded-xl" style={{ float: "left", width: "300px", height: "200px", objectFit: "cover" }} onClick={(e) => showPicture(e, x)} />
 
 																			{/* </div> */}
 																		</div>

@@ -45,7 +45,7 @@ export default function Navbar() {
 			{/*  <MobileNav open={open} setOpen={setOpen} /> */}
 			<div className="w-3/12 flex items-center ml-28">
 				<NavLink className="text-2xl font-semibold" href="/">
-					<Image alt="asd" src="assets/logo.jpg" className="img-logo" style={{ marginRight: "15px", maxHeight: "130px" }} />
+					<Image alt="drawerLogo" src="assets/logo.jpg" className="img-logo" style={{ marginRight: "15px", maxHeight: "130px" }} />
 				</NavLink>
 				<NavLink className="text-2xl font-semibold text-blue-800 hover:no-underline" href="/">
 					Drawer.io

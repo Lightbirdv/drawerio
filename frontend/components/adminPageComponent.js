@@ -29,10 +29,6 @@ import { searchDrawer } from "../lib/searchDrawer";
 
 const AdminPageComponent = () => {
 
-
-
-  let searchF = "";
-
   const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const [state, setState] = useState({ drawerName: "" });
@@ -85,22 +81,24 @@ const AdminPageComponent = () => {
     forceUpdate();
   };
 
-  const goNext = (e, _id) => {
+  const goNext = (e, _id, name) => {
     e.preventDefault();
     localStorage.setItem("drawer_id", _id);
     localStorage.getItem("drawer_id");
-    Router.push("/thirdpage");
+
+    Router.push(`/drawerentry?drawertitle=${name}`);
   };
 
   const goToUserManagement = (e) => {
-    e.preventDefault();
-    Router.push("/userpage")
+  e.preventDefault();
+  Router.push("/usermanagement")
   }
 
   const [get, setPosts] = useState({ blogs: [] });
   useEffect(() => {
     const fetchPostList = async () => {
-      const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL+process.env.NEXT_PUBLIC_API_PORT+"drawer/all/user", {
+
+      const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL + process.env.NEXT_PUBLIC_API_PORT + "drawer/all/user", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -154,7 +152,7 @@ const AdminPageComponent = () => {
             onKeyDown={(event) => {
               handleKeyDown
               let b;
-              if (searchTerm == "") {
+              if (searchTerm.slice(1) == "") {
                 b = searchDrawer("");
                 forceUpdate();
                 get.blogs = b;
@@ -194,9 +192,9 @@ const AdminPageComponent = () => {
           <button type="button" className="bg-main text-white w-12 h-8 text-xl text-center" onClick={handleShow} style={{ borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}>
             +
           </button>
-          <button type="button"
-            className="bg-main flex justify-center items-center text-white w-12 h-8 text-xl text-center"
-            onClick={goToUserManagement} style={{ marginLeft: "5px", borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}><MdSupervisorAccount /></button>
+          <button 	type="button"
+											className="bg-main flex justify-center items-center text-white w-12 h-8 text-xl text-center"
+											 onClick={goToUserManagement} style={{ marginLeft: "5px", borderRadius: "10px", backgroundColor: "#3CDDC0", color: "white" }}><MdSupervisorAccount/></button>
         </div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -228,12 +226,13 @@ const AdminPageComponent = () => {
         </Modal>
 
 
+
         {x.blogs2 &&
           x.blogs2.filter((item) => {
-
+            const keys = ["comment", "originurl", "seltext", "websitecontent"]
             if (searchTermEntrys == "") {
               return null
-            } else {
+            } else if (keys.some((key) => item[key].toLowerCase().includes(searchTermEntrys.toLowerCase())) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTermEntrys.toLowerCase())) {
               return item
             }
           })
@@ -248,7 +247,7 @@ const AdminPageComponent = () => {
                   className="ml-8 w-3/6"
                   onClick={(e) => {
                     {
-                      goNext(e, item.drawer_id);
+                      goNext(e, item.drawer_id, item.drawertitle);
                     }
                   }}
                 >
@@ -343,7 +342,14 @@ const AdminPageComponent = () => {
               </div>
             ))}
 
-        {get.blogs &&
+
+
+
+
+
+
+
+        {/* {get.blogs &&
           get.blogs.filter((x) => {
             <div key={x.drawer_id}></div>
             if (searchTerm == "" && searchTermEntrys == "") {
@@ -354,20 +360,20 @@ const AdminPageComponent = () => {
             } else {
               return x
             }
+          }) */}
+
+        {get.blogs &&
+          get.blogs.filter((item) => {
+            <div key={x.drawer_id}></div>
+            if (searchTerm == "" && searchTermEntrys == "") {
+              return item
+            }
+            else if (searchTermEntrys !== "" && searchTerm == "") {
+              return null
+            } else if (item.drawertitle.toLowerCase().includes(searchTerm.toLowerCase()) || dayjs(item.creationdate).format('MMM, D, YYYY').toLowerCase().includes(searchTerm.toLowerCase())) {
+              return item
+            }
           })
-
-            /* .filter((x) => {
-              if (searchTerm == "" && searchTermEntrys == "") {
-                return x
-              } else if () {  
-
-              }
-              else {
-                return null
-              }
-            }) */
-
-
             .map((item) => (
               <div className="flex flex-row justify-between my-1 p-2 bg-white hover:bg-gray-200 rounded-xl items-center shadow-sm" key={item.drawer_id}>
                 <div
@@ -379,7 +385,7 @@ const AdminPageComponent = () => {
                   className="ml-8 w-3/6"
                   onClick={(e) => {
                     {
-                      goNext(e, item.drawer_id);
+                      goNext(e, item.drawer_id, item.drawertitle);
                     }
                   }}
                 >
