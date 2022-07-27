@@ -63,7 +63,7 @@ const RegisterForm = function (props) {
                 .post(
                   process.env.REACT_APP_DRAWERIO_API_KEY + "/user/register",
                   {
-                    email: data.email,
+                    email: data.email.toLowerCase(),
                     password: passwordOne,
                   }
                 )
@@ -77,7 +77,7 @@ const RegisterForm = function (props) {
                     .post(
                       process.env.REACT_APP_DRAWERIO_API_KEY + "/user/confirm",
                       {
-                        email: data.email,
+                        email: data.email.toLowerCase(),
                       }
                     )
                     .then((response) => console.log("Successfully send Email."))

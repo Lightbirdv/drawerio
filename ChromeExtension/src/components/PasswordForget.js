@@ -17,7 +17,7 @@ const PasswordForget = function () {
   const handleClick = () => {
     axios
       .post(process.env.REACT_APP_DRAWERIO_API_KEY + "/user/forgot", {
-        email: emailForgot,
+        email: emailForgot.toLowerCase(),
       })
       .then((response) => {
         setSuccessSend(true);
