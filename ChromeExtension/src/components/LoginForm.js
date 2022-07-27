@@ -49,19 +49,21 @@ const LoginForm = function (props) {
         onSubmit={handleSubmit((data) => {
           axios
             .post(process.env.REACT_APP_DRAWERIO_API_KEY + "/auth/login", {
-              email: data.email,
-              password: data.password,
+              email: data.email.toLowerCase(),
+              password: data.password.toLowerCase(),
             })
             .then((response) => {
-              if (response.data.token !== null) {
-                localStorage.setItem("token", response.data.token);
-                localStorage.setItem(
-                  "refreshToken",
-                  response.data.user.refreshtoken
-                );
-              }
-              if (localStorage.getItem("token")) {
-                setGoUserPage(true);
+              if (response.data.user.enabled === true) {
+                if (response.data.token !== null) {
+                  localStorage.setItem("token", response.data.token);
+                  localStorage.setItem(
+                    "refreshToken",
+                    response.data.user.refreshtoken
+                  );
+                }
+                if (localStorage.getItem("token")) {
+                  setGoUserPage(true);
+                }
               }
             })
             .catch((error) => {
