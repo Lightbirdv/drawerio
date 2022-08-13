@@ -5,7 +5,8 @@ We want to create a service with which you can scrape webcontent, pictures, vide
 XYZ, wants to save content and the link of a website with as little clicks as possible and then close the website to go on with the research. XYZ then wants to access drawerio.com and access the data after logging in in a sorted list of drawers containing the data as drawerentries.
 
 # Techstack
-![Screen_Shot_2022-07-28_at_17.16.12](uploads/b7ef11858e8bd66896cd3af7e9094f10/Screen_Shot_2022-07-28_at_17.16.12.png)
+<img width="474" alt="Screen_Shot_2022-07-28_at_17 16 12" src="https://user-images.githubusercontent.com/56518155/184482737-571080e0-84b1-488a-a2b6-08855528e0a9.png">
+
 - Programming language: Typescript (backend), Javascript (frontend, extension)
 - Backend: nodejs/expressjs
 - Frontend: Nextjs (React)
@@ -14,7 +15,8 @@ XYZ, wants to save content and the link of a website with as little clicks as po
 
 # Cloudinfrastructure
 
-![Screen_Shot_2022-07-28_at_17.17.45](uploads/e76c206a198e183a195e9d19ef06d5a7/Screen_Shot_2022-07-28_at_17.17.45.png)
+<img width="431" alt="Screen_Shot_2022-07-28_at_17 17 45" src="https://user-images.githubusercontent.com/56518155/184482760-e42ee2cf-5d90-4565-b91a-1d4bb7be9e7a.png">
+
 
 - hosted on aws
 - Domain name is drawerio.com
