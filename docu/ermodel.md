@@ -1,5 +1,5 @@
 # er model pic
-![ermodell_1](uploads/f0e046b855678b9aedcd20b719af1778/ermodell_1.png)
+![ermodell_1](https://user-images.githubusercontent.com/56518155/184482291-df03c224-6f15-45a8-9e2c-9bfcc93817d7.png)
 # er model 
 ## User
 - PK: user_id not null
