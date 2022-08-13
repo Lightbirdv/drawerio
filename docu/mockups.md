@@ -1,12 +1,17 @@
 # browser extension icon
-![Page_5](uploads/435af830e7502f5d132e628897638876/Page_5.png)
+![Page_5](https://user-images.githubusercontent.com/56518155/184483029-efaa44c1-fa78-4c1d-a682-73e9d6fc2327.png)
+
 # extension login
-![Page_6](uploads/f0cf8660c6b49096a9c7ba7db8f3c8db/Page_6.png)
+![Page_6](https://user-images.githubusercontent.com/56518155/184483057-896fe3e5-9dbf-4155-bc54-82c4b8b4b7c0.png)
+
 # extension main state
-![Page_7](uploads/18386231882e1b2eb42354fa7b34c8d2/Page_7.png)
+![Page_7](https://user-images.githubusercontent.com/56518155/184483061-427678e3-834c-49f7-947e-6dc6c82856f4.png)
+
 # landing page
-![Page_8](uploads/c0fe7720e80a0dc7399571873ab9c08b/Page_8.png)
+![Page_8](https://user-images.githubusercontent.com/56518155/184483064-547346cf-3ff5-4aa9-9c16-163db8873afc.png)
+
 # drawer list
-![Page_9](uploads/8ee7cb55093cf8bfdc714139cf9eb270/Page_9.png)
+![Page_9](https://user-images.githubusercontent.com/56518155/184483067-8861620d-f220-4794-bf1c-af4976670065.png)
+
 # drawer details
-![Page_10](uploads/b8b9545d87fc506e6c1bc777f1fa2b99/Page_10.png)
+![Page_10](https://user-images.githubusercontent.com/56518155/184483088-6673bf7c-1dcb-49f9-9672-0b6381ebb167.png)
